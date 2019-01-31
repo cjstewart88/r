@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>check</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      .check {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background-color: royalblue;
+      }
+
+      .check:nth-child(odd) {
+        background-color: darkslateblue
+      }
+
+      .row:nth-child(odd) .check {
+        background-color: darkslateblue
+      }
+
+      .row:nth-child(odd) .check:nth-child(odd) {
+        background-color: royalblue
+      }
+      
+      .check.hover {
+        background-color: coral !important;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function(event) {
+        const width = document.body.clientWidth;
+        const height = document.body.clientHeight;
+        const numberOfColumns = width / 15;
+        const numberOfRows = height / 15;
+
+        for (let i = 0; i < numberOfRows; i++) {
+          const rowElement = document.createElement('div');
+          rowElement.classList  = 'row';
+
+          for (let z = 1; z < numberOfColumns; z++) { 
+            rowElement.innerHTML += '<div class="check"></div>';
+          }
+
+          document.body.append(rowElement)
+        }
+
+        for (let i = 0; i < document.getElementsByClassName('check').length; i++) {
+          const check = document.getElementsByClassName('check')[i];
+          if (check) {   
+            document.getElementsByClassName('check')[i].addEventListener('mouseover', (event) => {
+              event.target.classList = 'check hover';
+            })
+          }
+        }
+      });
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>
