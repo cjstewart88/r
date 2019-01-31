@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>check</title>
+    <title>check - 01/31/2019</title>
     <style>
       body {
         margin: 0;
@@ -27,6 +27,7 @@
       
       .check.hover {
         background-color: coral !important;
+        transition: background-color 0.5s ease;
       }
     </style>
     <script>
@@ -52,7 +53,11 @@
           if (check) {   
             document.getElementsByClassName('check')[i].addEventListener('mouseover', (event) => {
               event.target.classList = 'check hover';
-            })
+
+              setTimeout(() => {
+                event.target.classList = 'check';
+              }, 500);
+            });
           }
         }
       });
