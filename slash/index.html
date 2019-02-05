@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>slash - 02/04/2019</title>
+    <style>
+      body {
+        background-color: tomato;
+        overflow: hidden;
+      }
+
+      .slash-wrapper {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      .slash {
+        display: inline-block;
+        width: 10px;
+        height: 100%;
+        margin-left: 4%;
+        background-color: black;
+      }
+
+      .slash1 {
+        animation: rotateClockwise 25s infinite;
+      }
+
+      .slash2 {
+        animation: rotateCounterClockwise 25s infinite;
+      }
+
+      @keyframes rotateClockwise {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes rotateCounterClockwise {
+        from {
+          transform: rotate(360deg);
+        }
+
+        to {
+          transform: rotate(0deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slash-wrapper">
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+      <div class="slash slash1"></div>
+    </div>
+
+    <div class="slash-wrapper">
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+      <div class="slash slash2"></div>
+    </div>
+  </body>
+</html>
