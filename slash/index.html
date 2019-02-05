@@ -3,30 +3,58 @@
     <title>slash - 02/04/2019</title>
     <style>
       body {
-        background-color: tomato;
+        margin: 0;
+        background-color: #281846;
         overflow: hidden;
       }
 
-      .slash-wrapper {
+      .fixed-bar {
+        z-index: 3;
+        display: inline-block;
+        width: 50px;
+        height: 100%;
+        border-right: solid 5px;
+        animation: colorChange 60s infinite;
+      }
+
+      @keyframes colorChange {
+        0% {
+          border-right-color: #ff0037;
+        }
+
+        50% {
+          border-right-color: rgba(0,0,0,.0);
+        }
+        
+        100% {
+          border-right-color: #ff0037;
+        }
+      }
+
+      .wrapper {
         position: absolute;
         top: 0;
         height: 100%;
         width: 100%;
+        text-align: center;
       }
 
       .slash {
         display: inline-block;
         width: 10px;
         height: 100%;
-        margin-left: 4%;
-        background-color: black;
+        margin-left: 2%;
+        margin-right: 2%;
+        background-color: #5f0353;
       }
 
       .slash1 {
+        z-index: 1;
         animation: rotateClockwise 25s infinite;
       }
 
       .slash2 {
+        z-index: 3;
         animation: rotateCounterClockwise 25s infinite;
       }
 
@@ -52,7 +80,7 @@
     </style>
   </head>
   <body>
-    <div class="slash-wrapper">
+    <div class="wrapper">
       <div class="slash slash1"></div>
       <div class="slash slash1"></div>
       <div class="slash slash1"></div>
@@ -75,7 +103,27 @@
       <div class="slash slash1"></div>
     </div>
 
-    <div class="slash-wrapper">
+    <div class="wrapper">
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+      <div class="fixed-bar"></div>
+    </div>
+
+    <div class="wrapper">
       <div class="slash slash2"></div>
       <div class="slash slash2"></div>
       <div class="slash slash2"></div>
