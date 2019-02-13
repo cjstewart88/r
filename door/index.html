@@ -97,11 +97,10 @@
         height: calc(100% - 20px);
         margin: 20px;
         background: url(brain.jpg);
-        background-repeat: no-repeat;
         background-position: center;
-        background-size: cover;
+        background-size: 400px;
         background-blend-mode: exclusion;
-        transition: all 3s linear;
+        transition: all 0.5s linear;
       }
 
       .door {
@@ -163,7 +162,7 @@
           }
 
           document.getElementsByClassName('inside')[0].setAttribute(
-            'style', `background-color: ${colors[colorIndex]}`
+            'style', `background-color: ${colors[colorIndex]}; background-size: ${Math.random(10)*100}%`
           );
         }, 2000);
 
