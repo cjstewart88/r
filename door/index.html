@@ -1,0 +1,196 @@
+<html>
+  <head>
+    <title>door - 02/12/2019</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      .door-wrapper {
+        position: absolute;
+        bottom: 0;
+        left: calc(45% - 100px);
+        width: 400px;
+        height: 600px;
+        overflow: hidden;
+      }
+
+      .left-frame {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 20px;
+        height: 100%;
+        border: solid 2px #000;
+        border-bottom: none;
+        background: #fff;
+        z-index: 1;
+      }
+
+      .right-frame {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 20px;
+        height: 100%;
+        border: solid 2px #000;
+        border-bottom: none;
+        background: #fff;
+        z-index: 1;
+      }
+
+      .left-frame::before, .right-frame::before {
+        content: '';
+        display: block;
+        width: 18px;
+        height: 18px;
+        position: absolute;
+        z-index: 2;
+        background-color: #fff;
+      }
+
+      .left-frame::before {
+        left: 0;
+      }
+
+      .right-frame::before {
+        right: 0;
+      }
+
+      .top-frame {
+        position: absolute;
+        top: 0;
+        height: 20px;
+        width: 100%;
+        border: solid 2px #000;
+      }
+
+      .top-frame::before, .top-frame::after {
+        content: '';
+        display: block;
+        width: 2px;
+        height: 24px;
+        position: absolute;
+        z-index: 2;
+        background-color: #000;
+      }
+
+      .top-frame::before {
+        left: 8px;
+        transform: rotate(134deg);
+        top: -3px;
+      }
+      
+      .top-frame::after {
+        right: 8px;
+        transform: rotate(-134deg);
+        top: -3px;
+      }
+
+      .inside {
+        position: absolute;
+        width: calc(100% - 40px);
+        height: calc(100% - 20px);
+        margin: 20px;
+        background: url(brain.jpg);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        background-blend-mode: exclusion;
+        transition: all 3s linear;
+      }
+
+      .door {
+        position: absolute;
+        height: 100%;
+        margin: 20px 0;
+        background-color: #fff;
+        transition: all 1s linear;
+      }
+
+      .right-door {
+        left: 50%;
+        right: 0;
+        border-left: solid 2px #000;
+      }
+
+      .right-door.open {
+        left: 100%;
+      }
+
+      .left-door {
+        left: 0;
+        right: 49%;
+        border-right: solid 2px #000;
+      }
+
+      .left-door.open {
+        right: 100%;
+      }
+
+      .button {
+        position: absolute;
+        left: calc(45% - 150px);
+        bottom: 200px;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        border: solid 1px #c52e2e;
+        background-color: #dc5757;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s linear;
+        cursor: pointer;
+      }
+
+      .button:hover {
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
+        background-color: #f16e6e;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function(event) {
+        const colors = ['red', 'green', 'blue'];
+        let colorIndex = 0;
+        setInterval(() => {
+          if (colorIndex === 2) {
+            colorIndex = 0;
+          } else {
+            colorIndex += 1
+          }
+
+          document.getElementsByClassName('inside')[0].setAttribute(
+            'style', `background-color: ${colors[colorIndex]}`
+          );
+        }, 2000);
+
+
+        const leftDoor = document.getElementsByClassName('left-door')[0];
+        const rightDoor = document.getElementsByClassName('right-door')[0];
+        document.getElementsByClassName('button')[0].addEventListener('click', () => {
+          if (leftDoor.classList.value.indexOf('open') == -1) {
+            leftDoor.classList += ' open';
+            rightDoor.classList += ' open';
+          } else {
+            leftDoor.classList = 'door left-door';
+            rightDoor.classList = 'door right-door';
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="button"></div>
+    <div class="door-wrapper">
+      <div class="left-frame"></div>
+      <div class="right-frame"></div>
+      <div class="top-frame"></div>
+      <div class="inside"></div>
+      <div class="door left-door"></div>
+      <div class="door right-door"></div>
+    </div>
+  </body>
+</html>
