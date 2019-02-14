@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>wobble - 02/13/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      let direction;
+      let minY;
+      let maxY;
+      let currentX;
+      
+      window.addEventListener('resize', resizeCanvas, false);
+
+      function setup() {
+        direction = 'down';
+        minY = window.innerHeight/2 - 50;
+        maxY = window.innerHeight/2 + 50;
+        currentX = window.innerHeight/2 - 50;
+      }
+
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        setup();
+      }
+
+      function draw() {
+        if (direction === 'down') {
+          currentX += 2;
+          
+          if (currentX === maxY) {
+            direction = 'up';
+          } 
+        } else {
+          currentX -= 2;
+
+          if (currentX === minY) {
+            direction = 'down';
+          }
+        }
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        
+        const ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        let multiplier;
+        for (i = 0; i < 140; i++) {
+          if (i%2 === 0) {
+            multiplier = 125;
+          } else {
+            multiplier = -125;
+          }
+          ctx.beginPath();
+          ctx.strokeStyle = '#00c18c';
+          ctx.lineWidth = '15';
+          ctx.moveTo(0, (window.innerHeight/2 + (i * multiplier)));
+          ctx.bezierCurveTo(
+            window.innerWidth/2 -  50, currentX, 
+            window.innerWidth/2 +  50, currentX, 
+            window.innerWidth, (window.innerHeight/2 + (i * multiplier))
+          );
+          ctx.stroke();
+        }
+
+        window.requestAnimationFrame(draw);
+      }
+
+      setup();
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
