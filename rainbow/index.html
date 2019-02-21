@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <title>rainbow - 02/20/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      window.addEventListener('resize', resizeCanvas, false);
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      }
+
+      window.addEventListener('touchstart', () => playPause());
+      window.addEventListener('click', () => playPause());
+
+      let play = true;
+      function playPause() {
+        play = !play;
+        if (play) {
+          draw();
+        }
+      }
+
+      let startMouseX = 100;
+      let startMouseY = 300;
+      let endMouseX = 100;
+      let endMouseY = 300;
+      window.addEventListener('mousemove', (e) => {
+        startMouseX = e.offsetX;
+        startMouseY = e.offsetY;
+        endMouseX = window.innerWidth - e.offsetX;
+        endMouseY = window.innerHeight - e.offsetY;
+      });
+
+      window.addEventListener('touchmove', (e) => {
+        startMouseX = e.changedTouches[0].pageX;
+        startMouseY = e.changedTouches[0].pageY;
+        endMouseX = window.innerWidth - e.changedTouches[0].pageX;
+        endMouseY = window.innerHeight - e.changedTouches[0].pageY;
+      })
+
+      let reverse = false;
+      function draw() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        
+        const ctx = c.getContext("2d");
+
+        ctx.beginPath();
+        var gradient = ctx.createLinearGradient(0,0, window.innerWidth,0);
+        gradient.addColorStop(0, 'rgba(255, 0, 0, 0.000)');
+        gradient.addColorStop(0.200, 'rgba(255, 0, 0, 1.000)');
+        gradient.addColorStop(0.320, 'rgba(255, 252, 0, 1.000)');
+        gradient.addColorStop(0.440, 'rgba(1, 180, 57, 1.000)');
+        gradient.addColorStop(0.560, 'rgba(0, 234, 255, 1.000)');
+        gradient.addColorStop(0.680, 'rgba(0, 3, 144, 1.000)');
+        gradient.addColorStop(0.800, 'rgba(255, 0, 198, 1.000)');
+        gradient.addColorStop(1, 'rgba(255, 0, 198, 0.000)');
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = '20';
+        ctx.moveTo(startMouseX, startMouseY);
+        ctx.bezierCurveTo(
+          window.innerWidth / 2, 800, 
+          window.innerWidth / 2, 150, 
+          endMouseX, endMouseY
+        );
+        ctx.stroke();
+
+        ctx.beginPath();
+        var gradient = ctx.createLinearGradient(0,0, window.innerWidth,0);
+        gradient.addColorStop(0, 'rgba(255, 0, 198, 0.000)');
+        gradient.addColorStop(0.200, 'rgba(255, 0, 198, 1.000)');
+        gradient.addColorStop(0.320, 'rgba(0, 3, 144, 1.000)');
+        gradient.addColorStop(0.440, 'rgba(0, 234, 255, 1.000)');
+        gradient.addColorStop(0.560, 'rgba(1, 180, 57, 1.000)');
+        gradient.addColorStop(0.680, 'rgba(255, 252, 0, 1.000)');
+        gradient.addColorStop(0.800, 'rgba(255, 0, 0, 1.000)');
+        gradient.addColorStop(1, 'rgba(255, 0, 0, 0.000)');
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = '5';
+        ctx.moveTo(startMouseX, startMouseY);
+        ctx.bezierCurveTo(
+          window.innerWidth / 2, 800, 
+          window.innerWidth / 2, 150, 
+          endMouseX, endMouseY
+        );
+        ctx.stroke();
+
+        if (play) {
+          window.requestAnimationFrame(draw);
+        }
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
