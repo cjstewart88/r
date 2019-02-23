@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <title>clouds - 02/22/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      window.addEventListener('resize', resizeCanvas, false);
+
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      }
+
+
+      const clouds = {
+        0: {
+          x: Math.floor((Math.random()*(window.innerWidth-300))) + .5,
+          y: [100.5, 110.5, 120.5, 130.5, 140.5, 150.5],
+          direction: 'right',
+          speed: 1
+        },
+        1: {
+          x: Math.floor((Math.random()*(window.innerWidth-300))) + .5,
+          y: [200.5, 210.5, 220.5, 230.5, 240.5, 250.5],
+          direction: 'right',
+          speed: 1.3
+        },
+        2: {
+          x: Math.floor((Math.random()*(window.innerWidth-300))) + .5,
+          y: [300.5, 310.5, 320.5, 330.5, 340.5, 350.5],
+          direction: 'right',
+          speed: 1
+        },
+        3: {
+          x: Math.floor((Math.random()*(window.innerWidth-300))) + .5,
+          y: [400.5, 410.5, 420.5, 430.5, 440.5, 450.5],
+          direction: 'right',
+          speed: 1
+        },
+        4: {
+          x: Math.floor((Math.random()*(window.innerWidth-300))) + .5,
+          y: [500.5, 510.5, 520.5, 530.5, 540.5, 550.5],
+          direction: 'right',
+          speed: 1.3
+        }
+      };
+
+      function draw() {
+        const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+
+        const ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        for (let i = 0; i <= 4; i++) {
+          ctx.save();
+          ctx.translate(clouds[i].x, 0);
+
+          ctx.moveTo(50.5, clouds[i].y[0]);
+          ctx.lineTo(150.5, clouds[i].y[0]);
+          ctx.stroke();
+
+          ctx.moveTo(20.5, clouds[i].y[1]);
+          ctx.lineTo(210.5, clouds[i].y[1]);
+          ctx.stroke();
+
+          ctx.moveTo(10.5, clouds[i].y[2]);
+          ctx.lineTo(160.5, clouds[i].y[2]);
+          ctx.stroke();
+
+          ctx.moveTo(170.5, clouds[i].y[2]);
+          ctx.lineTo(250.5, clouds[i].y[2]);
+          ctx.stroke();
+
+          ctx.moveTo(0.5, clouds[i].y[3]);
+          ctx.lineTo(230.5, clouds[i].y[3]);
+          ctx.stroke();
+
+          ctx.moveTo(10.5, clouds[i].y[4]);
+          ctx.lineTo(70.5, clouds[i].y[4]);
+          ctx.stroke();
+
+          ctx.moveTo(100.5, clouds[i].y[4]);
+          ctx.lineTo(220.5, clouds[i].y[4]);
+          ctx.stroke();
+
+          ctx.moveTo(50.5, clouds[i].y[5]);
+          ctx.lineTo(210.5, clouds[i].y[5]);
+          ctx.stroke();
+
+          ctx.restore();
+
+          if (clouds[i].x + 1 >= window.innerWidth - 280) {
+            clouds[i].direction = 'left';
+          } else if (clouds[i].x <= 0) {
+            clouds[i].direction = 'right';
+          }
+
+          if (clouds[i].direction == 'right') {
+            clouds[i].x += clouds[i].speed;
+          } else {
+            clouds[i].x = -280;
+          }
+        }
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
