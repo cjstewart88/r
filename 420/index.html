@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>420 - 04/20/2019</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .square {
+        display: inline-block;
+        transition: all 0.95s linear;
+      }
+    </style>
+  </head>
+  <body></body>
+  <script>
+    const colorPalletes = [
+      ['#F0EEC8','#00B7A8','#096386','#0C084C'],
+      ['#FDD043','#E2598B','#AA5C9F','#7F4782'],
+      ['#FF8364','#FFB677','#FFD98E','#616F39'],
+      ['#F0EEC8','#00B7A8','#096386','#0C084C'],
+      ['#FD5F00','#05004E','#76B39D','#F9F8EB'],
+      ['#E4C666','#247E6C','#A9C6DE','#EAF5FF'],
+      ['#FF8260','#FF4057','#900048','#240041'],
+      ['#4C8492','#F09C67','#F7E0A3','#FFFDE8'],
+      ['#5E0A0A','#5CA0D3','#C8E6F5','#F2EEE0'],
+      ['#9764C7','#099A97','#15CDA8','#F1E4E4'],
+      ['#FF5959','#FACF5A','#49BEB7','#085F63'],
+      ['#F18C8E','#F0B7A4','#F1D1B5','#305F72'],
+      ['#4E4E4E','#DBCC8F','#F6E0B3','#FFF5EB'],
+      ['#F34573','#2A6171','#75CAC3','#D7F7F5'],
+      ['#8B5D5D','#AA7070','#C19191','#F0E9E9'],
+      ['#142D4C','#385170','#9FD3C7','#ECECEC'],
+      ['#6D3939','#5CA0D3','#C8E6F5','#F2EEE0'],
+      ['#A374D5','#BE97DC','#EEC1EA','#FFFBBE'],
+      ['#621E81','#257AA6','#00BDAA','#EAEAEA'],
+      ['#EAEAEA','#00D1CD','#F30067','#444444'],
+      ['#DB66E4','#F77FEE','#ACEACF','#C5FAD9'],
+      ['#556FB5','#E4508F','#AEDDCD','#FFFEEC'],
+      ['#FFC3E7','#01676B','#21AA93','#00028C'],
+      ['#FFFFB5','#7BC67B','#6B8C42','#5A3921'],
+      ['#34314F','#692DB7','#8158FC','#FFC15E'],
+      ['#FFD6C2','#FF8B6A','#DF0054','#480032'],
+      ['#FFFDAF','#00FAAC','#FF3796','#302387'],
+      ['#DEE0D9','#6B76FF','#FFE5AE','#FF62A5'],
+      ['#3426A4','#8D309B','#C54FA7','#F5C7F7'],
+      ['#207DFF','#00BD56','#85EF47','#F9FD50'],
+      ['#DAE1E7','#DD6B4D','#1C4B82','#183661'],
+      ['#F17E7E','#EFCA8C','#DFE38E','#7FE7CC'],
+      ['#113F67','#38598B','#A2A8D3','#E7EAF6'],
+      ['#E16262','#FABC60','#3A9679','#11144C'],
+      ['#000000','#226089','#4592AF','#E3C4A8'],
+      ['#048998','#3BB4C1','#E9E4E6','#F6F5F5'],
+      ['#621295','#C40B13','#F69314','#DADDDF'],
+      ['#866EC7','#BF9FEE','#F2C0FF','#FFD7E8'],
+      ['#BD245F','#E44985','#F3DCAD','#F8B739'],
+      ['#FFF8CD','#FFA0D2','#FF78AE','#F54291'],
+      ['#113F67','#226597','#87C0CD','#F3F9FB']
+    ];
+    function setColorPallete() {
+      return Math.floor(Math.random() * colorPalletes.length);
+    }
+    let activeColorPallete = setColorPallete();
+
+    const squares = [];
+    function draw() {
+      document.body.innerHTML = '';
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const squaresPerRow = 12;
+      const widthOfSquare = width / squaresPerRow;
+      const heightOfSquare = width / squaresPerRow;
+      const numberOfRows = height / heightOfSquare;
+      const numberOfTotalSquares = numberOfRows * squaresPerRow;
+
+      for (let i = 0; i < numberOfTotalSquares; i++) {
+        let element = document.createElement('div')
+        element.classList = 'square';
+        element.style.width = widthOfSquare;
+        element.style.height = heightOfSquare;
+        document.body.append(element);
+        squares.push(element);
+      }
+    }
+
+    function changeSquareColor() {
+      let randomSquare = squares[Math.floor(Math.random() * squares.length)];
+      randomSquare.style.backgroundColor = colorPalletes[activeColorPallete][Math.floor(Math.random() * 4)];
+    }
+
+    window.addEventListener('resize', draw);
+    draw();
+
+    setInterval(changeSquareColor, 25);
+    setInterval(() => activeColorPallete = setColorPallete(), 8000);
+  </script>
+</html>
