@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title>combo - 04/28/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      window.addEventListener('resize', resizeCanvas, false);
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      }
+
+      
+      let size = 0;
+      let size2 = 0;
+      window.addEventListener('mousemove', (e) => {
+        size = e.clientX;
+        size2 = e.clientY;
+      });
+
+      let rotate = 100;
+      let reverse = false;
+      let reverse2 = false;
+      let strokeSize = 5;
+      function draw() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        
+        const ctx = c.getContext("2d");
+
+        ctx.beginPath();
+        ctx.fillStyle = 'black'
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        for (let i = 0; i <= window.innerWidth; i++) {
+          ctx.beginPath();
+          var gradient = ctx.createLinearGradient(window.innerHeight, rotate, 0, 0);
+          gradient.addColorStop(0.000, '#11144c');
+          gradient.addColorStop(0.420, '#3a9679');
+          gradient.addColorStop(0.740, '#fabc60');
+          gradient.addColorStop(1.000, '#e16262');
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(window.innerWidth/2, window.innerHeight/2, i*-40, i*30);
+        }
+        
+        for (let i = 0; i <= size/70; i++) {
+          ctx.beginPath();
+          var gradient = ctx.createLinearGradient(window.innerHeight, rotate, 0, 0);
+          gradient.addColorStop(0.000, '#11144c');
+          gradient.addColorStop(0.420, '#3a9679');
+          gradient.addColorStop(0.740, '#fabc60');
+          gradient.addColorStop(1.000, '#e16262');
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(window.innerWidth/2, window.innerHeight/2, i*-40, i*-30);
+        }
+
+        
+        for (let i = 0; i <= window.innerWidth; i++) {
+          ctx.beginPath();
+          var gradient = ctx.createLinearGradient(window.innerHeight, rotate, 0, 0);
+          gradient.addColorStop(0.000, '#11144c');
+          gradient.addColorStop(0.420, '#3a9679');
+          gradient.addColorStop(0.740, '#fabc60');
+          gradient.addColorStop(1.000, '#e16262');
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(window.innerWidth/2, window.innerHeight/2, i*40, i*-30);
+        }
+
+        
+        for (let i = 0; i <= size/70; i++) {
+          ctx.beginPath();
+          var gradient = ctx.createLinearGradient(window.innerHeight, rotate, 0, 0);
+          gradient.addColorStop(0.000, '#11144c');
+          gradient.addColorStop(0.420, '#3a9679');
+          gradient.addColorStop(0.740, '#fabc60');
+          gradient.addColorStop(1.000, '#e16262');
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(window.innerWidth/2, window.innerHeight/2, i*40, i*30);
+        }
+
+        if (rotate >= window.innerWidth*4) {
+          reverse = true;
+        } else if (rotate <= window.innerWidth*-4){
+          reverse = false;
+        }
+
+        if (reverse) {
+          rotate -= 50;
+        } else {
+          rotate += 50;
+        }
+
+        if (strokeSize > window.innerWidth) {
+          reverse2 = true;
+        } else if (strokeSize < 0) {
+          reverse2 = false;
+        }
+
+        if (reverse2) {
+          strokeSize -= 5;
+        } else {
+          strokeSize += 5;
+        }
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
