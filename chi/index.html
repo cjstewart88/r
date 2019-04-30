@@ -1,0 +1,162 @@
+<html>
+  <head>
+    <title>chi - 04/29/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      canvas {
+        display: block;
+        margin-top: calc(50% - 420px);
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      var c = document.createElement('canvas');
+      c.id = "canvas";
+      document.body.appendChild(c);
+      c.width = 1200;
+      c.height = 500;
+
+      c.addEventListener('mouseenter', () => cancelAnimationFrame(animationFrame));
+      c.addEventListener('mouseout', () => window.requestAnimationFrame(draw));
+      
+      let version = 1;
+      let animationFrame;
+      function draw() {
+        const c = document.getElementById("canvas");
+        c.width = 1200;
+        c.height = 500;
+        const ctx = c.getContext("2d");
+
+        if (version == 1) {
+          version = 2;
+          ctx.drawImage(image, 0, 0);
+        } else if (version == 2) {
+          ctx.beginPath();
+          ctx.moveTo(1, 1)
+          ctx.strokeStyle = 'black';
+          ctx.lineTo(87, 1);
+          ctx.lineTo(84, 171);
+          ctx.lineTo(139, 197);                
+          ctx.lineTo(141, 180);
+          ctx.lineTo(135, 175);
+          ctx.lineTo(139, 172);
+          ctx.lineTo(139, 165);
+          ctx.lineTo(189, 156);
+          ctx.lineTo(189, 145);
+          ctx.lineTo(198, 145);
+          ctx.lineTo(198, 149);
+          ctx.lineTo(201, 149);
+          ctx.lineTo(202, 144);
+          ctx.lineTo(204, 138);
+          ctx.lineTo(207, 140);
+          ctx.lineTo(210, 119);
+          ctx.lineTo(212, 116);
+          ctx.lineTo(215, 123);
+          ctx.lineTo(217, 122);
+          ctx.lineTo(220, 97);
+          ctx.lineTo(224, 102);
+          ctx.lineTo(231, 97);
+          ctx.lineTo(231, 67);
+          ctx.lineTo(230, 58);
+          ctx.lineTo(234, 46);
+          ctx.lineTo(235, 24);
+          ctx.lineTo(246, 1);
+          ctx.lineTo(290, 1);
+          ctx.lineTo(294, 12);
+          ctx.lineTo(297, 6);
+          ctx.lineTo(300, 16);
+          ctx.lineTo(299, 47);
+          ctx.lineTo(305, 49);
+          ctx.lineTo(304, 151);
+          ctx.lineTo(308, 164);
+          ctx.lineTo(310, 171);
+          ctx.lineTo(318, 176);
+          ctx.lineTo(320, 173);
+          ctx.lineTo(324, 190);
+          ctx.lineTo(324, 217);
+          ctx.lineTo(330, 219);
+          ctx.lineTo(329, 334);
+          ctx.lineTo(336, 333);
+          ctx.lineTo(337, 310);
+          ctx.lineTo(344, 310);
+          ctx.lineTo(347, 297);
+          ctx.lineTo(354, 298);
+          ctx.lineTo(354, 294);
+          ctx.lineTo(368, 293);
+          ctx.lineTo(369, 297);
+          ctx.lineTo(414, 313);
+          ctx.lineTo(414, 321);
+          ctx.lineTo(423, 324);
+          ctx.lineTo(423, 340);
+          ctx.lineTo(426, 340);
+          ctx.lineTo(426, 318);
+          ctx.lineTo(438, 316);
+          ctx.lineTo(439, 117);
+          ctx.lineTo(588, 91);
+          ctx.lineTo(626, 129);
+          ctx.lineTo(628, 206);
+          ctx.lineTo(653, 225);
+          ctx.lineTo(653, 236);
+          ctx.lineTo(657, 240);
+          ctx.lineTo(661, 330);
+          ctx.lineTo(666, 332);
+          ctx.lineTo(666, 393);
+          ctx.lineTo(668, 407);
+          ctx.lineTo(676, 409);
+          ctx.lineTo(674, 263);
+          ctx.lineTo(736, 257);
+          ctx.lineTo(742, 262);
+          ctx.lineTo(742, 265);
+          ctx.lineTo(755, 265);
+          ctx.lineTo(760, 268);
+          ctx.lineTo(759, 273);
+          ctx.lineTo(767, 276);
+          ctx.lineTo(768, 330);
+          ctx.lineTo(817, 324);
+          ctx.lineTo(816, 315);
+          ctx.lineTo(822, 313);
+          ctx.lineTo(828, 312);
+          ctx.lineTo(833, 312);
+          ctx.lineTo(840, 313);
+          ctx.lineTo(845, 314);
+          ctx.lineTo(846, 323);
+          ctx.lineTo(848, 324);
+          ctx.lineTo(848, 329);
+          ctx.lineTo(851, 330);
+          ctx.lineTo(861, 335);
+          ctx.lineTo(861, 340);
+          ctx.lineTo(868, 344);
+          ctx.lineTo(867, 349);
+          ctx.lineTo(879, 351);
+          ctx.lineTo(881, 355);
+          ctx.lineTo(886, 459);
+          ctx.lineTo(895, 460);
+          ctx.lineTo(897, 477);
+          ctx.lineTo(1009, 475);
+          ctx.lineTo(1005, 373);
+          ctx.lineTo(996, 366);
+          ctx.lineTo(1003, 366);
+          ctx.lineTo(999, 28);
+          ctx.lineTo(993, 22);
+          ctx.lineTo(996, 19);
+          ctx.lineTo(996, 1);
+          ctx.lineTo(1197, 1);
+          ctx.stroke();
+          version = 1;
+        }
+
+        animationFrame = window.requestAnimationFrame(draw);
+      }
+      
+      var image = new Image();
+      image.src = 'chi.jpg';
+      image.onload = () => draw() 
+    </script>
+  </body>
+</html>
