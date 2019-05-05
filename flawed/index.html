@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>flawed - 05/04/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      window.addEventListener('resize', resizeCanvas, false);
+
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        draw();
+      }
+
+      let redraw = 0;
+      window.addEventListener('mousemove', () => {
+        if (redraw === 10) {
+          redraw = 0;
+          draw();
+        } else {
+          redraw += 1;
+        }
+      });
+
+      function draw() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = '#232222';
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        for (let i = 0; i < window.innerWidth; i+=20) {
+          ctx.beginPath();
+          ctx.arc(
+            i, 
+            window.innerHeight - (window.innerHeight / (i / (Math.floor(Math.random() * 190) + 185))), 
+            Math.floor(Math.random() * 5) + 1, 
+            0, 
+            2 * Math.PI
+          );
+          ctx.fillStyle = `rgba(247, 244, 230, ${i/window.innerWidth})`;
+          ctx.fill();
+        }
+      }
+
+      draw();
+    </script>
+  </body>
+</html>
