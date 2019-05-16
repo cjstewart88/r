@@ -1,0 +1,134 @@
+<html>
+  <head>
+    <title>trip - 05/15/2019</title>
+    <style>
+      body {
+        margin: 0;
+        background: rgba(255,11,85,0.9);
+      }
+
+      @-moz-keyframes spin {
+          from { -moz-transform: rotate(0deg); }
+          to { -moz-transform: rotate(360deg); }
+      }
+      @-webkit-keyframes spin {
+          from { -webkit-transform: rotate(0deg); }
+          to { -webkit-transform: rotate(360deg); }
+      }
+      @keyframes spin {
+          from {transform:rotate(0deg);}
+          to {transform:rotate(360deg);}
+      }
+
+      canvas {
+        border-radius: 50%;
+        -webkit-animation: spin 4s infinite linear;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      window.addEventListener('resize', resizeCanvas, false);
+
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        draw();
+      }
+
+      let numberOfThings = 50;
+      let maxNumberOfThings = 65;
+      let minNumberOfThings = 50;
+      let reverse = false;
+      let widthBetween = 15;
+      let color = 'rgba(0,0,0,0.3)';
+      function draw() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        
+        const ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        ctx.fillStyle = 'rgba(255,11,85,0.0)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 1; i < numberOfThings; i++) {
+          ctx.beginPath();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = '2';
+          ctx.moveTo(0, (i*widthBetween));
+          ctx.bezierCurveTo(
+            100+i*widthBetween, (140+i*widthBetween), 
+            100+i*widthBetween, (140+i*widthBetween), 
+            (i*widthBetween), 0
+          );
+          ctx.stroke();
+        }
+
+        for (let i = 1; i < numberOfThings; i++) {
+          ctx.beginPath();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = '2';
+          ctx.moveTo(window.innerWidth, (i*widthBetween));
+          ctx.bezierCurveTo(
+            window.innerWidth - (100+i*widthBetween), (140+i*widthBetween), 
+            window.innerWidth - (100+i*widthBetween), (140+i*widthBetween), 
+            window.innerWidth - (i*widthBetween), 0
+          );
+          ctx.stroke();
+        }
+
+        for (let i = 1; i < numberOfThings; i++) {
+          ctx.beginPath();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = '2';
+          ctx.moveTo(window.innerWidth, window.innerHeight - (i*widthBetween));
+          ctx.bezierCurveTo(
+            window.innerWidth - (100+i*widthBetween), window.innerHeight - (140+i*widthBetween), 
+            window.innerWidth - (100+i*widthBetween), window.innerHeight - (140+i*widthBetween), 
+            window.innerWidth - (i*widthBetween), window.innerHeight
+          );
+          ctx.stroke();
+        }
+
+        for (let i = 1; i < numberOfThings; i++) {
+          ctx.beginPath();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = '2';
+          ctx.moveTo(0, window.innerHeight - (i*widthBetween));
+          ctx.bezierCurveTo(
+            100+i*widthBetween, window.innerHeight-(140+i*widthBetween), 
+            100+i*widthBetween, window.innerHeight-(140+i*widthBetween), 
+            (i*widthBetween), window.innerHeight
+          );
+          ctx.stroke();
+        }
+
+        if (reverse) {
+          if (numberOfThings == minNumberOfThings) {
+            reverse = false;
+            if (maxNumberOfThings == 65) {
+              maxNumberOfThings = 55;
+            } else {
+              maxNumberOfThings = 65;
+            }
+          } else {
+            numberOfThings -= 1;
+          }
+        }
+
+        if (!reverse) {
+          if (numberOfThings == maxNumberOfThings) {
+            reverse = true;
+          } else {
+            numberOfThings += 1;
+          }
+        }
+      }
+
+      setInterval(draw, 100)
+    </script>
+  </body>
+</html>
