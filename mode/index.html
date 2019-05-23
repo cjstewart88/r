@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>mode - 04/22/2019</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      video {
+        height: 100% !important;
+      }
+
+      canvas {
+        position: fixed;
+        top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <video id="video" autoplay>
+      <source src="video.mp4" type="video/mp4">
+    </video>
+    <canvas id="canvas"></canvas>
+    <script>
+      var vid = document.getElementById("video");
+      vid.volume = 0.02;
+
+      let thingsToDraw = [];
+      window.addEventListener('mousemove', (e) => {
+        let x = e.offsetX;
+        let y = e.offsetY;
+        thingsToDraw.push([x,y]);
+      });
+
+      setInterval(() => {
+        thingsToDraw.shift()
+      }, 40)
+
+      function draw() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        
+        const ctx = c.getContext("2d");
+
+        thingsToDraw.forEach((thing) => {
+          ctx.beginPath();
+          var gradient = ctx.createLinearGradient(window.innerHeight, 0, 0, 0);
+          gradient.addColorStop(0, `rgba(255, 0, 0, 0.5)`);
+          gradient.addColorStop(0.200, `rgba(255, 0, 0, 0.5)`);
+          gradient.addColorStop(0.320, `rgba(255, 252, 0, 0.5)`);
+          gradient.addColorStop(0.440, `rgba(1, 180, 57, 0.5)`);
+          gradient.addColorStop(0.560, `rgba(0, 234, 255, 0.5)`);
+          gradient.addColorStop(0.680, `rgba(0, 3, 144, 0.5)`);
+          gradient.addColorStop(0.800, `rgba(255, 0, 198, 0.5)`);
+          gradient.addColorStop(1, `rgba(255, 0, 198, 0.5)`);
+          ctx.fillStyle = gradient;
+          ctx.fillRect(thing[0], thing[1], 10, 10);
+        });
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
