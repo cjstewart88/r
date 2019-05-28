@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>lines - 05/27/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      let spaceBetween = 50;
+      let numberOfLines = calcNumberOfLines();
+
+      function calcNumberOfLines() {
+        return (window.innerHeight / spaceBetween) * 2;
+      }
+
+      window.addEventListener('resize', resizeCanvas, false);
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        numberOfLines = calcNumberOfLines();
+        draw();
+      }
+
+      function draw() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        
+        const ctx = c.getContext("2d");
+
+        ctx.beginPath();
+        for (let i = 0; i < numberOfLines; i ++) {
+          ctx.moveTo(100 + (i*spaceBetween), -10);
+          ctx.lineTo(-10, 100 + (i*spaceBetween));
+          ctx.lineWidth = 5;
+          ctx.stroke();
+        }
+
+        for (let i = 0; i < numberOfLines; i ++) {
+          ctx.moveTo(100 + (i*spaceBetween), 0);
+          ctx.lineTo(100+ (i*spaceBetween), window.innerHeight);
+          ctx.lineWidth = 5;
+          ctx.stroke();
+        }
+        ctx.closePath();
+      }
+
+      draw();
+
+
+    </script>
+  </body>
+</html>
