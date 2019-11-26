@@ -23,25 +23,6 @@
         generateMovingCircles();
       }
 
-      let currentMouseDirection = 'right';
-      let previousMouseX = 5000;
-      window.onmousemove = function(e) {
-        if (currentMouseDirection == 'right') {
-          if (e.pageX < previousMouseX) {
-            currentMouseDirection = 'left';
-          } else {
-            previousMouseX = e.pageX;
-          }
-        }
-        if (currentMouseDirection == 'left') {
-          if (e.pageX > previousMouseX) {
-            currentMouseDirection = 'right';
-          } else {
-            previousMouseX = e.pageX;
-          }
-        }
-      }
-
       let circles = [];
 
       function generateLeftCircles() {
