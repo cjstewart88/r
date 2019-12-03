@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <title>funky - 12/02/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      span {
+        position: absolute;
+        top: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        font-size: calc(100vh / 1.5);
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <span class="emoji"></span>
+    <script>
+      window.addEventListener('resize', resizeCanvas, false);
+
+      let centerX = 0;
+      let centerY = 0;
+
+      let trail = [[]];
+
+      const emojis = ['😀','😁','😂','🤣','😃','😄','😅','😆','😉','😊','😋','😎','😍','😘','🥰','😗','😙','😚','☺️','🙂','🤗','🤩','🤔','🤨','😐','😑','😶','🙄','😏','😣','😥','😮','🤐','😯','😪','😫','😴','😌','😛','😜','😝','🤤','😒','😓','😔','😕','🙃','🤑','😲','☹️','🙁','😖','😞','😟','😤','😢','😭','😦','😧','😨','😩','🤯','😬','😰','😱','🥵','🥶','😳','🤪','😵','😡','😠','🤬','😷','🤒','🤕','🤢','🤮','🤧','😇','🤠','🤡','🥳','🥴','🥺','🤥','🤫','🤭','🧐','🤓','😈','👿','👹','👺','💀','👻','👽','🤖','💩','😺','😸','😹','😻','😼','😽','🙀','😿','😾'];
+      let currentEmoji = emojis[Math.floor(Math.random() * (108))];
+
+      window.onmousemove = function(e) {
+        centerX = e.clientX;
+        centerY = e.clientY;
+        currentEmoji = emojis[Math.floor(Math.random() * (108))];
+        document.getElementsByClassName('emoji')[0].innerHTML = currentEmoji;
+        trail.push(
+          [centerX, centerY - 100],
+          [centerX + 100, centerY],
+          [centerX, centerY + 100],
+          [centerX - 100, centerY]
+        );
+      }
+
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      }
+
+      function draw() {
+        const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+
+        const ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        for (let i = 0; i < trail.length; i++) {
+          ctx.beginPath();
+          ctx.arc(trail[i][0], trail[i][1], 5, 0, 2 * Math.PI);
+          ctx.fillStyle = 'black';
+          ctx.fill();
+          ctx.closePath();
+        }
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
