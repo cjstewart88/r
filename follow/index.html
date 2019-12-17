@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>follow - 12/016/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      let centerX = 0;
+      let centerY = 0;
+
+      let trail = [[]];
+      let mousedown = false;
+      window.onmousedown = function() {
+        mousedown = true;
+      }
+
+      window.onmouseup = function() {
+        mousedown = false;
+      }
+
+      window.onmousemove = function(e) {
+        if (mousedown) {
+          centerX = e.clientX;
+          centerY = e.clientY;
+          trail.push(
+            [centerX, centerY]
+          );
+        }
+      }
+
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      }
+
+      function draw() {
+        const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+
+        const ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        for (let i = 0; i < trail.length; i++) {
+          ctx.beginPath();
+          ctx.arc(trail[i][0], trail[i][1], 1, 0, 2 * Math.PI);
+          ctx.fillStyle = 'black';
+          ctx.fill();
+          ctx.closePath();
+        }
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
