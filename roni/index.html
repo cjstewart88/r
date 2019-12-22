@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>roni - 12/21/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- eb4034 red -->
+    <!-- eb6534 orange -->
+    <canvas id="canvas"></canvas>
+    <script>
+      window.addEventListener('resize', resizeCanvas, false);
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      }
+
+      let offSet = 70;
+
+      function draw() {
+        const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+
+        const ctx = c.getContext("2d");
+        ctx.beginPath();
+        ctx.fillStyle = "#eb6534";
+        ctx.fillRect(0, 0,  window.innerWidth, window.innerHeight);
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, 0, 2 * Math.PI);
+        ctx.fillStyle = "rgba(235, 147, 52, " + (offSet < 100 ? '.' + offSet : '1') + ")";
+        ctx.fill();
+        ctx.closePath();
+
+        for (i = offSet; i < window.innerHeight; i += offSet) {
+          ctx.fillStyle = "#eb6534";
+          ctx.fillRect(0, i,  window.innerWidth, 10);
+        }
+      }
+      draw();
+
+      window.onmousemove = function(e) {
+        offSet = Math.round(e.clientY/8);
+        if (offSet <= 0) {
+          return
+        }
+        draw();
+      }
+    </script>
+  </body>
+</html>
