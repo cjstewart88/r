@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>kexp - 1/4/2020</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      window.addEventListener('resize', resizeCanvas, false);
+      window.addEventListener('mousemove',((e)=> setMouseCords(e) ));
+
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        circles = [];
+        movingCircles = [];
+        generateCircles();
+      }
+
+      let circles = [];
+
+      function generateCircles() {
+        for (w = 0; w <= window.innerWidth / 10; w++) {
+          for (i = 0; i <= window.innerHeight / 10; i++) {
+            circles.push([w * 30, i * 30, "rgba(0, 0, 0)"]);
+          }
+        }
+      }
+      generateCircles();
+
+      let changeCount = 0;
+      function changeColors() {
+        if (changeCount === 28) {
+          circles.forEach((c) => {
+            c[2] = "rgba(0, 0, 0, 0." + randomIntFromInterval(1, 9) + ")";
+          });
+          changeCount = 0;
+        } else {
+          changeCount++
+        }
+      }
+
+      function randomIntFromInterval(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      let mouseCircleX = 0;
+      let mouseCircleY = 0;
+      function setMouseCords(e) {
+        mouseCircleX = e.clientX;
+        mouseCircleY = e.clientY;
+      }
+
+      function drawMouseCircle(ctx) {
+        ctx.beginPath();
+        ctx.arc(mouseCircleX, mouseCircleY, 100, 0, 2 * Math.PI);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      function draw() {
+        const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+
+        const ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        circles.forEach((c) => {
+          ctx.beginPath();
+          ctx.arc(c[0], c[1], 5, 0, 2 * Math.PI);
+          ctx.fillStyle = c[2];
+          ctx.fill();
+          ctx.closePath();
+        });
+
+        drawMouseCircle(ctx);
+
+        changeColors();
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
