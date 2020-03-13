@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>moyo - 3/12/2020</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      window.addEventListener('resize', resizeCanvas, false);
+
+      let lines = [];
+
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+      }
+
+      let modifier = 45;
+      let direction = 'down';
+      function generateLines() {
+        lines = [];
+        for (w = 0; w <= window.innerHeight / 50; w++) {
+          segments = [];
+          
+          for (i = 0; i <= (window.innerWidth/100); i++) {
+            if (direction == 'down') {
+              modifier++;
+
+              if (modifier == 50) {
+                direction = 'up';
+              }
+            } else {
+              modifier--;
+
+              if (modifier == 45)  {
+                direction = 'down';
+              }
+            }
+            segments.push([i*100, w*50+modifier, i*100+100, w*50+modifier]);
+          }
+
+          lines.push(segments);
+        }
+      }
+
+      function randomIntFromInterval(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      counter = 30
+      function draw() {
+        if (counter == 30) {
+          generateLines();
+          counter = 0;
+        } else {
+          counter++;
+        }
+
+        const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+
+        const ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        lines.forEach((segments) => {
+          segments.forEach((s) => {
+            ctx.beginPath();
+          
+            ctx.moveTo(s[0], s[1])
+            ctx.lineTo(s[2], s[3])
+
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+            ctx.closePath();
+          });
+        });
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
