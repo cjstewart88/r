@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <title>scrap - 3/23/2020</title>
+    <style>
+      body {
+        margin: 0;
+        background-image: url(./space.PNG);
+        background-size: cover;
+        overflow: hidden;
+      }
+
+      body:active { 
+        background: none;
+      }
+
+      .leaf {
+        float: left;
+        width: 150px;
+        height: 100%;
+        margin-left: 20px;
+        background-image: url(./leaf.png);
+        background-size: 150px;
+        background-repeat: repeat-y;
+        opacity: 1;
+        transition: 1s ease-in;
+      }
+
+      .leaf:hover {
+        opacity: 0;
+        filter: invert(1);
+      }
+
+      .leaves-wrapper {
+        position: absolute;
+        margin-left: 30%;
+        margin-top: 10%;
+        width: 660px;
+        transition: 2s ease-in;
+      }
+
+      .leaves-wrapper:hover {
+        opacity: 0.1;
+        filter: invert(1);
+        width: 1300px;
+      }
+
+      .leaves-wrapper .leaves:hover {
+        width: 400px;
+        height: 400px;
+
+      }
+
+      .leaves {
+        float: left;
+        width: 200px;
+        height: 200px;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 100px;
+        background-image: url(./leaves.png); 
+        background-size: 100%;
+        background-position: center center;
+        transition: 2s ease-in;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaves-wrapper">
+      <div class="leaves"></div>
+      <div class="leaves"></div>
+      <div class="leaves"></div>
+      <div class="leaves"></div>
+      <div class="leaves"></div>
+      <div class="leaves"></div>
+    </div>
+  </body>
+</html>
