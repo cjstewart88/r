@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>olinc - 03/28/2019</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      let play = true;
+      let stopAt = window.innerHeight;
+      let currentPoint = 0;
+      let circles = [];
+
+      function randomIntFromInterval(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      function randomColor() {
+        return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      }
+
+      function generateCircles() {
+        circles = [];
+        for (let i = 0; i <= 50; i++) {
+          circles.push([
+            randomIntFromInterval(0, window.innerWidth), 
+            randomIntFromInterval(0, window.innerHeight) * -1,
+            randomColor()
+          ]);
+        }
+      }
+      generateCircles();
+
+      window.addEventListener('resize', resizeCanvas, false);
+      function resizeCanvas() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        stopAt = window.innerHeight;
+        generateCircles();
+      }
+
+      function draw() {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        
+        const ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        
+        for (let i = 0; i < circles.length; i++) {
+          ctx.beginPath();
+          ctx.arc(circles[i][0], circles[i][1], 15, 0, 2 * Math.PI);
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = circles[i][2];
+          ctx.stroke();
+          ctx.closePath();
+
+          if (circles[i][1] < stopAt) {
+            circles[i][1] += 5;
+          } else {
+            circles[i][1] = randomIntFromInterval(0, window.innerHeight) * -1;
+            circles[i][2] = randomColor();
+          }
+        }
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
