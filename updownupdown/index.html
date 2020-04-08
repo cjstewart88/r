@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>updownupdown - 04/7/2020</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      const age = prompt('How old are you?');
+      const spaceBetween = 20;
+      let trendLength = 0;
+      let trendLengthCounter = 0;
+      let trendDirection = 'up';
+      let lines;
+      let leftOrRight = 'right';
+
+      function generateLines() {
+        lines = [[0, window.innerHeight/2, 'green']];
+        const numberOfLines = (window.innerWidth / spaceBetween) * age;
+        for (let i = 0; i < numberOfLines; i++) {
+          if (trendLengthCounter == trendLength) {
+            trendDirection = trendDirection === 'up' ? 'down' : 'up';
+            trendLengthCounter = 0;
+            trendLength = randomIntFromInterval(1, 10);
+          } else {
+            trendLengthCounter += 1;
+          }
+
+          let x;
+          if (lines[lines.length-1][0] >= window.innerWidth) {
+            leftOrRight = 'left';
+            x = lines[lines.length-1][0] + spaceBetween;
+          } else if (lines[lines.length-1][0] < 0) {
+            leftOrRight = 'right';
+          }
+
+          if (leftOrRight === 'right') {
+            x = lines[lines.length-1][0] + spaceBetween;
+          } else { 
+            x = lines[lines.length-1][0] - spaceBetween;
+          }
+          let y;
+          let color;
+
+          if (trendDirection === 'up') {
+            y = randomIntFromInterval(lines[lines.length-1][1], lines[lines.length-1][1] + randomIntFromInterval(1, 100));
+            color = 'black';
+          } else {
+            y = randomIntFromInterval(lines[lines.length-1][1], lines[lines.length-1][1] - randomIntFromInterval(1, 100));
+            color = 'black';
+          }
+
+          if (y <= 200) {
+            trendDirection = trendDirection === 'up' ? 'down' : 'up';
+            trendLengthCounter = 0;
+            trendLength = randomIntFromInterval(1, 10);
+            y = 210;
+          } else if  (y >= window.innerHeight  - 200) {
+            trendDirection = trendDirection === 'up' ? 'down' : 'up';
+            trendLengthCounter = 0;
+            trendLength = randomIntFromInterval(1, 10);
+            y = window.innerHeight - 210;
+          }
+
+          lines.push([x, y, color]);
+        }
+      }
+      generateLines();
+
+      function randomIntFromInterval(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      const c = document.getElementById("canvas");
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      const ctx = c.getContext("2d");
+
+      function draw(i) {
+        if (i < lines.length-1) {
+          ctx.beginPath();
+          ctx.moveTo(lines[i][0], lines[i][1]);
+          ctx.lineTo(lines[i+1][0], lines[i+1][1]);
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = lines[i+1][2];
+          ctx.stroke();
+          ctx.closePath();
+
+          setTimeout(draw, 2, i+1)
+        }
+      }
+
+      draw(0);
+    </script>
+  </body>
+</html>
