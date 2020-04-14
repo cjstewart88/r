@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>witches - 04/13/2020</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      function randomIntFromInterval(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      window.onmousemove = (e) => draw(e.clientY);
+
+      function draw(y) {
+        const c = document.getElementById("canvas");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        const ctx = c.getContext("2d");
+
+        ctx.beginPath();
+        ctx.arc((window.innerWidth/2) - (window.innerWidth/4), (window.innerHeight/2), 50, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc((window.innerWidth/2) + (window.innerWidth/4), (window.innerHeight/2), 50, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+
+        for (let i = 0; i < 10; i++) {
+          ctx.beginPath();
+          ctx.moveTo((window.innerWidth/2) - (window.innerWidth/4), (window.innerHeight/2));
+          ctx.bezierCurveTo(
+            (window.innerWidth/2) - (window.innerWidth/6), y + (i*10), 
+            (window.innerWidth/2) + (window.innerWidth/6), y + (i*10), 
+            (window.innerWidth/2) + (window.innerWidth/4), (window.innerHeight/2)
+          );
+          ctx.stroke();
+          ctx.closePath();
+        }
+      }
+
+      draw();
+    </script>
+  </body>
+</html>
