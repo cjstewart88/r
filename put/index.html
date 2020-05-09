@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>put - 5/8/2029</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      const ctx = c.getContext("2d");
+
+      function draw(x, y, shape) {
+        ctx.fillStyle = 'black';
+        switch (shape) {
+          case 'square': ctx.fillRect(x, y, 20, 20); break;
+          case 'circle': ctx.beginPath(); ctx.arc(x, y, 10, 0, 2 * Math.PI); ctx.closePath(); ctx.fill(); break;
+        }
+      }
+
+      window.addEventListener('resize', () => {
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      }, false);
+
+      document.addEventListener("click", function(e)  {
+        draw(e.x, e.y, 'square');
+      });
+
+      window.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        draw(e.x, e.y, 'circle');
+        return false;
+      }, false);
+
+      document.body.onkeypress = (e) => {
+        switch (e.charCode) {
+          case 32: ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); break;
+        }
+      }
+    </script>
+  </body>
+</html>
