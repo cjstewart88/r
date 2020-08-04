@@ -1,0 +1,139 @@
+<html>
+  <head>
+    <title>maker - 8/3/2020</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      span {
+        position: fixed;
+        left: 5px;
+        top: 5px;
+        cursor: pointer;
+        background: peru;
+        padding: 4px 6px;
+        color: white;
+        font-size: 10px;
+      }
+
+      span:hover {
+        background: white;
+        color: peru;
+      }
+    </style>
+  </head>
+  <body oncontextmenu="return false;">
+    <span onclick="alert('left click to draw\nright click to erase\nspace to clear\nenter to save creation')">?</span>
+    <canvas id="canvas"></canvas>
+    <script>
+      let thing  = [];
+
+      const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      const ctx = c.getContext("2d");
+
+      document.body.onmousemove = (e) => { tryToDraw(e) };
+
+      let draw = false;
+      document.addEventListener("click", function()  {
+        draw = false;
+      });
+
+      let color = 'black';
+      document.addEventListener("mousedown", (e) => {
+        draw = true;
+        color = e.which === 3 ? 'white' : 'black';
+      })
+
+      function tryToDraw(e) {
+        if (draw && e.pageX <= c.width && e.pageY <= c.height) {
+          ctx.fillStyle = color;
+          ctx.fillRect(e.pageX, e.pageY, 2, 2);
+          thing.push([e.pageX, e.pageY, color]);
+        }
+      }
+
+      const base = `
+          <html>
+            <head>
+              <style>
+                body {
+                  margin: 0;
+                }
+              </style>
+            </head>
+            <body>
+              <canvas id="canvas"></canvas>
+              <script>
+                const thingToDraw = {{REPLACE_ME}};
+                
+                let index = 0;
+                let interval = null;
+
+                const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+                c.width = window.innerWidth;
+                c.height = window.innerHeight;
+                const ctx = c.getContext("2d");
+
+                window.addEventListener('resize', () => {
+                  c.width = window.innerWidth;
+                  c.height = window.innerHeight;
+                  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                  reset();
+                  draw();
+                }, false);
+
+                function reset() {
+                  index = 0; 
+                  clearInterval(interval);
+                }
+
+                function draw() {
+                  interval = setInterval(() => {
+                    if (thingToDraw.length === index) { reset(); return; }
+                    const pixel = thingToDraw[index];
+                    ctx.fillStyle = pixel[2];
+                    ctx.fillRect(pixel[0], pixel[1], 2, 2);
+                    index += 1;
+                  }, 1);
+                }
+                
+                draw();
+              <\/script>
+            </body>
+          </html>`;
+
+      function makeFile() {
+        const d = new Date();
+        const filename = new Date().getTime() + ".html";
+
+        const thingToMake = base.replace('{{REPLACE_ME}}', JSON.stringify(thing));
+
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + thingToMake);
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+      }
+
+      document.body.onkeypress = (e) => {
+        if (e.charCode === 32) {
+          thing = [];
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        }
+
+        if (e.charCode === 13) {
+          makeFile();
+        }
+      }
+    </script>
+  </body>
+</html>
