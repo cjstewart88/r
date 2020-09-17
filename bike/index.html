@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <title>bike - 09/16/2020</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script>
+      function randomIntFromInterval(min, max) { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      function draw() {
+        const c = /** @type {HTMLCanvasElement} */ (document.getElementById("canvas"));
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+
+        const ctx = c.getContext("2d");
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+
+        const centerX = window.innerWidth/2;
+        const centerY = window.innerHeight/2;
+
+        ctx.moveTo(centerX, centerY);
+        const htCords = [randomIntFromInterval(centerX+100, centerX+150), centerY];
+        ctx.lineTo(htCords[0], htCords[1]);
+        const bbCords = [randomIntFromInterval(centerX, centerX+30), randomIntFromInterval(centerY+50, centerY+100)];
+        ctx.lineTo(bbCords[0], bbCords[1]);
+        ctx.lineTo(centerX, centerY);
+        const rearAxle = [randomIntFromInterval(centerX-50, centerX-100), randomIntFromInterval(centerY+10, centerY+100)];
+        ctx.lineTo(rearAxle[0], rearAxle[1])
+        ctx.lineTo(bbCords[0], bbCords[1]);
+        ctx.moveTo(htCords[0], htCords[1]);
+        const frontAxle = [randomIntFromInterval(htCords[0], htCords[0]+10), randomIntFromInterval(bbCords[1]-10, bbCords[1]+10)];
+        ctx.lineTo(frontAxle[0], frontAxle[1]);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(rearAxle[0], rearAxle[1], randomIntFromInterval(30, 50), 0, 2 * Math.PI);
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(frontAxle[0], frontAxle[1], randomIntFromInterval(30, 50), 0, 2 * Math.PI);
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.closePath();
+      }
+
+      document.addEventListener("click", function(e)  {
+        draw();
+      });
+
+      draw();
+    </script>
+  </body>
+</html>
