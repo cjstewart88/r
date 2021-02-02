@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>2/1/2021 - charte</title>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      const canvas = document.getElementsByTagName('canvas')[0];
+      canvas.width = 800;
+      canvas.height = 600;
+      const ctx = canvas.getContext('2d');
+      const points = [];
+
+      for (let i = 0; i < 17; i++) {
+        let x = i * 50;
+        let y = Math.floor(Math.random() * 600);
+
+        points.push([x,y]);
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+
+        ctx.stroke();
+      }
+
+      canvas.onclick = (e) => {
+        const x = e.offsetX;
+        const y = e.offsetY;
+        points.forEach((point) => {
+          console.log('on a point')
+        });
+      }
+    </script>
+  </body>
+</htrml>
