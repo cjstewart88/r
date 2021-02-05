@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>2/4/2021 - point-draw</title>
+  </head>
+  <body style="user-select: none">
+    <canvas style="display: block; margin: 40 auto; border: solid 1px black"></canvas>
+    <p style="width: 800px; margin: 20 auto; text-align: center;">click and drag the points. double click to add a point.</p>
+    <script>
+      // generate initial points
+      const points = [];
+      for (let i = 0; i < 3; i++) {
+        let x = i * 50;
+        let y = Math.floor(Math.random() * 600);
+
+        points.push([x,y]);
+      }
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+
+      const draw = () => {
+        canvas.width = 800;
+        canvas.height = 600;
+        const ctx = canvas.getContext('2d');
+
+        ctx.clearRect(0, 0, 800, 600);
+
+        points.forEach((point, i) => {
+          const x = point[0];
+          const y = point[1];
+
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+
+          ctx.stroke();
+        });
+
+        points.forEach((point, i) => {
+          ctx.beginPath();
+          ctx.arc(point[0], point[1], 5, 0, 2 * Math.PI);
+          ctx.fill();
+        })
+
+        window.requestAnimationFrame(draw);
+      }
+
+
+      let movingPointIndexes = [];
+      canvas.onmousedown = (e) => {
+        const x = e.offsetX;
+        const y = e.offsetY;
+        points.forEach((point, i) => {
+          if ((point[0] <= x+5 && point[0] >= x-5) && (point[1] <= y+5 && point[1] >= y-5)) {
+            movingPointIndexes.push(i);
+          }
+        });
+      }
+
+      canvas.onmousemove = (e) => {
+        if (movingPointIndexes.length > 0) {
+          movingPointIndexes.forEach((movingPointIndex) => {
+            const newX = e.offsetX;
+            const newY = e.offsetY
+            points[movingPointIndex] = [newX, newY];
+          });
+        }
+      }
+
+      canvas.onmouseup = (e) => {
+        movingPointIndexes = [];
+      }
+
+      canvas.ondblclick = (e) => {
+        points.push([e.offsetX, e.offsetY])
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</htrml>
