@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>2/9/2021 - chill</title>
+  </head>
+  <body style="margin: 0">
+    <canvas></canvas>
+    <script>
+      function randomColor() {
+        return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      }
+
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const maxRadius = 250;
+      const minRadius = 1;
+
+      const circles = [];
+      for (let i = 0; i < 20; i++) {
+        let x = Math.floor(Math.random() * width);
+        let y = Math.floor(Math.random() * height);
+        let radius = Math.floor(Math.random() * maxRadius);
+
+        circles.push({ cords: { x: x, y: y }, radius: radius, action: 'grow', color: randomColor() });
+      }
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+
+      const draw = () => {
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.globalAlpha = 0.7;
+
+        circles.forEach((point, i) => {
+          ctx.beginPath();
+          ctx.arc(point.cords.x, point.cords.y, point.radius, 0, 2 * Math.PI);
+          ctx.fillStyle = point.color;
+          ctx.fill();
+
+          if (point.radius === maxRadius) {
+            point.action = 'shrink';
+          } else if (point.radius === minRadius) {
+            point.action = 'grow';
+          }
+
+          if (point.action === 'grow') {
+            point.radius++;
+          } else {
+            point.radius--;
+          }
+        })
+
+        window.requestAnimationFrame(draw);
+      }
+
+
+      canvas.onclick = (e) => {
+        const x = e.offsetX;
+        const y = e.offsetY;
+        circles.forEach((point, i) => {
+          if ((point.cords.x <= x+point.radius && point.cords.x >= x-point.radius) && (point.cords.y <= y+point.radius && point.cords.y >= y-point.radius)) {
+            point.color = randomColor();
+          }
+        });
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</htrml>
