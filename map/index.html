@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>2/23/2021 - map</title>
+  </head>
+  <body style="margin: 0; background-color: blueviolet;">
+    <canvas></canvas>
+    <script>
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const randomIntFromInterval = (min, max) => { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      const randomColor = () => {
+        return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      }
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = width;
+      canvas.height = height;
+
+      let rectWidth = 300;
+      let rectHeight = 100;
+
+      let x = width / 2 - rectWidth/2;
+      let y = height / 2 - rectHeight/2;
+
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+
+        ctx.beginPath();
+        ctx.rect(x, y, rectWidth, rectHeight);
+        ctx.strokeStyle = 'blueviolet';
+        ctx.lineWidth = '3';
+        ctx.shadowBlur = 2;
+        ctx.shadowColor = "blue";
+        ctx.stroke();
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+
+      const moveBy = 10;
+      document.onmousemove = (e) => {
+        console.log(e)
+        x = e.x;
+        y = e.y;
+      }
+    </script>
+  </body>
+</html>
