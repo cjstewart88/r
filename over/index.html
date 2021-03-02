@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>3/1/2021 - over</title>
+    <style>
+      body { margin: 0; background-color: black; }
+
+      .square {
+        width: 50px;
+        height: 50px;
+        display: inline-block;
+        background: white;
+      }
+
+      .wrapper {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper"></div>
+    <script>
+      const numOfRows = (window.innerWidth / 50-1);
+      const maxNumOfCols = (window.innerHeight / 50-1);
+
+      function randomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      const randomIntFromInterval = (min, max) => { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      const wrapper = document.getElementsByClassName('wrapper')[0];
+      let counter = 0;
+      let colors = [];
+      let backgroundParts = [];
+      const create = () => {
+        if (counter == 50) {
+          wrapper.innerHTML = '';
+          backgroundParts = [];
+          for (let i = 0; i < numOfRows; i++) {
+            const row = document.createElement('div');
+            row.classList = 'row';
+            const squareBackground = randomColor();
+            const numOfSquares = randomIntFromInterval(1, maxNumOfCols);
+            colors.push(squareBackground);
+            backgroundParts.push(squareBackground);
+            for (let x = 1; x <= numOfSquares; x++) {
+              const square = document.createElement('div');
+              square.classList = 'square';
+              square.style = 'background: ' + squareBackground;
+              row.append(square);
+            }
+            wrapper.append(row);
+          }
+          counter = 0;
+          wrapper.setAttribute('style', "background: linear-gradient(180deg, " + backgroundParts.join(','))
+          colors = [];
+        } else {
+          counter++;
+        }
+
+        window.requestAnimationFrame(create)
+      }
+
+      window.requestAnimationFrame(create);
+
+    </script>
+  </body>
+</html>
