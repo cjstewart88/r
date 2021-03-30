@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <title>3/29/2021 - frac</title>
+  </head>
+  <body style="margin: 0; background-color: black;">
+    <canvas></canvas>
+    <input type="range" min="1" max="50" value="1" style="position: fixed; top: 20; left: calc(50vw - 100px); width: 200px">
+    <script>
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const numOfPartsInput = document.querySelector('input');
+      numOfPartsInput.addEventListener('input', (e) => {
+        const numOfParts = e.srcElement.value;
+        draw(numOfParts);
+      });
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = width;
+      canvas.height = height;
+
+      let parts = [];
+      const draw = (numOfParts) => {
+        parts = [];
+        for (let i = 1; i <= numOfParts; i++) {
+          parts.push(
+            {
+              startAtX: 0,
+              startAtY: 0,
+              cp1x: 120*i,
+              cp1y: 160*i,
+              cp2x: 80*i,
+              cp2y: 50,
+              endAtX: i*80,
+              endAtY: 0
+            }
+          )
+
+          parts.push(
+            {
+              startAtX: width,
+              startAtY: 0,
+              cp1x: width - (120*i),
+              cp1y: 160*i,
+              cp2x: width - (80*i),
+              cp2y: 50,
+              endAtX: width - (i*80),
+              endAtY: 0
+            }
+          )
+
+          parts.push(
+            {
+              startAtX: 0,
+              startAtY: height,
+              cp1x: 120*i,
+              cp1y: height - (160*i),
+              cp2x: 80*i,
+              cp2y: height - (50),
+              endAtX: i*80,
+              endAtY: height
+            }
+          )
+
+          parts.push(
+            {
+              startAtX: width,
+              startAtY: height,
+              cp1x: width - (120*i),
+              cp1y: height - (160*i),
+              cp2x: width - (80*i),
+              cp2y: height - (50),
+              endAtX: width - (i*80),
+              endAtY: height
+            }
+          )
+        }
+
+        ctx.clearRect(0, 0, width, height);
+        parts.forEach((part) => {
+          ctx.beginPath();
+          ctx.moveTo(part.startAtX, part.startAtY);
+          ctx.bezierCurveTo(part.cp1x, part.cp1y, part.cp2x, part.cp2y, part.endAtX, part.endAtY);
+          ctx.strokeStyle = 'yellow';
+          ctx.lineWidth = '1';
+          ctx.stroke();
+        });
+      }
+
+      draw(1);
+    </script>
+  </body>
+</html>
