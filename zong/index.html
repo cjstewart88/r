@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>4/6/2021 - zong</title>
+  </head>
+  <body style="margin: 0; background-color: black;">
+    <canvas></canvas>
+    <script>
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = width;
+      canvas.height = height;
+
+      let highPoint = 10;
+      let upOrDown = 'up';
+      const setHighPoint = () => {
+        if (highPoint >= 900) {
+          upOrDown = 'down';
+        } else if (highPoint === 0) {
+          upOrDown = 'up';
+        }
+
+        if (upOrDown === 'up') {
+          highPoint += 10;
+        } else {
+          highPoint -= 10;
+        }
+      }
+
+      let startingX = width/2
+      let leftOrRight1 = 'right';
+      const minStartingX = width/2-100;
+      const maxStartingX = 0;
+      const setStartingX = () => {
+        if (startingX >= minStartingX) {
+          leftOrRight1 = 'left';
+        } else if (startingX <= maxStartingX) {
+          leftOrRight1 = 'right';
+        }
+
+        if (leftOrRight1 === 'left') {
+          startingX -= 10;
+        } else {
+          startingX += 10;
+        }
+      }
+
+      let endingX = width/2
+      let leftOrRight2 = 'right';
+      const minStartingX2 = width/2+100;
+      const maxStartingX2 = width;
+      const setEndingX = () => {
+        if (endingX >= maxStartingX2) {
+          leftOrRight2 = 'left';
+        } else if (endingX <= minStartingX2) {
+          leftOrRight2 = 'right';
+        }
+
+        if (leftOrRight2 === 'left') {
+          endingX -= 10;
+        } else {
+          endingX += 10;
+        }
+      }
+
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+        ctx.beginPath();
+        ctx.moveTo(startingX, height);
+        ctx.bezierCurveTo(startingX, height, width/2, height-highPoint, endingX, height);
+        ctx.strokeStyle = 'orange';
+        ctx.lineWidth = '18';
+        ctx.stroke();
+
+        setHighPoint();
+        setStartingX();
+        setEndingX()
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
