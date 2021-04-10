@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>4/9/2021 - fall</title>
+  </head>
+  <body style="margin: 0; background-color: black;">
+    <canvas></canvas>
+    <script>
+      function randomIntFromInterval(min, max) { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      const randomColor = () => {
+        return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      }
+
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const lines = [];
+
+
+      for (let i = 0; i <= 400; i++) {
+        lines.push({
+          x: i * 10,
+          y: randomIntFromInterval(-150, 0),
+          incrementBy: randomIntFromInterval(10, 30),
+          color: randomColor()
+        });
+      }
+
+      const circle = { x: 0, y: 0 };
+      window.onmousemove = (e) => {
+        circle.x = e.x;
+        circle.y = e.y;
+      };
+
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+
+
+        for (let i = 0; i < lines.length; i++) {
+          ctx.beginPath();
+          ctx.moveTo(lines[i].x, lines[i].y);
+          ctx.lineTo(lines[i].x, lines[i].y + 10);
+          ctx.strokeStyle = lines[i].color;
+          ctx.lineWidth = '10';
+          ctx.stroke();
+          ctx.closePath();
+
+          if (lines[i].y >= window.innerHeight+lines[i].incrementBy) {
+            lines[i].y = -150;
+          } else {
+            lines[i].y += lines[i].incrementBy;
+          }
+        }
+
+        ctx.beginPath();
+        ctx.fillStyle = '#040404'
+        ctx.arc(circle.x, circle.y, 200, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.font = "200px Arial";
+        ctx.fillStyle  = 'black'
+        ctx.fillText("Hello You", (width/2-400), height/2);
+        ctx.closePath();
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
