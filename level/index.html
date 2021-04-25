@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <title>4/24/2021 - level</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 40px;
+        font-weight: bold;;
+      }
+
+      span {
+        margin-right: 5px;
+      }
+
+      .floor {
+        color: black;
+      }
+
+      .lava {
+        color: red;
+      }
+
+      .player {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const randomIntFromInterval = (min, max) => { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      const key = {
+        F: 'floor',
+        L: 'lava',
+        O: 'player'
+      };
+
+      const level = [
+        ['F', 'F', 'F', 'F', 'L', 'L', 'L', 'L', 'L'],
+        ['L', 'L', 'F', 'F', 'L', 'L', 'L', 'L', 'L'],
+        ['L', 'L', 'F', 'F', 'L', 'L', 'L', 'L', 'L'],
+        ['L', 'L', 'L', 'F', 'F', 'F', 'L', 'L', 'L'],
+        ['L', 'L', 'L', 'F', 'F', 'F', 'F', 'F', 'F'],
+        ['L', 'L', 'L', 'F', 'F', 'F', 'F', 'F', 'F'],
+        ['L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'],
+        ['L', 'L', 'L', 'L', 'L', 'L', 'L', 'L', 'L'],
+      ];
+
+      const objectName = (objectSymbol) => key[objectSymbol];
+
+      const playerCords = {
+        x: 0,
+        y: 0
+      };
+
+      const objectToInsert = (x, y) => {
+        if (playerCords.x === x && playerCords.y === y) {
+          return 'O';
+        } else {
+          return level[y][x];
+        }
+      }
+
+      const resetGame = () => {
+        playerCords.x = 0;
+        playerCords.y = 0;
+        draw();
+      }
+
+      const checkIfDead = () => {
+        if (level[playerCords.y][playerCords.x] === 'L') {
+          alert('you dead')
+          resetGame();
+        }
+      }
+
+      const body = document.body;
+      const draw = () => {
+        body.innerHTML = '';
+        for (let y = 0; y < level.length; y++) {
+          for (let x = 0; x < level[y].length; x++) {
+            const objectSymbol = objectToInsert(x, y);
+            body.innerHTML += "<span class='" + objectName(objectSymbol) + "'>" + objectSymbol + "</span>";
+            if (level[y].length === x+1) {
+              body.innerHTML += "<br>";
+            }
+          }
+        }
+      }
+
+      window.onkeyup = ((e) => {
+        switch (e.key) {
+          case 'ArrowUp':
+            if (playerCords.y - 1 < 0) { return; }
+            playerCords.y -= 1;
+            break;
+          case 'ArrowDown':
+            if (playerCords.y + 1 > level.length - 1) { return; }
+            playerCords.y += 1;
+            break;
+          case 'ArrowLeft':
+            if (playerCords.x - 1 < 0) { return; }
+            playerCords.x -= 1;
+            break;
+          case 'ArrowRight':
+            if (playerCords.x + 1 > level[0].length - 1) { return; }
+            playerCords.x += 1;
+            break;
+        }
+        draw();
+        checkIfDead();
+      });
+
+      draw();
+    </script>
+  </body>
+</html>
