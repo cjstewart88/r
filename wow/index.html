@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>4/26/2021 - wow</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="der"></canvas>
+    <script>
+      const randomIntFromInterval = (min, max) => { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      const circles = [
+        [100, 100, 5, 0, 2 * Math.PI],
+        [130, 150, 5, 0, 2 * Math.PI],
+        [70, 150, 5, 0, 2 * Math.PI]
+      ];
+
+      var c = document.getElementById("der");
+      var ctx = c.getContext("2d");
+
+      const draw = () => {
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+
+        circles.forEach((c) => {
+          ctx.beginPath();
+          ctx.arc(c[0], c[1], c[2], c[3], c[4]);
+          ctx.stroke();
+        });
+
+        window.requestAnimationFrame(draw)
+      }
+
+      window.requestAnimationFrame(draw)
+
+      let holding = false;
+      document.body.addEventListener('mousedown', (event) => holding = true);
+
+      document.body.addEventListener('mousemove', (event) => {
+        if (holding) {
+          circles[0][0] = event.x;
+          circles[0][1] = event.y;
+          circles[1][0] = event.x+30;
+          circles[1][1] = event.y+50;
+          circles[2][0] = event.x-30;
+          circles[2][1] = event.y+50;
+        }
+      });
+
+      document.body.addEventListener('mouseup', (event) => holding = false);
+
+    </script>
+  </body>
+</html>
