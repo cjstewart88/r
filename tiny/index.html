@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <title>5/1/2021 - tiny</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      const randomIntFromInterval = (min, max) => { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      const playerCords = {
+        x: 0,
+        y: 0,
+        direction: 'right'
+      };
+
+      const moveBy = 10;
+      window.onkeydown = ((e) => {
+        switch (e.key) {
+          case 'ArrowUp':
+            playerCords.y -= moveBy;
+            playerCords.direction = 'up';
+            break;
+          case 'ArrowDown':
+            playerCords.y += moveBy;
+            playerCords.direction = 'down';
+            break;
+          case 'ArrowLeft':
+            playerCords.x -= moveBy;
+            playerCords.direction = 'left';
+            break;
+          case 'ArrowRight':
+            playerCords.x += moveBy;
+            playerCords.direction = 'right';
+            break;
+        }
+      });
+
+      const blasts = [];
+      window.onkeyup = ((e) => {
+        if (e.code === 'Space') {
+          blasts.push([playerCords.x, playerCords.y, playerCords.direction]);
+        }
+      });
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        ctx.fillRect(playerCords.x, playerCords.y,  1, 1);
+
+        for (let i = 0; i < blasts.length; i++) {
+          switch (blasts[i][2]) {
+            case 'up':
+              blasts[i][1] -= 1;
+              break;
+            case 'down':
+              blasts[i][1] += 1;
+              break;
+            case 'left':
+              blasts[i][0] -= 1;
+              break;
+            case 'right':
+              blasts[i][0] += 1;
+              break;
+          }
+
+          ctx.beginPath();
+          ctx.fillStyle = "blue";
+          ctx.fillRect(blasts[i][0], blasts[i][1],  1, 1);
+        }
+        ctx.closePath();
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
