@@ -1,0 +1,842 @@
+[
+  [
+    "Ancient's Pledge",
+    "3 Socket Shields",
+    [
+        "Ral",
+        "Ort",
+        "Tal"
+    ],
+    "+50% Enhanced Defense\nCold Resist +43%\nFire Resist +48%\nLightning Resist +48%\nPoison Resist +48%\n10% Damage Goes To Mana\n"
+  ],
+  [
+    "Black",
+    "3 Socket Clubs/Hammers/Maces",
+    [
+        "Thul",
+        "Io",
+        "Nef"
+    ],
+    "+120% Enhanced Damage\n40% Chance Of Crushing Blow\n+200 To Attack Rating\nAdds 3-14 Cold Damage - Cold Duration 3 Seconds\n+10 To Vitality\n15% Increased Attack Speed\nKnockback\nMagic Damage Reduced By 2\nLevel 4 Corpse Explosion (12 Charges)"
+  ],
+  [
+    "Fury",
+    "3 Socket Melee Weapons",
+    [
+        "Jah",
+        "Gul",
+        "Eth"
+    ],
+    "+209% Enhanced Damage\n40% Increased Attack Speed\nPrevent Monster Heal\n66% Chance Of Open Wounds\n33% Deadly Strike\nIgnore Target's Defense\n-25% Target Defense\n20% Bonus To Attack Rating\n6% Life Stolen Per Hit\n+5 To Frenzy (Barbarian Only)"
+  ],
+  [
+    "Holy Thunder",
+    "4 Socket Scepters",
+    [
+        "Eth",
+        "Ral",
+        "Ort",
+        "Tal"
+    ],
+    "+60% Enhanced Damage\n-25% Target Defense\nAdds 5-30 Fire Damage\nAdds 21-110 Lightning Damage\n+75 Poison Damage Over 5 Seconds\n+10 To Maximum Damage\nLightning Resistance +60%\n+5 To Maximum Lightning Resistance\n+3 To Holy Shock (Paladin Only)\nLevel 7 Chain Lightning (60 Charges)\n"
+  ],
+  [
+    "Honor",
+    "5 Socket Melee Weapons",
+    [
+        "Amn",
+        "El",
+        "Ith",
+        "Tir",
+        "Sol"
+    ],
+    "+160% Enhanced Damage\n+9 To Minimum Damage\n+9 To Maximum Damage\n25% Deadly Strike\n+250 To Attack Rating\n+1 to All Skills\n7% Life Stolen Per Hit\nReplenish Life +10\n+10 To Strength\n+1 To Light Radius\n+2 To Mana After Each Kill\n"
+  ],
+  [
+    "King's Grace",
+    "3 Socket Swords/Scepters",
+    [
+        "Amn",
+        "Ral",
+        "Thul"
+    ],
+    "+100% Enhanced Damage\n+100% Damage To Demons\n+50% Damage To Undead\nAdds 5-30 Fire Damage\nAdds 3-14 Cold Damage - 3 Second Duration\n+150 To Attack Rating\n+100 To Attack Rating Against Demons\n+100 To Attack Rating Against Undead\n7% Life Stolen Per Hit\n"
+  ],
+  [
+    "Leaf",
+    "2 Socket Staves* (Not Orbs)",
+    [
+        "Tir",
+        "Ral"
+    ],
+    "Adds 5-30 Fire Damage\n+3 To Fire Skills\n+3 To Fire Bolt (Sorceress Only)\n+3 To Inferno (Sorceress Only)\n+3 To Warmth (Sorceress Only)\n+2 To Mana After Each Kill\n+ (2 Per Character Level) +2-198 To Defense (Based On Character Level)\nCold Resist +33%\n"
+  ],
+  [
+    "Lionheart",
+    "3 Socket Body Armor",
+    [
+        "Hel",
+        "Lum",
+        "Fal"
+    ],
+    "+20% Enhanced Damage\nRequirements -15%\n+25 To Strength\n+10 To Energy\n+20 To Vitality\n+15 To Dexterity\n+50 To Life\nAll Resistances +30"
+  ],
+  [
+    "Lore",
+    "2 Socket Helms",
+    [
+        "Ort",
+        "Sol"
+    ],
+    "+1 To All Skill Levels\n+10 To Energy\n+2 To Mana After Each Kill\nLightning Resist +30%\nDamage Reduced By 7\n+2 To Light Radius\n"
+  ],
+  [
+    "Malice",
+    "3 Socket Melee Weapons",
+    [
+        "Ith",
+        "El",
+        "Eth"
+    ],
+    "+33% Enhanced Damage\n+9 To Maximum Damage\n100% Chance Of Open Wounds\n-25% Target Defense\n-100 To Monster Defense Per Hit\nPrevent Monster Heal\n+50 To Attack Rating\nDrain Life -5"
+  ],
+  [
+    "Melody",
+    "3 Socket Missile Weapons",
+    [
+        "Shael",
+        "Ko",
+        "Nef"
+    ],
+    "+50% Enhanced Damage\n+300% Damage To Undead\n+3 To Bow and Crossbow Skills (Amazon Only)\n+3 To Critical Strike (Amazon Only)\n+3 To Dodge (Amazon Only)\n+3 To Slow Missiles (Amazon Only)\n20% Increased Attack Speed\n+10 To Dexterity\nKnockback"
+  ],
+  [
+    "Memory",
+    "4 Socket Staves (Not Orbs)",
+    [
+        "Lum",
+        "Io",
+        "Sol",
+        "Eth"
+    ],
+    "+3 to Sorceress Skill Levels\n33% Faster Cast Rate\nIncrease Maximum Mana 20%\n+3 Energy Shield (Sorceress Only)\n+2 Static Field (Sorceress Only)\n+10 To Energy\n+10 To Vitality\n+9 To Minimum Damage\n-25% Target Defense\nMagic Damage Reduced By 7\n+50% Enhanced Defense\n"
+  ],
+  [
+    "Nadir",
+    "2 Socket Helms",
+    [
+        "Nef",
+        "Tir"
+    ],
+    "+50% Enhanced Defense\n+10 Defense\n+30 Defense vs. Missile\nLevel 13 Cloak of Shadows (9 Charges)\n+2 To Mana After Each Kill\n+5 To Strength\n-33% Extra Gold From Monsters\n-3 To Light Radius\n"
+  ],
+  [
+    "Radiance",
+    "3 Socket Helms",
+    [
+        "Nef",
+        "Sol",
+        "Ith"
+    ],
+    "+75% Enhanced Defense\n+30 Defense Vs. Missile\n+10 To Energy\n+10 To Vitality\n15% Damage Goes To Mana\nMagic Damage Reduced By 3\n+33 To Mana\nDamage Reduced By 7\n+5 To Light Radius\n"
+  ],
+  [
+    "Rhyme",
+    "2 Socket Shields",
+    [
+        "Shael",
+        "Eth"
+    ],
+    "20% Increased Chance of Blocking\n40% Faster Block Rate\nAll Resistances +25\nRegenerate Mana 15%\nCannot Be Frozen\n50% Extra Gold From Monsters\n25% Better Chance Of Getting Magic Items"
+  ],
+  [
+    "Silence",
+    "6 Socket Weapons",
+    [
+        "Dol",
+        "Eld",
+        "Hel",
+        "Ist",
+        "Tir",
+        "Vex"
+    ],
+    "200% Enhanced Damage\n+75% Damage To Undead\nRequirements -20%\n20% Increased Attack Speed\n+50 To Attack Rating Against Undead\n+2 To All Skills\nAll Resistances +75\n20% Faster Hit Recovery\n11% Mana Stolen Per Hit\nHit Causes Monster To Flee 25%\nHit Blinds Target +33\n+2 To Mana After Each Kill\n30% Better Chance Of Getting Magic Items"
+  ],
+  [
+    "Smoke",
+    "2 Socket Body Armor",
+    [
+        "Nef",
+        "Lum"
+    ],
+    "+75% Enhanced Defense\n+280 Defense Vs. Missile\nAll Resistances +50\n20% Faster Hit Recovery\nLevel 6 Weaken (18 Charges)\n+10 To Energy\n-1 To Light Radius\n"
+  ],
+  [
+    "Stealth",
+    "2 Socket Body Armor",
+    [
+        "Tal",
+        "Eth"
+    ],
+    "Magic Damage Reduced By 3\n+6 To Dexterity\n+15 To Maximum Stamina\nPoison Resist +30%\nRegenerate Mana 15%\n25% Faster Run/Walk\n25% Faster Cast Rate\n25% Faster Hit Recovery\n"
+  ],
+  [
+    "Steel",
+    "2 Socket Swords/Axes/Maces",
+    [
+        "Tir",
+        "El"
+    ],
+    "20% Enhanced Damage\n+3 To Minimum Damage\n+3 To Maximum Damage\n+50 To Attack Rating\n50% Chance Of Open Wounds\n25% Increased Attack Speed\n+2 To Mana After Each Kill\n+1 To Light Radius\n"
+  ],
+  [
+    "Strength",
+    "2 Socket Melee Weapons",
+    [
+        "Amn",
+        "Tir"
+    ],
+    "35% Enhanced Damage\n25% Chance Of Crushing Blow\n7% Life Stolen Per Hit\n+2 To Mana After Each Kill\n+20 To Strength\n+10 To Vitality\n"
+  ],
+  [
+    "Venom",
+    "3 Socket Weapons",
+    [
+        "Tal",
+        "Dol",
+        "Mal"
+    ],
+    "Hit Causes Monster To Flee 25%\nPrevent Monster Heal\nIgnore Target's Defense\n7% Mana Stolen Per Hit\nLevel 15 Poison Explosion (27 Charges)\nLevel 13 Poison Nova (11 Charges)\n+273 Poison Damage Over 6 seconds"
+  ],
+  [
+    "Wealth",
+    "3 Socket Body Armor",
+    [
+        "Lem",
+        "Ko",
+        "Tir"
+    ],
+    "300% Extra Gold From Monsters\n100% Better Chance Of Getting Magic Items\n+2 To Mana After Each Kill\n+10 To Dexterity\n"
+  ],
+  [
+    "White",
+    "2 Socket Wand",
+    [
+        "Dol",
+        "Io"
+    ],
+    "Hit Causes Monster To Flee 25%\n+10 To Vitality\n+3 To Poison And Bone Skills (Necromancer Only)\n+3 To Bone Armor (Necromancer Only)\n+2 To Bone Spear (Necromancer Only)\n+4 To Skeleton Mastery (Necromancer Only)\nMagic Damage Reduced By 4\n20% Faster Cast Rate\n+13 To Mana\n"
+  ],
+  [
+    "Zephyr",
+    "2 Socket Missile Weapons",
+    [
+        "Ort",
+        "Eth"
+    ],
+    "+33% Enhanced Damage\n+66 To Attack Rating\nAdds 1-50 Lightning Damage\n-25% Target Defense\n+25 Defense\n25% Faster Run/Walk\n25% Increased Attack Speed\n7% Chance To Cast Level 1 Twister When Struck\n"
+  ],
+  [
+    "PDF Version\n\nRune Words Index | Original Rune Words | 1.10 Rune Words | 1.11 Rune Words\n\n1.10 Rune Words\tAllowed Items\tRune Order\tCompleted Stats\n\nBeast\t5 Socket Axes/Scepters/Hammers\tBer + Tir + Um + Mal + Lum\tLevel 9 Fanaticism Aura When Equipped\n+40% Increased Attack Speed\n+240-270% Enhanced Damage (varies)\n20% Chance of Crushing Blow\n25% Chance of Open Wounds\n+3 To Werebear\n+3 To Lycanthropy\nPrevent Monster Heal\n+25-40 To Strength (varies)\n+10 To Energy\n+2 To Mana After Each Kill\nLevel 13 Summon Grizzly (5 Charges)\nBramble\t4 Socket Body Armor\tRal + Ohm + Sur + Eth\tLevel 15-21 Thorns Aura When Equipped (varies)\n+50% Faster Hit Recovery\n+25-50% To Poison Skill Damage (varies)\n+300 Defense\nIncrease Maximum Mana 5%\nRegenerate Mana 15%\n+5% To Maximum Cold Resist\nFire Resist +30%\nPoison Resist +100%\n+13 Life After Each Kill\nLevel 13 Spirit of Barbs (33 Charges)\n\nBreath of the Dying\t6 Socket Weapons\tVex + Hel + El + Eld + Zod + Eth\t50% Chance To Cast Level 20 Poison Nova When You Kill An Enemy\nIndestructible\n+60% Increased Attack Speed\n+350-400% Enhanced Damage (varies)\n+200% Damage To Undead\n-25% Target Defense\n+50 To Attack Rating\n+50 To Attack Rating Against Undead\n7% Mana Stolen Per Hit\n12-15% Life Stolen Per Hit (varies)\nPrevent Monster Heal\n+30 To All Attributes\n+1 To Light Radius\nRequirements -20%\n\nCall To Arms*\t5 Socket Weapons\tAmn + Ral + Mal + Ist + Ohm\t+1 To All Skills\n+40% Increased Attack Speed\n+250-290% Enhanced Damage (varies)\nAdds 5-30 Fire Damage\n7% Life Stolen Per Hit\n+2-6 To Battle Command (varies)*\n+1-6 To Battle Orders (varies)*\n+1-4 To Battle Cry (varies)*\nPrevent Monster Heal\nReplenish Life +12\n30% Better Chance of Getting Magic Items\nChains of Honor\t4 Socket Body Armor\tDol + Um + Ber + Ist\t+2 To All Skills\n+200% Damage To Demons\n+100% Damage To Undead\n8% Life Stolen Per Hit\n+70% Enhanced Defense\n+20 To Strength\nReplenish Life +7\nAll Resistances +65\nDamage Reduced By 8%\n25% Better Chance of Getting Magic Items\nChaos\t3 Socket Claws\tFal + Ohm + Um\t9% Chance To Cast Level 11 Frozen Orb On Striking\n11% Chance To Cast Level 9 Charged Bolt On Striking\n+35% Increased Attack Speed\n+290-340% Enhanced Damage (varies)\nAdds 216-471 Magic Damage\n25% Chance of Open Wounds\n+1 To Whirlwind\n+10 To Strength\n+15 Life After Each Demon Kill\n\nCrescent Moon\t3 Socket Axes/Swords/Polearms\tShael + Um + Tir\t10% Chance To Cast Level 17 Chain Lightning On Striking\n7% Chance To Cast Level 13 Static Field On Striking\n+20% Increased Attack Speed\n+180-220% Enhanced Damage (varies)\nIgnore Target's Defense\n-35% To Enemy Lightning Resistance\n25% Chance of Open Wounds\n+9-11 Magic Absorb (varies)\n+2 To Mana After Each Kill\nLevel 18 Summon Spirit Wolf (30 Charges)\n\nDelirium*\t3 Socket Helms\tLem + Ist + Io\t1% Chance To Cast Level 50 Delirium* (morph) When Struck\n6% Chance To Cast Level 14 Mind Blast When Struck\n14% Chance To Cast Level 13 Terror When Struck\n11% Chance To Cast Level 18 Confuse On Striking\n+2 To All Skills\n+261 Defense\n+10 To Vitality\n50% Extra Gold From Monsters\n25% Better Chance of Getting Magic Items\nLevel 17 Attract (60 Charges)\n\nDoom\t5 Socket Axes/Polearms/Hammers\tHel + Ohm + Um + Lo + Cham\t5% Chance To Cast Level 18 Volcano On Striking\nLevel 12 Holy Freeze Aura When Equipped\n+2 To All Skills\n+45% Increased Attack Speed\n+330-370% Enhanced Damage (varies)\n-(40-60)% To Enemy Cold Resistance (varies)\n20% Deadly Strike\n25% Chance of Open Wounds\nPrevent Monster Heal\nFreezes Target +3\nRequirements -20%\nDuress\t3 Socket Body Armor\tShael + Um + Thul\t+40% Faster Hit Recovery\n+10-20% Enhanced Damage (varies)\nAdds 37-133 Cold Damage 2 sec. Duration (Normal)\n15% Chance of Crushing Blow\n33% Chance of Open Wounds\n+150-200% Enhanced Defense (varies)\n-20% Slower Stamina Drain\nCold Resist +45%\nLightning Resist +15%\nFire Resist +15%\nPoison Resist +15%\n\nEnigma\t3 Socket Body Armor\tJah + Ith + Ber\t+2 To All Skills\n+45% Faster Run/Walk\n+1 To Teleport\n+750-775 Defense (varies)\n+ (0.75 Per Character Level) +0-74 To Strength (Based On Character Level)\nIncrease Maximum Life 5%\nDamage Reduced By 8%\n+14 Life After Each Kill\n15% Damage Taken Goes To Mana\n+ (1 Per Character Level) +1-99% Better Chance of Getting Magic Items (Based On Character Level)\n\nEternity\t5 Socket Melee Weapons\tAmn + Ber + Ist + Sol + Sur\tIndestructible\n+260-310% Enhanced Damage (varies)\n+9 To Minimum Damage\n7% Life Stolen Per Hit\n20% Chance of Crushing Blow\nHit Blinds Target\nSlows Target By 33%\nRegenerate Mana 16%\nReplenish Life +16\nCannot Be Frozen\n30% Better Chance Of Getting Magic Items\nLevel 8 Revive (88 Charges)\n\nExile\t4 Socket Paladin Shields (only)\tVex + Ohm + Ist + Dol\t15% Chance To Cast Level 5 Life Tap On Striking\nLevel 13-16 Defiance Aura When Equipped (varies)\n+2 To Offensive Auras (Paladin Only)\n+30% Faster Block Rate\nFreezes Target\n+220-260% Enhanced Defense (varies)\nReplenish Life +7\n+5% To Maximum Cold Resist\n+5% To Maximum Fire Resist\n25% Better Chance Of Getting Magic Items\nRepairs 1 Durability in 4 Seconds\nFamine\t4 Socket Axes/Hammers\tFal + Ohm + Ort + Jah\t+30% Increased Attack Speed\n+320-370% Enhanced Damage (varies)\nIgnore Target's Defense\nAdds 180-200 Magic Damage\nAdds 50-200 Fire Damage\nAdds 51-250 Lightning Damage\nAdds 50-200 Cold Damage\n12% Life Stolen Per Hit\nPrevent Monster Heal\n+10 To Strength\nGloom\t3 Socket Body Armor\tFal + Um + Pul\t15% Chance To Cast Level 3 Dim Vision When Struck\n+10% Faster Hit Recovery\n+200-260% Enhanced Defense (varies)\n+10 To Strength\nAll Resistances +45\nHalf Freeze Duration\n5% Damage Taken Goes To Mana\n-3 To Light Radius\nHand of Justice*\t4 Socket Weapons\tSur + Cham + Amn + Lo\t100% Chance To Cast Level 36 Blaze When You Level-Up\n100% Chance To Cast Level 48 Meteor When You Die\nLevel 16 Holy Fire Aura When Equipped\n+33% Increased Attack Speed\n+280-330% Enhanced Damage (varies)\nIgnore Target's Defense\n7% Life Stolen Per Hit\n-20% To Enemy Fire Resistance\n20% Deadly Strike\nHit Blinds Target\nFreezes Target +3\nHeart of the Oak\t4 Socket Staves/Maces*\tKo + Vex + Pul + Thul\t+3 To All Skills\n+40% Faster Cast Rate\n+75% Damage To Demons\n+100 To Attack Rating Against Demons\nAdds 3-14 Cold Damage, 3 sec. Duration (Normal)\n7% Mana Stolen Per Hit\n+10 To Dexterity\nReplenish Life +20\nIncrease Maximum Mana 15%\nAll Resistances +30-40 (varies)\nLevel 4 Oak Sage (25 Charges)\nLevel 14 Raven (60 Charges)\n\nKingslayer\t4 Socket Swords/Axes\tMal + Um + Gul + Fal\t+30% Increased Attack Speed\n+230-270% Enhanced Damage (varies)\n-25% Target Defense\n20% Bonus To Attack Rating\n33% Chance of Crushing Blow\n50% Chance of Open Wounds\n+1 To Vengeance\nPrevent Monster Heal\n+10 To Strength\n40% Extra Gold From Monsters\nPassion\t4 Socket Weapons\tDol + Ort + Eld + Lem\t+25% Increased Attack Speed\n+160-210% Enhanced Damage (varies)\n50-80% Bonus To Attack Rating (varies)\n+75% Damage To Undead\n+50 To Attack Rating Against Undead\nAdds 1-50 Lightning Damage\n+1 To Berserk\n+1 To Zeal\nHit Blinds Target +10\nHit Causes Monster To Flee 25%\n75% Extra Gold From Monsters\nLevel 3 Heart of Wolverine (12 Charges)\n\nPrudence\t2 Socket Body Armor\tMal + Tir\t+25% Faster Hit Recovery\n+140-170% Enhanced Defense (varies)\nAll Resistances +25-35 (varies)\nDamage Reduced by 3\nMagic Damage Reduced by 17\n+2 To Mana After Each Kill\n+1 To Light Radius\nRepairs Durability 1 In 4 Seconds\n\nSanctuary\t3 Socket Shields\tKo + Ko + Mal\t+20% Faster Hit Recovery\n+20% Faster Block Rate\n20% Increased Chance of Blocking\n+130-160% Enhanced Defense (varies)\n+250 Defense vs. Missile\n+20 To Dexterity\nAll Resistances +50-70 (varies)\nMagic Damage Reduced By 7\nLevel 12 Slow Missiles (60 Charges)\n\nSplendor\t2 Socket Shields\tEth + Lum\t+1 To All Skills\n+10% Faster Cast Rate\n+20% Faster Block Rate\n+60-100% Enhanced Defense (varies)\n+10 To Energy\nRegenerate Mana 15%\n50% Extra Gold From Monsters\n20% Better Chance of Getting Magic Items\n+3 To Light Radius\n\nStone\t4 Socket Body Armor\tShael + Um + Pul + Lum\t+60% Faster Hit Recovery\n+250-290% Enhanced Defense (varies)\n+300 Defense Vs. Missile\n+16 To Strength\n+16 To Vitality\n+10 To Energy\nAll Resistances +15\nLevel 16 Molten Boulder (80 Charges)\nLevel 16 Clay Golem (16 Charges)\n\nWind\t2 Socket Melee Weapons\tSur + El\t10% Chance To Cast Level 9 Tornado On Striking\n+20% Faster Run/Walk\n+40% Increased Attack Speed\n+15% Faster Hit Recovery\n+120-160% Enhanced Damage (varies)\n-50% Target Defense\n+50 To Attack Rating\nHit Blinds Target\n+1 To Light Radius\nLevel 13 Twister (127 Charges)\nLadder Rune Words\tAllowed Items\tRune Order\tCompleted Stats\n\nBrand\t4 Socket Missile Weapons\tJah + Lo + Mal + Gul\t35% Chance To Cast Level 14 Amplify Damage When Struck\n100% Chance To Cast Level 18 Bone Spear On Striking\n+260-340% Enhanced Damage (varies)\nIgnore Target's Defense\n20% Bonus to Attack Rating\n+280-330% Damage To Demons (varies)\n20% Deadly Strike\nPrevent Monster Heal\nKnockback\nFires Explosive Arrows or Bolts (15)\n\nDeath\t5 Socket Swords/Axes\tHel + El + Vex + Ort + Gul\t100% Chance To Cast Level 44 Chain Lightning When You Die\n25% Chance To Cast Level 18 Glacial Spike On Attack\nIndestructible\n+300-385% Enhanced Damage (varies)\n20% Bonus To Attack Rating\n+50 To Attack Rating\nAdds 1-50 Lightning Damage\n7% Mana Stolen Per Hit\n50% Chance of Crushing Blow\n+(0.5 per Character Level) 0.5-49.5% Deadly Strike (Based on Character Level)\n+1 To Light Radius\nLevel 22 Blood Golem (15 Charges)\nRequirements -20%\nDestruction\t5 Socket Polearms/Swords\tVex + Lo + Ber + Jah + Ko\t23% Chance To Cast Level 12 Volcano On Striking\n5% Chance To Cast Level 23 Molten Boulder On Striking\n100% Chance To Cast level 45 Meteor When You Die\n15% Chance To Cast Level 22 Nova On Attack\n+350% Enhanced Damage\nIgnore Target's Defense\nAdds 100-180 Magic Damage\n7% Mana Stolen Per Hit\n20% Chance Of Crushing Blow\n20% Deadly Strike\nPrevent Monster Heal\n+10 To Dexterity\n\nDragon\t3 Socket Body Armor/Shields\tSur + Lo + Sol\t20% Chance to Cast Level 18 Venom When Struck\n12% Chance To Cast Level 15 Hydra On Striking\nLevel 14 Holy Fire Aura When Equipped\n+360 Defense\n+230 Defense Vs. Missile\n+3-5 To All Attributes (varies)\n+0.375-37.125 To Strength (Based on Character Level)\nIncrease Maximum Mana 5% (Armor Only)\n+50 To Mana (Shields Only)\n+5% To Maximum Lightning Resist\nDamage Reduced by 7\n\nDream\t3 Socket Helms/Shields\tIo + Jah + Pul\t10% Chance To Cast Level 15 Confuse When Struck\nLevel 15 Holy Shock Aura When Equipped\n+20-30% Faster Hit Recovery (varies)\n+30% Enhanced Defense\n+150-220 Defense (varies)\n+10 To Vitality\nIncrease Maximum Life 5% (Helms Only)\n+50 To Life (Shields Only)\n+0.625-61.875 To Mana (Based On Character Level)\nAll Resistances +5-20 (varies)\n12-25% Better Chance of Getting Magic Items (varies)\nEdge\t3 Socket Missile Weapons\tTir + Tal + Amn\tLevel 15 Thorns Aura When Equipped\n+35% Increased Attack Speed\n+320-380% Damage To Demons (varies)\n+280% Damage To Undead\n+75 Poison Damage Over 5 Seconds\n7% Life Stolen Per Hit\nPrevent Monster Heal\n+5-10 To All Attributes (varies)\n+2 To Mana After Each Kill\nReduces All Vendor Prices 15%!!!*\nFaith\t4 Socket Missile Weapons\tOhm + Jah + Lem + Eld\tLevel 12-15 Fanaticism Aura When Equipped (varies)\n+1-2 To All Skills (varies)\n+330% Enhanced Damage\nIgnore Target's Defense\n300% Bonus To Attack Rating\n+75% Damage To Undead\n+50 To Attack Rating Against Undead\n+120 Fire Damage\nAll Resistances +15\n10% Reanimate As: Returned\n75% Extra Gold From Monsters\nFortitude\t4 Socket Weapons/Body Armor\tEl + Sol + Dol + Lo\tWeapons\n20% Chance To Cast Level 15 Chilling Armor when Struck\n+25% Faster Cast Rate\n+300% Enhanced Damage\n+9 To Minimum Damage\n+50 To Attack Rating\n20% Deadly Strike\nHit Causes Monster To Flee 25%\n+200% Enhanced Defense\n+X To Life (Based on Character Level)*\nAll Resistances +25-30 (varies)\n12% Damage Taken Goes To Mana\n+1 To Light Radius\n\nBody Armor\n20% Chance To Cast Level 15 Chilling Armor when Struck\n+25% Faster Cast Rate\n+300% Enhanced Damage\n+200% Enhanced Defense\n+15 Defense\n+X To Life (Based on Character Level)*\nReplenish Life +7\n+5% To Maximum Lightning Resist\nAll Resistances +25-30 (varies)\nDamage Reduced By 7\n12% Damage Taken Goes To Mana\n+1 To Light Radius\nGrief\t5 Socket Swords/Axes\tEth + Tir + Lo + Mal + Ral\t35% Chance To Cast Level 15 Venom On Striking\n+30-40% Increased Attack Speed (varies)\nDamage +340-400 (varies)\nIgnore Target's Defense\n-25% Target Defense\n+(1.875 per character level) 1.875-185.625% Damage To Demons (Based on Character Level)\nAdds 5-30 Fire Damage\n-20-25% To Enemy Poison Resistance (varies)\n20% Deadly Strike\nPrevent Monster Heal\n+2 To Mana After Each Kill\n+10-15 Life After Each Kill (varies)\nHarmony\t4 Socket Missile Weapons\tTir + Ith + Sol + Ko\tLevel 10 Vigor Aura When Equipped\n+200-275% Enhanced Damage (varies)\n+9 To Minimum Damage\n+9 To Maximum Damage\nAdds 55-160 Lightning Damage\nAdds 55-160 Fire Damage\nAdds 55-160 Cold Damage\n+2-6 To Valkyrie (varies)\n+10 To Dexterity\nRegenerate Mana 20%\n+2 To Mana After Each Kill\n+2 To Light Radius\nLevel 20 Revive (25 Charges)\nIce\t4 Socket Missile Weapons\tAmn + Shael + Jah + Lo\t100% Chance To Cast Level 40 Blizzard When You Level-up\n25% Chance To Cast Level 22 Frost Nova On Striking\nLevel 18 Holy Freeze Aura When Equipped\n+20% Increased Attack Speed\n+140-210% Enhanced Damage (varies)\nIgnore Target's Defense\n+25-30% To Cold Skill Damage (varies)\n-20% To Enemy Cold Resistance\n7% Life Stolen Per Hit\n20% Deadly Strike\n3.125-309.375 Extra Gold From Monsters (Based on Character Level)\nInfinity\t4 Socket Polearms\tBer + Mal + Ber + Ist\t50% Chance To Cast Level 20 Chain Lightning When You Kill An Enemy\nLevel 12 Conviction Aura When Equipped\n+35% Faster Run/Walk\n+255-325% Enhanced Damage (varies)\n-(45-55)% To Enemy Lightning Resistance (varies)\n40% Chance of Crushing Blow\nPrevent Monster Heal\n0.5-49.5 To Vitality (Based on Character Level)\n30% Better Chance of Getting Magic Items\nLevel 21 Cyclone Armor (30 Charges)\n\nInsight\t4 Socket Polearms/Staves\tRal + Tir + Tal + Sol\tLevel 12-17 Meditation Aura When Equipped (varies)\n+35% Faster Cast Rate\n+200-260% Enhanced Damage (varies)\n+9 To Minimum Damage\n180-250% Bonus to Attack Rating (varies)\nAdds 5-30 Fire Damage\n+75 Poison Damage Over 5 Seconds\n+1-6 To Critical Strike (varies)\n+5 To All Attributes\n+2 To Mana After Each Kill\n23% Better Chance of Getting Magic Items\n\nLast Wish\t6 Socket Swords/Hammers/Axes\tJah + Mal + Jah + Sur + Jah + Ber\t6% Chance To Cast Level 11 Fade When Struck\n10% Chance To Cast Level 18 Life Tap On Striking\n20% Chance To Cast Level 20 Charged Bolt On Attack\nLevel 17 Might Aura When Equipped\n+330-375% Enhanced Damage (varies)\nIgnore Target's Defense\n60-70% Chance of Crushing Blow (varies)\nPrevent Monster Heal\nHit Blinds Target\n+(0.5 per character level) 0.5-49.5% Chance of Getting Magic Items (Based on Character Level)\nLawbringer\t3 Socket Swords/Hammers/Scepters\tAmn + Lem + Ko\t20% Chance To Cast Level 15 Decrepify On Striking\nLevel 16-18 Sanctuary Aura When Equipped (varies)\n-50% Target Defense\nAdds 150-210 Fire Damage\nAdds 130-180 Cold Damage\n7% Life Stolen Per Hit\nSlain Monsters Rest In Peace\n+200-250 Defense Vs. Missile (varies)\n+10 To Dexterity\n75% Extra Gold From Monsters\nOath\t4 Socket Swords/Axes/Maces\tShael + Pul + Mal + Lum\t30% Chance To Cast Level 20 Bone Spirit On Striking\nIndestructible\n+50% Increased Attack Speed\n+210-340% Enhanced Damage (varies)\n+75% Damage To Demons\n+100 To Attack Rating Against Demons\nPrevent Monster Heal\n+10 To Energy\n+10-15 Magic Absorb (varies)\nLevel 16 Heart Of Wolverine (20 Charges)\nLevel 17 Iron Golem (14 Charges)\n\nObedience\t5 Socket Polearms\tHel + Ko + Thul + Eth + Fal\t30% Chance To Cast Level 21 Enchant When You Kill An Enemy\n40% Faster Hit Recovery\n+370% Enhanced Damage\n-25% Target Defense\nAdds 3-14 Cold Damage 3 Second Duration (Normal)\n-25% To Enemy Fire Resistance\n40% Chance of Crushing Blow\n+200-300 Defense (varies)\n+10 To Strength\n+10 To Dexterity\nAll Resistances +20-30 (varies)\nRequirements -20%\nPhoenix\t4 Socket Weapons/Shields\tVex + Vex + Lo + Jah\tWeapons\n100% Chance To Cast level 40 Blaze When You Level-up\n40% Chance To Cast Level 22 Firestorm On Striking\nLevel 10-15 Redemption Aura When Equipped (varies)\n+350-400% Enhanced Damage (varies)\nIgnores Target's Defense\n14% Mana Stolen Per Hit\n-28% To Enemy Fire Resistance\n20% Deadly Strike\n+350-400 Defense Vs. Missile (varies)\n+15-21 Fire Absorb (varies)\n\nShields\n100% Chance To Cast level 40 Blaze When You Level-up\n40% Chance To Cast Level 22 Firestorm On Striking\nLevel 10-15 Redemption Aura When Equipped (varies)\n+350-400 Defense Vs. Missile (varies)\n+350-400% Enhanced Damage (varies)\n-28% To Enemy Fire Resistance\n+50 To Life\n+5% To Maximum Lightning Resist\n+10% To Maximum Fire Resist\n+15-21 Fire Absorb (varies)\n\nPride\t4 Socket Polearms\tCham + Sur + Io + Lo\t25% Chance To Cast Level 17 Fire Wall When Struck\nLevel 16-20 Concentration Aura When Equipped (varies)\n260-300% Bonus To Attack Rating (varies)\n+1-99% Damage To Demons (Based on Character Level)\nAdds 50-280 Lightning Damage\n20% Deadly Strike\nHit Blinds Target\nFreezes Target +3\n+10 To Vitality\nReplenish Life +8\n1.875-185.625% Extra Gold From Monsters (Based on Character Level)\nRift\t4 Socket Polearms/Scepters\tHel + Ko + Lem + Gul\t20% Chance To Cast Level 16 Tornado On Striking\n16% Chance To Cast Level 21 Frozen Orb On Attack\n20% Bonus To Attack Rating\nAdds 160-250 Magic Damage\nAdds 60-180 Fire Damage\n+5-10 To All Stats (varies)\n+10 To Dexterity\n38% Damage Taken Goes To Mana\n75% Extra Gold From Monsters\nLevel 15 Iron Maiden (40 Charges)\nRequirements -20%\nSpirit\t4 Socket Swords/Shields\tTal + Thul + Ort + Amn\tWeapons\n+2 To All Skills\n+25-35% Faster Cast Rate (varies)\n+55% Faster Hit Recovery\nAdds 1-50 Lightning Damage\nAdds 3-14 Cold Damage 3 Second Duration (Normal)\n+75 Poison Damage Over 5 Seconds\n7% Life Stolen Per Hit\n+250 Defense Vs. Missile\n+22 To Vitality\n+89-112 To Mana (varies)\n+3-8 Magic Absorb (varies)\n\nShields\n+2 To All Skills\n+25-35% Faster Cast Rate (varies)\n+55% Faster Hit Recovery\n+250 Defense Vs. Missile\n+22 To Vitality\n+89-112 To Mana (varies)\nCold Resist +35%\nLightning Resist +35%\nPoison Resist +35%\n+3-8 Magic Absorb (varies)\nAttacker Takes Damage of 14\nVoice of Reason\t4 Socket Swords/Maces\tLem + Ko + El + Eld\t15% Chance To Cast Level 13 Frozen Orb On Striking\n18% Chance To Cast Level 20 Ice Blast On Striking\n+50 To Attack Rating\n+220-350% Damage To Demons\n+355-375% Damage To Undead (varies)\n+50 To Attack Rating Against Undead\nAdds 100-220 Cold Damage\n-24% To Enemy Cold Resistance\n+10 To Dexterity\nCannot Be Frozen\n75% Extra Gold From Monsters\n+1 To Light Radius\nWrath\t4 Socket Missile Weapons\tPul + Lum + Ber + Mal\t30% Chance To Cast Level 1 Decrepify On Striking\n5% Chance To Cast Level 10 Life Tap On Striking\n+375% Damage To Demons\n+100 To Attack Rating Against Demons\n+250-300% Damage To Undead (varies)\nAdds 85-120 Magic Damage\nAdds 41-240 Lightning Damage\n20% Chance of Crushing Blow\nPrevent Monster Heal\n+10 To Energy\nCannot Be Frozen\n1.11 Rune Words\tAllowed Items\tRune Order\tCompleted Stats\n\nBone (Necromancer)\t3 Socket Body Armor\tSol + Um + Um\t15% Chance To Cast level 10 Bone Armor When Struck\n15% Chance To Cast level 10 Bone Spear On Striking\n+2 To Necromancer Skill Levels\n+100-150 To Mana (varies)\nAll Resistances +30\nDamage Reduced By 7\n\nEnlightenment (Sorceress)\t3 Socket Body Armor\tPul + Ral + Sol\t5% Chance To Cast Level 15 Blaze When Struck\n5% Chance To Cast level 15 Fire Ball On Striking\n+2 To Sorceress Skill Levels\n+1 To Warmth\n+30% Enhanced Defense\nFire Resist +30%\nDamage Reduced By 7\n\nMyth (Barbarian)\t3 Socket Body Armor\tHel + Amn + Nef\t3% Chance To Cast Level 1 Howl When Struck\n10% Chance To Cast Level 1 Taunt On Striking\n+2 To Barbarian Skill Levels\n+30 Defense Vs. Missile\nReplenish Life +10\nAttacker Takes Damage of 14\nRequirements -15%\n\nPeace (Amazon)\t3 Socket Body Armor\tShael + Thul + Amn\t4% Chance To Cast Level 5 Slow Missiles When Struck\n2% Chance To Cast level 15 Valkyrie On Striking\n+2 To Amazon Skill Levels\n+20% Faster Hit Recovery\n+2 To Critical Strike\nCold Resist +30%\nAttacker Takes Damage of 14\n\nPrinciple (Paladin)\t3 Socket Body Armor\tRal + Gul + Eld\t100% Chance To Cast Level 5 Holy Bolt On Striking\n+2 To Paladin Skill Levels\n+50% Damage to Undead\n+100-150 To Life (varies)\n15% Slower Stamina Drain\n+5% To Maximum Poison Resist\nFire Resist +30%\nRain (Druid)\t3 Socket Body Armor\tOrt + Mal + Ith\t5% Chance To Cast Level 15 Cyclone Armor When Struck\n5% Chance To Cast Level 15 Twister On Striking\n+2 To Druid Skills\n+100-150 To Mana (varies)\nLightning Resist +30%\nMagic Damage Reduced By 7\n15% Damage Taken Goes to Mana\nTreachery (Assassin)\t3 Socket Body Armor\tShael + Thul + Lem\t5% Chance To Cast Level 15 Fade When Struck\n25% Chance To Cast level 15 Venom On Striking\n+2 To Assassin Skills\n+45% Increased Attack Speed\n+20% Faster Hit Recovery\nCold Resist +30%\n50% Extra Gold From Monsters\n"
+  ],
+  [
+    "1.10 Rune Words",
+    "Allowed Items",
+    [
+        "Rune Order"
+    ],
+    "Completed Stats"
+  ],
+  [],
+  [
+    "Beast",
+    "5 Socket Axes/Scepters/Hammers",
+    [
+        "Ber",
+        "Tir",
+        "Um",
+        "Mal",
+        "Lum"
+    ],
+    "Level 9 Fanaticism Aura When Equipped\n+40% Increased Attack Speed\n+240-270% Enhanced Damage (varies)\n20% Chance of Crushing Blow\n25% Chance of Open Wounds\n+3 To Werebear\n+3 To Lycanthropy\nPrevent Monster Heal\n+25-40 To Strength (varies)\n+10 To Energy\n+2 To Mana After Each Kill\nLevel 13 Summon Grizzly (5 Charges)"
+  ],
+  [
+    "Bramble",
+    "4 Socket Body Armor",
+    [
+        "Ral",
+        "Ohm",
+        "Sur",
+        "Eth"
+    ],
+    "Level 15-21 Thorns Aura When Equipped (varies)\n+50% Faster Hit Recovery\n+25-50% To Poison Skill Damage (varies)\n+300 Defense\nIncrease Maximum Mana 5%\nRegenerate Mana 15%\n+5% To Maximum Cold Resist\nFire Resist +30%\nPoison Resist +100%\n+13 Life After Each Kill\nLevel 13 Spirit of Barbs (33 Charges)\n"
+  ],
+  [
+    "Breath of the Dying",
+    "6 Socket Weapons",
+    [
+        "Vex",
+        "Hel",
+        "El",
+        "Eld",
+        "Zod",
+        "Eth"
+    ],
+    "50% Chance To Cast Level 20 Poison Nova When You Kill An Enemy\nIndestructible\n+60% Increased Attack Speed\n+350-400% Enhanced Damage (varies)\n+200% Damage To Undead\n-25% Target Defense\n+50 To Attack Rating\n+50 To Attack Rating Against Undead\n7% Mana Stolen Per Hit\n12-15% Life Stolen Per Hit (varies)\nPrevent Monster Heal\n+30 To All Attributes\n+1 To Light Radius\nRequirements -20%\n"
+  ],
+  [
+    "Call To Arms*",
+    "5 Socket Weapons",
+    [
+        "Amn",
+        "Ral",
+        "Mal",
+        "Ist",
+        "Ohm"
+    ],
+    "+1 To All Skills\n+40% Increased Attack Speed\n+250-290% Enhanced Damage (varies)\nAdds 5-30 Fire Damage\n7% Life Stolen Per Hit\n+2-6 To Battle Command (varies)*\n+1-6 To Battle Orders (varies)*\n+1-4 To Battle Cry (varies)*\nPrevent Monster Heal\nReplenish Life +12\n30% Better Chance of Getting Magic Items"
+  ],
+  [
+    "Chains of Honor",
+    "4 Socket Body Armor",
+    [
+        "Dol",
+        "Um",
+        "Ber",
+        "Ist"
+    ],
+    "+2 To All Skills\n+200% Damage To Demons\n+100% Damage To Undead\n8% Life Stolen Per Hit\n+70% Enhanced Defense\n+20 To Strength\nReplenish Life +7\nAll Resistances +65\nDamage Reduced By 8%\n25% Better Chance of Getting Magic Items"
+  ],
+  [
+    "Chaos",
+    "3 Socket Claws",
+    [
+        "Fal",
+        "Ohm",
+        "Um"
+    ],
+    "9% Chance To Cast Level 11 Frozen Orb On Striking\n11% Chance To Cast Level 9 Charged Bolt On Striking\n+35% Increased Attack Speed\n+290-340% Enhanced Damage (varies)\nAdds 216-471 Magic Damage\n25% Chance of Open Wounds\n+1 To Whirlwind\n+10 To Strength\n+15 Life After Each Demon Kill\n"
+  ],
+  [
+    "Crescent Moon",
+    "3 Socket Axes/Swords/Polearms",
+    [
+        "Shael",
+        "Um",
+        "Tir"
+    ],
+    "10% Chance To Cast Level 17 Chain Lightning On Striking\n7% Chance To Cast Level 13 Static Field On Striking\n+20% Increased Attack Speed\n+180-220% Enhanced Damage (varies)\nIgnore Target's Defense\n-35% To Enemy Lightning Resistance\n25% Chance of Open Wounds\n+9-11 Magic Absorb (varies)\n+2 To Mana After Each Kill\nLevel 18 Summon Spirit Wolf (30 Charges)\n"
+  ],
+  [
+    "Delirium*",
+    "3 Socket Helms",
+    [
+        "Lem",
+        "Ist",
+        "Io"
+    ],
+    "1% Chance To Cast Level 50 Delirium* (morph) When Struck\n6% Chance To Cast Level 14 Mind Blast When Struck\n14% Chance To Cast Level 13 Terror When Struck\n11% Chance To Cast Level 18 Confuse On Striking\n+2 To All Skills\n+261 Defense\n+10 To Vitality\n50% Extra Gold From Monsters\n25% Better Chance of Getting Magic Items\nLevel 17 Attract (60 Charges)\n"
+  ],
+  [
+    "Doom",
+    "5 Socket Axes/Polearms/Hammers",
+    [
+        "Hel",
+        "Ohm",
+        "Um",
+        "Lo",
+        "Cham"
+    ],
+    "5% Chance To Cast Level 18 Volcano On Striking\nLevel 12 Holy Freeze Aura When Equipped\n+2 To All Skills\n+45% Increased Attack Speed\n+330-370% Enhanced Damage (varies)\n-(40-60)% To Enemy Cold Resistance (varies)\n20% Deadly Strike\n25% Chance of Open Wounds\nPrevent Monster Heal\nFreezes Target +3\nRequirements -20%"
+  ],
+  [
+    "Duress",
+    "3 Socket Body Armor",
+    [
+        "Shael",
+        "Um",
+        "Thul"
+    ],
+    "+40% Faster Hit Recovery\n+10-20% Enhanced Damage (varies)\nAdds 37-133 Cold Damage 2 sec. Duration (Normal)\n15% Chance of Crushing Blow\n33% Chance of Open Wounds\n+150-200% Enhanced Defense (varies)\n-20% Slower Stamina Drain\nCold Resist +45%\nLightning Resist +15%\nFire Resist +15%\nPoison Resist +15%\n"
+  ],
+  [
+    "Enigma",
+    "3 Socket Body Armor",
+    [
+        "Jah",
+        "Ith",
+        "Ber"
+    ],
+    "+2 To All Skills\n+45% Faster Run/Walk\n+1 To Teleport\n+750-775 Defense (varies)\n+ (0.75 Per Character Level) +0-74 To Strength (Based On Character Level)\nIncrease Maximum Life 5%\nDamage Reduced By 8%\n+14 Life After Each Kill\n15% Damage Taken Goes To Mana\n+ (1 Per Character Level) +1-99% Better Chance of Getting Magic Items (Based On Character Level)\n"
+  ],
+  [
+    "Eternity",
+    "5 Socket Melee Weapons",
+    [
+        "Amn",
+        "Ber",
+        "Ist",
+        "Sol",
+        "Sur"
+    ],
+    "Indestructible\n+260-310% Enhanced Damage (varies)\n+9 To Minimum Damage\n7% Life Stolen Per Hit\n20% Chance of Crushing Blow\nHit Blinds Target\nSlows Target By 33%\nRegenerate Mana 16%\nReplenish Life +16\nCannot Be Frozen\n30% Better Chance Of Getting Magic Items\nLevel 8 Revive (88 Charges)\n"
+  ],
+  [
+    "Exile",
+    "4 Socket Paladin Shields (only)",
+    [
+        "Vex",
+        "Ohm",
+        "Ist",
+        "Dol"
+    ],
+    "15% Chance To Cast Level 5 Life Tap On Striking\nLevel 13-16 Defiance Aura When Equipped (varies)\n+2 To Offensive Auras (Paladin Only)\n+30% Faster Block Rate\nFreezes Target\n+220-260% Enhanced Defense (varies)\nReplenish Life +7\n+5% To Maximum Cold Resist\n+5% To Maximum Fire Resist\n25% Better Chance Of Getting Magic Items\nRepairs 1 Durability in 4 Seconds"
+  ],
+  [
+    "Famine",
+    "4 Socket Axes/Hammers",
+    [
+        "Fal",
+        "Ohm",
+        "Ort",
+        "Jah"
+    ],
+    "+30% Increased Attack Speed\n+320-370% Enhanced Damage (varies)\nIgnore Target's Defense\nAdds 180-200 Magic Damage\nAdds 50-200 Fire Damage\nAdds 51-250 Lightning Damage\nAdds 50-200 Cold Damage\n12% Life Stolen Per Hit\nPrevent Monster Heal\n+10 To Strength"
+  ],
+  [
+    "Gloom",
+    "3 Socket Body Armor",
+    [
+        "Fal",
+        "Um",
+        "Pul"
+    ],
+    "15% Chance To Cast Level 3 Dim Vision When Struck\n+10% Faster Hit Recovery\n+200-260% Enhanced Defense (varies)\n+10 To Strength\nAll Resistances +45\nHalf Freeze Duration\n5% Damage Taken Goes To Mana\n-3 To Light Radius"
+  ],
+  [
+    "Hand of Justice*",
+    "4 Socket Weapons",
+    [
+        "Sur",
+        "Cham",
+        "Amn",
+        "Lo"
+    ],
+    "100% Chance To Cast Level 36 Blaze When You Level-Up\n100% Chance To Cast Level 48 Meteor When You Die\nLevel 16 Holy Fire Aura When Equipped\n+33% Increased Attack Speed\n+280-330% Enhanced Damage (varies)\nIgnore Target's Defense\n7% Life Stolen Per Hit\n-20% To Enemy Fire Resistance\n20% Deadly Strike\nHit Blinds Target\nFreezes Target +3"
+  ],
+  [
+    "Heart of the Oak",
+    "4 Socket Staves/Maces*",
+    [
+        "Ko",
+        "Vex",
+        "Pul",
+        "Thul"
+    ],
+    "+3 To All Skills\n+40% Faster Cast Rate\n+75% Damage To Demons\n+100 To Attack Rating Against Demons\nAdds 3-14 Cold Damage, 3 sec. Duration (Normal)\n7% Mana Stolen Per Hit\n+10 To Dexterity\nReplenish Life +20\nIncrease Maximum Mana 15%\nAll Resistances +30-40 (varies)\nLevel 4 Oak Sage (25 Charges)\nLevel 14 Raven (60 Charges)\n"
+  ],
+  [
+    "Kingslayer",
+    "4 Socket Swords/Axes",
+    [
+        "Mal",
+        "Um",
+        "Gul",
+        "Fal"
+    ],
+    "+30% Increased Attack Speed\n+230-270% Enhanced Damage (varies)\n-25% Target Defense\n20% Bonus To Attack Rating\n33% Chance of Crushing Blow\n50% Chance of Open Wounds\n+1 To Vengeance\nPrevent Monster Heal\n+10 To Strength\n40% Extra Gold From Monsters"
+  ],
+  [
+    "Passion",
+    "4 Socket Weapons",
+    [
+        "Dol",
+        "Ort",
+        "Eld",
+        "Lem"
+    ],
+    "+25% Increased Attack Speed\n+160-210% Enhanced Damage (varies)\n50-80% Bonus To Attack Rating (varies)\n+75% Damage To Undead\n+50 To Attack Rating Against Undead\nAdds 1-50 Lightning Damage\n+1 To Berserk\n+1 To Zeal\nHit Blinds Target +10\nHit Causes Monster To Flee 25%\n75% Extra Gold From Monsters\nLevel 3 Heart of Wolverine (12 Charges)\n"
+  ],
+  [
+    "Prudence",
+    "2 Socket Body Armor",
+    [
+        "Mal",
+        "Tir"
+    ],
+    "+25% Faster Hit Recovery\n+140-170% Enhanced Defense (varies)\nAll Resistances +25-35 (varies)\nDamage Reduced by 3\nMagic Damage Reduced by 17\n+2 To Mana After Each Kill\n+1 To Light Radius\nRepairs Durability 1 In 4 Seconds\n"
+  ],
+  [
+    "Sanctuary",
+    "3 Socket Shields",
+    [
+        "Ko",
+        "Ko",
+        "Mal"
+    ],
+    "+20% Faster Hit Recovery\n+20% Faster Block Rate\n20% Increased Chance of Blocking\n+130-160% Enhanced Defense (varies)\n+250 Defense vs. Missile\n+20 To Dexterity\nAll Resistances +50-70 (varies)\nMagic Damage Reduced By 7\nLevel 12 Slow Missiles (60 Charges)\n"
+  ],
+  [
+    "Splendor",
+    "2 Socket Shields",
+    [
+        "Eth",
+        "Lum"
+    ],
+    "+1 To All Skills\n+10% Faster Cast Rate\n+20% Faster Block Rate\n+60-100% Enhanced Defense (varies)\n+10 To Energy\nRegenerate Mana 15%\n50% Extra Gold From Monsters\n20% Better Chance of Getting Magic Items\n+3 To Light Radius\n"
+  ],
+  [
+    "Stone",
+    "4 Socket Body Armor",
+    [
+        "Shael",
+        "Um",
+        "Pul",
+        "Lum"
+    ],
+    "+60% Faster Hit Recovery\n+250-290% Enhanced Defense (varies)\n+300 Defense Vs. Missile\n+16 To Strength\n+16 To Vitality\n+10 To Energy\nAll Resistances +15\nLevel 16 Molten Boulder (80 Charges)\nLevel 16 Clay Golem (16 Charges)\n"
+  ],
+  [
+    "Wind",
+    "2 Socket Melee Weapons",
+    [
+        "Sur",
+        "El"
+    ],
+    "10% Chance To Cast Level 9 Tornado On Striking\n+20% Faster Run/Walk\n+40% Increased Attack Speed\n+15% Faster Hit Recovery\n+120-160% Enhanced Damage (varies)\n-50% Target Defense\n+50 To Attack Rating\nHit Blinds Target\n+1 To Light Radius\nLevel 13 Twister (127 Charges)"
+  ],
+  [
+    "Ladder Rune Words",
+    "Allowed Items",
+    [
+        "Rune Order"
+    ],
+    "Completed Stats"
+  ],
+  [],
+  [
+    "Brand",
+    "4 Socket Missile Weapons",
+    [
+        "Jah",
+        "Lo",
+        "Mal",
+        "Gul"
+    ],
+    "35% Chance To Cast Level 14 Amplify Damage When Struck\n100% Chance To Cast Level 18 Bone Spear On Striking\n+260-340% Enhanced Damage (varies)\nIgnore Target's Defense\n20% Bonus to Attack Rating\n+280-330% Damage To Demons (varies)\n20% Deadly Strike\nPrevent Monster Heal\nKnockback\nFires Explosive Arrows or Bolts (15)\n"
+  ],
+  [
+    "Death",
+    "5 Socket Swords/Axes",
+    [
+        "Hel",
+        "El",
+        "Vex",
+        "Ort",
+        "Gul"
+    ],
+    "100% Chance To Cast Level 44 Chain Lightning When You Die\n25% Chance To Cast Level 18 Glacial Spike On Attack\nIndestructible\n+300-385% Enhanced Damage (varies)\n20% Bonus To Attack Rating\n+50 To Attack Rating\nAdds 1-50 Lightning Damage\n7% Mana Stolen Per Hit\n50% Chance of Crushing Blow\n+(0.5 per Character Level) 0.5-49.5% Deadly Strike (Based on Character Level)\n+1 To Light Radius\nLevel 22 Blood Golem (15 Charges)\nRequirements -20%"
+  ],
+  [
+    "Destruction",
+    "5 Socket Polearms/Swords",
+    [
+        "Vex",
+        "Lo",
+        "Ber",
+        "Jah",
+        "Ko"
+    ],
+    "23% Chance To Cast Level 12 Volcano On Striking\n5% Chance To Cast Level 23 Molten Boulder On Striking\n100% Chance To Cast level 45 Meteor When You Die\n15% Chance To Cast Level 22 Nova On Attack\n+350% Enhanced Damage\nIgnore Target's Defense\nAdds 100-180 Magic Damage\n7% Mana Stolen Per Hit\n20% Chance Of Crushing Blow\n20% Deadly Strike\nPrevent Monster Heal\n+10 To Dexterity\n"
+  ],
+  [
+    "Dragon",
+    "3 Socket Body Armor/Shields",
+    [
+        "Sur",
+        "Lo",
+        "Sol"
+    ],
+    "20% Chance to Cast Level 18 Venom When Struck\n12% Chance To Cast Level 15 Hydra On Striking\nLevel 14 Holy Fire Aura When Equipped\n+360 Defense\n+230 Defense Vs. Missile\n+3-5 To All Attributes (varies)\n+0.375-37.125 To Strength (Based on Character Level)\nIncrease Maximum Mana 5% (Armor Only)\n+50 To Mana (Shields Only)\n+5% To Maximum Lightning Resist\nDamage Reduced by 7\n"
+  ],
+  [
+    "Dream",
+    "3 Socket Helms/Shields",
+    [
+        "Io",
+        "Jah",
+        "Pul"
+    ],
+    "10% Chance To Cast Level 15 Confuse When Struck\nLevel 15 Holy Shock Aura When Equipped\n+20-30% Faster Hit Recovery (varies)\n+30% Enhanced Defense\n+150-220 Defense (varies)\n+10 To Vitality\nIncrease Maximum Life 5% (Helms Only)\n+50 To Life (Shields Only)\n+0.625-61.875 To Mana (Based On Character Level)\nAll Resistances +5-20 (varies)\n12-25% Better Chance of Getting Magic Items (varies)"
+  ],
+  [
+    "Edge",
+    "3 Socket Missile Weapons",
+    [
+        "Tir",
+        "Tal",
+        "Amn"
+    ],
+    "Level 15 Thorns Aura When Equipped\n+35% Increased Attack Speed\n+320-380% Damage To Demons (varies)\n+280% Damage To Undead\n+75 Poison Damage Over 5 Seconds\n7% Life Stolen Per Hit\nPrevent Monster Heal\n+5-10 To All Attributes (varies)\n+2 To Mana After Each Kill\nReduces All Vendor Prices 15%!!!*"
+  ],
+  [
+    "Faith",
+    "4 Socket Missile Weapons",
+    [
+        "Ohm",
+        "Jah",
+        "Lem",
+        "Eld"
+    ],
+    "Level 12-15 Fanaticism Aura When Equipped (varies)\n+1-2 To All Skills (varies)\n+330% Enhanced Damage\nIgnore Target's Defense\n300% Bonus To Attack Rating\n+75% Damage To Undead\n+50 To Attack Rating Against Undead\n+120 Fire Damage\nAll Resistances +15\n10% Reanimate As: Returned\n75% Extra Gold From Monsters"
+  ],
+  [
+    "Fortitude",
+    "4 Socket Weapons/Body Armor",
+    [
+        "El",
+        "Sol",
+        "Dol",
+        "Lo"
+    ],
+    "Weapons\n20% Chance To Cast Level 15 Chilling Armor when Struck\n+25% Faster Cast Rate\n+300% Enhanced Damage\n+9 To Minimum Damage\n+50 To Attack Rating\n20% Deadly Strike\nHit Causes Monster To Flee 25%\n+200% Enhanced Defense\n+X To Life (Based on Character Level)*\nAll Resistances +25-30 (varies)\n12% Damage Taken Goes To Mana\n+1 To Light Radius\n\nBody Armor\n20% Chance To Cast Level 15 Chilling Armor when Struck\n+25% Faster Cast Rate\n+300% Enhanced Damage\n+200% Enhanced Defense\n+15 Defense\n+X To Life (Based on Character Level)*\nReplenish Life +7\n+5% To Maximum Lightning Resist\nAll Resistances +25-30 (varies)\nDamage Reduced By 7\n12% Damage Taken Goes To Mana\n+1 To Light Radius"
+  ],
+  [
+    "Grief",
+    "5 Socket Swords/Axes",
+    [
+        "Eth",
+        "Tir",
+        "Lo",
+        "Mal",
+        "Ral"
+    ],
+    "35% Chance To Cast Level 15 Venom On Striking\n+30-40% Increased Attack Speed (varies)\nDamage +340-400 (varies)\nIgnore Target's Defense\n-25% Target Defense\n+(1.875 per character level) 1.875-185.625% Damage To Demons (Based on Character Level)\nAdds 5-30 Fire Damage\n-20-25% To Enemy Poison Resistance (varies)\n20% Deadly Strike\nPrevent Monster Heal\n+2 To Mana After Each Kill\n+10-15 Life After Each Kill (varies)"
+  ],
+  [
+    "Harmony",
+    "4 Socket Missile Weapons",
+    [
+        "Tir",
+        "Ith",
+        "Sol",
+        "Ko"
+    ],
+    "Level 10 Vigor Aura When Equipped\n+200-275% Enhanced Damage (varies)\n+9 To Minimum Damage\n+9 To Maximum Damage\nAdds 55-160 Lightning Damage\nAdds 55-160 Fire Damage\nAdds 55-160 Cold Damage\n+2-6 To Valkyrie (varies)\n+10 To Dexterity\nRegenerate Mana 20%\n+2 To Mana After Each Kill\n+2 To Light Radius\nLevel 20 Revive (25 Charges)"
+  ],
+  [
+    "Ice",
+    "4 Socket Missile Weapons",
+    [
+        "Amn",
+        "Shael",
+        "Jah",
+        "Lo"
+    ],
+    "100% Chance To Cast Level 40 Blizzard When You Level-up\n25% Chance To Cast Level 22 Frost Nova On Striking\nLevel 18 Holy Freeze Aura When Equipped\n+20% Increased Attack Speed\n+140-210% Enhanced Damage (varies)\nIgnore Target's Defense\n+25-30% To Cold Skill Damage (varies)\n-20% To Enemy Cold Resistance\n7% Life Stolen Per Hit\n20% Deadly Strike\n3.125-309.375 Extra Gold From Monsters (Based on Character Level)"
+  ],
+  [
+    "Infinity",
+    "4 Socket Polearms",
+    [
+        "Ber",
+        "Mal",
+        "Ber",
+        "Ist"
+    ],
+    "50% Chance To Cast Level 20 Chain Lightning When You Kill An Enemy\nLevel 12 Conviction Aura When Equipped\n+35% Faster Run/Walk\n+255-325% Enhanced Damage (varies)\n-(45-55)% To Enemy Lightning Resistance (varies)\n40% Chance of Crushing Blow\nPrevent Monster Heal\n0.5-49.5 To Vitality (Based on Character Level)\n30% Better Chance of Getting Magic Items\nLevel 21 Cyclone Armor (30 Charges)\n"
+  ],
+  [
+    "Insight",
+    "4 Socket Polearms/Staves",
+    [
+        "Ral",
+        "Tir",
+        "Tal",
+        "Sol"
+    ],
+    "Level 12-17 Meditation Aura When Equipped (varies)\n+35% Faster Cast Rate\n+200-260% Enhanced Damage (varies)\n+9 To Minimum Damage\n180-250% Bonus to Attack Rating (varies)\nAdds 5-30 Fire Damage\n+75 Poison Damage Over 5 Seconds\n+1-6 To Critical Strike (varies)\n+5 To All Attributes\n+2 To Mana After Each Kill\n23% Better Chance of Getting Magic Items\n"
+  ],
+  [
+    "Last Wish",
+    "6 Socket Swords/Hammers/Axes",
+    [
+        "Jah",
+        "Mal",
+        "Jah",
+        "Sur",
+        "Jah",
+        "Ber"
+    ],
+    "6% Chance To Cast Level 11 Fade When Struck\n10% Chance To Cast Level 18 Life Tap On Striking\n20% Chance To Cast Level 20 Charged Bolt On Attack\nLevel 17 Might Aura When Equipped\n+330-375% Enhanced Damage (varies)\nIgnore Target's Defense\n60-70% Chance of Crushing Blow (varies)\nPrevent Monster Heal\nHit Blinds Target\n+(0.5 per character level) 0.5-49.5% Chance of Getting Magic Items (Based on Character Level)"
+  ],
+  [
+    "Lawbringer",
+    "3 Socket Swords/Hammers/Scepters",
+    [
+        "Amn",
+        "Lem",
+        "Ko"
+    ],
+    "20% Chance To Cast Level 15 Decrepify On Striking\nLevel 16-18 Sanctuary Aura When Equipped (varies)\n-50% Target Defense\nAdds 150-210 Fire Damage\nAdds 130-180 Cold Damage\n7% Life Stolen Per Hit\nSlain Monsters Rest In Peace\n+200-250 Defense Vs. Missile (varies)\n+10 To Dexterity\n75% Extra Gold From Monsters"
+  ],
+  [
+    "Oath",
+    "4 Socket Swords/Axes/Maces",
+    [
+        "Shael",
+        "Pul",
+        "Mal",
+        "Lum"
+    ],
+    "30% Chance To Cast Level 20 Bone Spirit On Striking\nIndestructible\n+50% Increased Attack Speed\n+210-340% Enhanced Damage (varies)\n+75% Damage To Demons\n+100 To Attack Rating Against Demons\nPrevent Monster Heal\n+10 To Energy\n+10-15 Magic Absorb (varies)\nLevel 16 Heart Of Wolverine (20 Charges)\nLevel 17 Iron Golem (14 Charges)\n"
+  ],
+  [
+    "Obedience",
+    "5 Socket Polearms",
+    [
+        "Hel",
+        "Ko",
+        "Thul",
+        "Eth",
+        "Fal"
+    ],
+    "30% Chance To Cast Level 21 Enchant When You Kill An Enemy\n40% Faster Hit Recovery\n+370% Enhanced Damage\n-25% Target Defense\nAdds 3-14 Cold Damage 3 Second Duration (Normal)\n-25% To Enemy Fire Resistance\n40% Chance of Crushing Blow\n+200-300 Defense (varies)\n+10 To Strength\n+10 To Dexterity\nAll Resistances +20-30 (varies)\nRequirements -20%"
+  ],
+  [
+    "Phoenix",
+    "4 Socket Weapons/Shields",
+    [
+        "Vex",
+        "Vex",
+        "Lo",
+        "Jah"
+    ],
+    "Weapons\n100% Chance To Cast level 40 Blaze When You Level-up\n40% Chance To Cast Level 22 Firestorm On Striking\nLevel 10-15 Redemption Aura When Equipped (varies)\n+350-400% Enhanced Damage (varies)\nIgnores Target's Defense\n14% Mana Stolen Per Hit\n-28% To Enemy Fire Resistance\n20% Deadly Strike\n+350-400 Defense Vs. Missile (varies)\n+15-21 Fire Absorb (varies)\n\nShields\n100% Chance To Cast level 40 Blaze When You Level-up\n40% Chance To Cast Level 22 Firestorm On Striking\nLevel 10-15 Redemption Aura When Equipped (varies)\n+350-400 Defense Vs. Missile (varies)\n+350-400% Enhanced Damage (varies)\n-28% To Enemy Fire Resistance\n+50 To Life\n+5% To Maximum Lightning Resist\n+10% To Maximum Fire Resist\n+15-21 Fire Absorb (varies)\n"
+  ],
+  [
+    "Pride",
+    "4 Socket Polearms",
+    [
+        "Cham",
+        "Sur",
+        "Io",
+        "Lo"
+    ],
+    "25% Chance To Cast Level 17 Fire Wall When Struck\nLevel 16-20 Concentration Aura When Equipped (varies)\n260-300% Bonus To Attack Rating (varies)\n+1-99% Damage To Demons (Based on Character Level)\nAdds 50-280 Lightning Damage\n20% Deadly Strike\nHit Blinds Target\nFreezes Target +3\n+10 To Vitality\nReplenish Life +8\n1.875-185.625% Extra Gold From Monsters (Based on Character Level)"
+  ],
+  [
+    "Rift",
+    "4 Socket Polearms/Scepters",
+    [
+        "Hel",
+        "Ko",
+        "Lem",
+        "Gul"
+    ],
+    "20% Chance To Cast Level 16 Tornado On Striking\n16% Chance To Cast Level 21 Frozen Orb On Attack\n20% Bonus To Attack Rating\nAdds 160-250 Magic Damage\nAdds 60-180 Fire Damage\n+5-10 To All Stats (varies)\n+10 To Dexterity\n38% Damage Taken Goes To Mana\n75% Extra Gold From Monsters\nLevel 15 Iron Maiden (40 Charges)\nRequirements -20%"
+  ],
+  [
+    "Spirit",
+    "4 Socket Swords/Shields",
+    [
+        "Tal",
+        "Thul",
+        "Ort",
+        "Amn"
+    ],
+    "Weapons\n+2 To All Skills\n+25-35% Faster Cast Rate (varies)\n+55% Faster Hit Recovery\nAdds 1-50 Lightning Damage\nAdds 3-14 Cold Damage 3 Second Duration (Normal)\n+75 Poison Damage Over 5 Seconds\n7% Life Stolen Per Hit\n+250 Defense Vs. Missile\n+22 To Vitality\n+89-112 To Mana (varies)\n+3-8 Magic Absorb (varies)\n\nShields\n+2 To All Skills\n+25-35% Faster Cast Rate (varies)\n+55% Faster Hit Recovery\n+250 Defense Vs. Missile\n+22 To Vitality\n+89-112 To Mana (varies)\nCold Resist +35%\nLightning Resist +35%\nPoison Resist +35%\n+3-8 Magic Absorb (varies)\nAttacker Takes Damage of 14"
+  ],
+  [
+    "Voice of Reason",
+    "4 Socket Swords/Maces",
+    [
+        "Lem",
+        "Ko",
+        "El",
+        "Eld"
+    ],
+    "15% Chance To Cast Level 13 Frozen Orb On Striking\n18% Chance To Cast Level 20 Ice Blast On Striking\n+50 To Attack Rating\n+220-350% Damage To Demons\n+355-375% Damage To Undead (varies)\n+50 To Attack Rating Against Undead\nAdds 100-220 Cold Damage\n-24% To Enemy Cold Resistance\n+10 To Dexterity\nCannot Be Frozen\n75% Extra Gold From Monsters\n+1 To Light Radius"
+  ],
+  [
+    "Wrath",
+    "4 Socket Missile Weapons",
+    [
+        "Pul",
+        "Lum",
+        "Ber",
+        "Mal"
+    ],
+    "30% Chance To Cast Level 1 Decrepify On Striking\n5% Chance To Cast Level 10 Life Tap On Striking\n+375% Damage To Demons\n+100 To Attack Rating Against Demons\n+250-300% Damage To Undead (varies)\nAdds 85-120 Magic Damage\nAdds 41-240 Lightning Damage\n20% Chance of Crushing Blow\nPrevent Monster Heal\n+10 To Energy\nCannot Be Frozen"
+  ],
+  [
+    "Bone (Necromancer)",
+    "3 Socket Body Armor",
+    [
+        "Sol",
+        "Um",
+        "Um"
+    ],
+    "15% Chance To Cast level 10 Bone Armor When Struck\n15% Chance To Cast level 10 Bone Spear On Striking\n+2 To Necromancer Skill Levels\n+100-150 To Mana (varies)\nAll Resistances +30\nDamage Reduced By 7\n"
+  ],
+  [
+    "Enlightenment (Sorceress)",
+    "3 Socket Body Armor",
+    [
+        "Pul",
+        "Ral",
+        "Sol"
+    ],
+    "5% Chance To Cast Level 15 Blaze When Struck\n5% Chance To Cast level 15 Fire Ball On Striking\n+2 To Sorceress Skill Levels\n+1 To Warmth\n+30% Enhanced Defense\nFire Resist +30%\nDamage Reduced By 7\n"
+  ],
+  [
+    "Myth (Barbarian)",
+    "3 Socket Body Armor",
+    [
+        "Hel",
+        "Amn",
+        "Nef"
+    ],
+    "3% Chance To Cast Level 1 Howl When Struck\n10% Chance To Cast Level 1 Taunt On Striking\n+2 To Barbarian Skill Levels\n+30 Defense Vs. Missile\nReplenish Life +10\nAttacker Takes Damage of 14\nRequirements -15%\n"
+  ],
+  [
+    "Peace (Amazon)",
+    "3 Socket Body Armor",
+    [
+        "Shael",
+        "Thul",
+        "Amn"
+    ],
+    "4% Chance To Cast Level 5 Slow Missiles When Struck\n2% Chance To Cast level 15 Valkyrie On Striking\n+2 To Amazon Skill Levels\n+20% Faster Hit Recovery\n+2 To Critical Strike\nCold Resist +30%\nAttacker Takes Damage of 14\n"
+  ],
+  [
+    "Principle (Paladin)",
+    "3 Socket Body Armor",
+    [
+        "Ral",
+        "Gul",
+        "Eld"
+    ],
+    "100% Chance To Cast Level 5 Holy Bolt On Striking\n+2 To Paladin Skill Levels\n+50% Damage to Undead\n+100-150 To Life (varies)\n15% Slower Stamina Drain\n+5% To Maximum Poison Resist\nFire Resist +30%"
+  ],
+  [
+    "Rain (Druid)",
+    "3 Socket Body Armor",
+    [
+        "Ort",
+        "Mal",
+        "Ith"
+    ],
+    "5% Chance To Cast Level 15 Cyclone Armor When Struck\n5% Chance To Cast Level 15 Twister On Striking\n+2 To Druid Skills\n+100-150 To Mana (varies)\nLightning Resist +30%\nMagic Damage Reduced By 7\n15% Damage Taken Goes to Mana"
+  ],
+  [
+    "Treachery (Assassin)",
+    "3 Socket Body Armor",
+    [
+        "Shael",
+        "Thul",
+        "Lem"
+    ],
+    "5% Chance To Cast Level 15 Fade When Struck\n25% Chance To Cast level 15 Venom On Striking\n+2 To Assassin Skills\n+45% Increased Attack Speed\n+20% Faster Hit Recovery\nCold Resist +30%\n50% Extra Gold From Monsters\n"
+  ]
+]
