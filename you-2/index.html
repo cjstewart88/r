@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <title>7/7/2021 - you-2</title>
+    <style>
+      body { margin: 0; background-color: black; overflow: hidden; }
+
+      .door {
+        background-color: blueviolet;
+        width: 4px;
+        height: 300px;
+        position: absolute;
+        top: 200px;
+        left: 500px;
+        box-shadow: 20px 0px 114px 120px #9900e60a;
+      }
+
+      .line {
+        background-color: #33164e;
+        width: 1px;
+        height: 300px;
+        position: absolute;
+        top: 455px;
+        left: 395px;
+        transform: rotate(45deg);
+      }
+
+
+      .line2 {
+        background-color: #33164e;
+        width: 1px;
+        height: 300px;
+        position: absolute;
+        top: 8px;
+        left: 359px;
+        transform: rotate(107deg);
+      }
+
+      .door2 {
+        left: 600px;
+        border-left: solid 5px blueviolet;
+        background-color: black;
+        width: 100%;
+        box-shadow: none;
+        box-shadow: 20px 0px 114px 120px black;
+      }
+
+      .door2-line {
+        /* top: 475px;
+        left: 515px;
+        transform: rotate(44deg); */
+      }
+
+      .door2-line2 {
+        /* top: -6px;
+        left: 466px;
+        transform: rotate(112deg); */
+      }
+
+      .circle {
+        width: 150px;
+        height: 150px;
+        background-color: black;
+        border-radius: 50%;
+        position: absolute;
+        left: 550px;
+        top: 280px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="line2"></div>
+    <div class="line"></div>
+    <div class="door"></div>
+    <div class="circle"></div>
+
+    <div class="door door2"></div>
+
+    <div class="line2 door2-line2"></div>
+    <div class="line door2-line"></div>
+
+    <script>
+      const door2 = document.body.getElementsByClassName('door2')[0];
+      const door2Line2 = document.body.getElementsByClassName('door2-line2')[0];
+      const door2Line = document.body.getElementsByClassName('door2-line')[0];
+
+      document.body.addEventListener('mousemove', (event) => {
+        if (event.clientX >= 500) {
+          door2.setAttribute('style', 'left: ' + event.clientX + 'px');
+          door2Line2.setAttribute('style', 'left: ' + (event.clientX - 140) + 'px');
+          door2Line.setAttribute('style', 'left: ' + (event.clientX - 106) + 'px');
+        }
+      });
+    </script>
+  </body>
+</html>
