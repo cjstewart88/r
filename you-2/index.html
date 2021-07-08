@@ -19,9 +19,9 @@
         width: 1px;
         height: 300px;
         position: absolute;
-        top: 455px;
-        left: 395px;
-        transform: rotate(45deg);
+        top: 390px;
+        left: 355px;
+        transform: rotate(76deg);
       }
 
 
@@ -45,15 +45,11 @@
       }
 
       .door2-line {
-        /* top: 475px;
-        left: 515px;
-        transform: rotate(44deg); */
+        transform: rotate(73deg);
+        top: 397px;
       }
 
       .door2-line2 {
-        /* top: -6px;
-        left: 466px;
-        transform: rotate(112deg); */
       }
 
       .circle {
@@ -65,13 +61,33 @@
         left: 550px;
         top: 280px;
       }
+
+      .top-line {
+        position: absolute;
+        width: 100%;
+        top: 200px;
+        left: 500px;
+        height: 2px;
+        background-color: blueviolet;
+      }
+
+      .bottom-line {
+        position: absolute;
+        width: 100%;
+        top: 500px;
+        left: 500px;
+        height: 2px;
+        background-color: blueviolet;
+      }
     </style>
   </head>
   <body>
     <div class="line2"></div>
-    <div class="line"></div>
+    <div class="line door-line"></div>
     <div class="door"></div>
     <div class="circle"></div>
+    <div class="top-line"></div>
+    <div class="bottom-line"></div>
 
     <div class="door door2"></div>
 
@@ -79,15 +95,24 @@
     <div class="line door2-line"></div>
 
     <script>
+      const door = document.body.getElementsByClassName('door')[0];
       const door2 = document.body.getElementsByClassName('door2')[0];
       const door2Line2 = document.body.getElementsByClassName('door2-line2')[0];
       const door2Line = document.body.getElementsByClassName('door2-line')[0];
+      const doorLine = document.body.getElementsByClassName('door-line')[0];
+
+      const bottomLine = document.body.getElementsByClassName('bottom-line')[0];
+
 
       document.body.addEventListener('mousemove', (event) => {
-        if (event.clientX >= 500) {
-          door2.setAttribute('style', 'left: ' + event.clientX + 'px');
+
+        if (event.clientX >= 500 && event.clientY >= 200) {
+          door.setAttribute('style', 'height: ' + (event.clientY - 200) + 'px');
+          door2.setAttribute('style', 'height: ' + (event.clientY - 200) + 'px;' + 'left: ' + event.clientX + 'px');
           door2Line2.setAttribute('style', 'left: ' + (event.clientX - 140) + 'px');
-          door2Line.setAttribute('style', 'left: ' + (event.clientX - 106) + 'px');
+          door2Line.setAttribute('style', 'left: ' + (event.clientX - 140) + 'px;' + 'top: ' + (event.clientY - 100) + 'px');
+          doorLine.setAttribute('style', 'top: ' + (event.clientY - 110) + 'px');
+          bottomLine.setAttribute('style', 'top: ' + event.clientY + 'px');
         }
       });
     </script>
