@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>7/8/2021 - late</title>
+    <style>
+      body { margin: 0; background-color: black; overflow: hidden; }
+
+      .corner-1, .corner-2, .corner-3, .corner-4 {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+      }
+
+      .corner-1 {
+        left: 0;
+        top: 0;
+        border-left: solid 5px gold;
+        border-top: solid 5px goldenrod;
+      }
+
+      .corner-2 {
+        right: 0;
+        top: 0;
+        border-right: solid 5px gold;
+        border-top: solid 5px goldenrod;
+      }
+
+      .corner-3 {
+        left: 0;
+        bottom: 0;
+        border-left: solid 5px gold;
+        border-bottom: solid 5px goldenrod;
+      }
+
+      .corner-4 {
+        right: 0;
+        bottom: 0;
+        border-right: solid 5px gold;
+        border-bottom: solid 5px goldenrod;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="corner-1"></div>
+    <div class="corner-2"></div>
+    <div class="corner-3"></div>
+    <div class="corner-4"></div>
+    <script>
+      const cornerOne = document.body.getElementsByClassName('corner-1')[0];
+      const cornerTwo = document.body.getElementsByClassName('corner-2')[0];
+      const cornerThree = document.body.getElementsByClassName('corner-3')[0];
+      const cornerFour = document.body.getElementsByClassName('corner-4')[0];
+
+      document.body.addEventListener('mousemove', (event) => {
+        //if (event.clientX >= 100 && event.clientX <= (window.innerWidth + 100)) {
+          cornerOne.setAttribute('style', 'left: ' + (event.clientX - 100) + 'px; top: ' + (event.clientY) + 'px');
+          cornerTwo.setAttribute('style', 'right: ' + (event.clientX - 100) + 'px; top: ' + (event.clientY) + 'px');
+          cornerThree.setAttribute('style', 'left: ' + (event.clientX - 100) + 'px; bottom: ' + (event.clientY) + 'px');
+          cornerFour.setAttribute('style', 'right: ' + (event.clientX - 100) + 'px; bottom: ' + (event.clientY) + 'px');
+        //}
+      });
+    </script>
+  </body>
+</html>
