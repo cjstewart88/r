@@ -2,7 +2,7 @@
   <head>
     <title>7/8/2021 - late</title>
     <style>
-      body { margin: 0; background-color: black; overflow: hidden; }
+      body { margin: 0; background-color: black; color: white; overflow: hidden; }
 
       .corner-1, .corner-2, .corner-3, .corner-4 {
         position: absolute;
@@ -40,24 +40,59 @@
     </style>
   </head>
   <body>
+    <div class="stats">
+      x, y: <span class="stats-x"></span>, <span class="stats-y"></span><br>
+      x speed: <span class="stats-x-speed"></span><br>
+      y speed: <span class="stats-y-speed"></span><br>
+    </div>
     <div class="corner-1"></div>
     <div class="corner-2"></div>
     <div class="corner-3"></div>
     <div class="corner-4"></div>
     <script>
+      let xSpeed = 5;
+      let ySpeed = 15;
+      let x = 0;
+      let y = 0;
+
       const cornerOne = document.body.getElementsByClassName('corner-1')[0];
       const cornerTwo = document.body.getElementsByClassName('corner-2')[0];
       const cornerThree = document.body.getElementsByClassName('corner-3')[0];
       const cornerFour = document.body.getElementsByClassName('corner-4')[0];
+      const xEl = document.body.getElementsByClassName('stats-x')[0];
+      const yEl = document.body.getElementsByClassName('stats-y')[0];
+      const xSpeedEl = document.body.getElementsByClassName('stats-x-speed')[0];
+      const ySpeedEl = document.body.getElementsByClassName('stats-y-speed')[0];
 
-      document.body.addEventListener('mousemove', (event) => {
-        //if (event.clientX >= 100 && event.clientX <= (window.innerWidth + 100)) {
-          cornerOne.setAttribute('style', 'left: ' + (event.clientX - 100) + 'px; top: ' + (event.clientY) + 'px');
-          cornerTwo.setAttribute('style', 'right: ' + (event.clientX - 100) + 'px; top: ' + (event.clientY) + 'px');
-          cornerThree.setAttribute('style', 'left: ' + (event.clientX - 100) + 'px; bottom: ' + (event.clientY) + 'px');
-          cornerFour.setAttribute('style', 'right: ' + (event.clientX - 100) + 'px; bottom: ' + (event.clientY) + 'px');
-        //}
-      });
+      const move = () => {
+        cornerOne.setAttribute('style', 'left: ' + x + 'px; top: ' + y + 'px');
+        cornerTwo.setAttribute('style', 'right: ' + x + 'px; top: ' + y + 'px');
+        cornerThree.setAttribute('style', 'left: ' + x + 'px; bottom: ' + y + 'px');
+        cornerFour.setAttribute('style', 'right: ' + x + 'px; bottom: ' + y + 'px');
+
+        if (x < window.innerWidth) {
+          x += xSpeed;
+        } else {
+          x = -200;
+          xSpeed = Math.floor(1 + Math.random()*500);
+        }
+
+        if (y < window.innerHeight) {
+          y += ySpeed;
+        } else {
+          y = -200;
+          ySpeed = Math.floor(1 + Math.random()*500);
+        }
+
+        xEl.innerText = x;
+        yEl.innerText = y;
+        xSpeedEl.innerText = xSpeed;
+        ySpeedEl.innerText = ySpeed;
+
+        window.requestAnimationFrame(move);
+      }
+
+      window.requestAnimationFrame(move);
     </script>
   </body>
 </html>
