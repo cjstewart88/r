@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>7/9/2021 - cube</title>
+  </head>
+  <body style="margin: 0">
+    <canvas></canvas>
+    <script>
+      const points = [
+        [150, 30, 250, 20],
+        [250, 20, 350, 20],
+        [350, 20, 350, 150],
+        [350, 150, 270, 200],
+        [270, 200, 270, 30],
+        [270, 30, 150, 30],
+        [150, 30, 150, 200],
+        [150, 200, 270, 200],
+        [250, 150, 150, 200],
+        [250, 150, 250, 20],
+        [350, 20, 270, 30],
+        [250, 150, 350, 150]
+      ];
+
+      const draw = () => {
+        const canvas = document.getElementsByTagName('canvas')[0];
+        canvas.width = 800;
+        canvas.height = 600;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 800, 600);
+
+        for (let i = 0; i < points.length; i++) {
+          ctx.moveTo(points[i][0], points[i][1]);
+          ctx.lineTo(points[i][2], points[i][3]);
+
+          ctx.stroke();
+        }
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+
+      let holdingPoint = null;
+      document.addEventListener('mousedown', (event) => {
+        const x = event.x;
+        const y = event.y;
+        for (let i = 0; i < points.length; i++) {
+          if (
+            (x >= points[i][0] - 30 && x <= points[i][0] + 30) &&
+            (y >= points[i][1] - 30 && y <= points[i][1] + 30)
+          ) {
+            holdingPoint = [points[i][0], points[i][1]];
+          }
+        }
+      });
+
+      document.addEventListener('mousemove', (event) => {
+        if (holdingPoint) {
+          for (let i = 0; i < points.length; i++) {
+            if (points[i][0] === holdingPoint[0] && points[i][1] === holdingPoint[1]) {
+              points[i][0] = event.x;
+              points[i][1] = event.y;
+            }
+
+            if (points[i][2] === holdingPoint[0] && points[i][3] === holdingPoint[1]) {
+              points[i][2] = event.x;
+              points[i][3] = event.y;
+            }
+          }
+          holdingPoint = [event.x, event.y];
+        }
+      });
+
+      document.addEventListener('mouseup', () => holdingPoint = null);
+    </script>
+  </body>
+</html>
