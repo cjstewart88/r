@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <title>7/11/2021 - space</title>
+  </head>
+  <body style="margin: 0">
+    <canvas></canvas>
+    <script>
+      let stars = [];
+      let gameScore = 0;
+      let gameOver = false;
+      let ship;
+
+      const randomNum = (max) => {
+        return Math.floor(1 + Math.random() * max);
+      }
+
+      const startGame = () => {
+        gameScore = 0;
+        ship = { x: 0, y: 0, width: 10, height: 10 };
+        stars = [];
+
+        for (let i = 0; i < 100; i++) {
+          stars.push({
+            x: randomNum(window.innerWidth),
+            y: randomNum(window.innerHeight),
+            velocity: randomNum(10),
+          })
+        }
+
+        gameOver = false;
+      }
+
+      const endGame = () => {
+        gameOver = true;
+        alert('game over. score: ' + gameScore);
+        startGame();
+      }
+
+      startGame();
+
+      const checkHit = () => {
+        if (gameOver) {
+          return;
+        }
+
+        for (let i = 0; i < stars.length; i++) {
+          if (
+            (ship.x >= (stars[i].x - (ship.width/2)) && ship.x <= stars[i].x + ship.width/2) &&
+            (ship.y >= (stars[i].y - (ship.height/2)) && ship.y <= stars[i].y + ship.height/2)
+          ) {
+            stars.splice(i, 1);
+            ship.width += 5;
+            ship.height += 5;
+          }
+        }
+
+        if (stars.length === 0) {
+          endGame();
+        } else {
+          gameScore += 1;
+        }
+      }
+
+      const draw = () => {
+        const canvas = document.getElementsByTagName('canvas')[0];
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.fillStyle = 'grey';
+        ctx.fillRect(ship.x - ship.width/2, ship.y - ship.height/2, ship.width, ship.height);
+
+        for (let i = 0; i < stars.length; i++) {
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(stars[i].x, stars[i].y, 2, 2);
+
+          if (stars[i].x > 0) {
+            stars[i].x -= stars[i].velocity;
+          } else {
+            stars[i].x = window.innerWidth + randomNum(20);
+            stars[i].velocity = randomNum(10);
+          }
+        }
+
+        checkHit();
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+
+      document.addEventListener('mousemove', (event) => {
+        ship.x = event.x;
+        ship.y = event.y;
+        checkHit();
+      });
+    </script>
+  </body>
+</html>
