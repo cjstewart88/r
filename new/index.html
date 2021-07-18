@@ -6,14 +6,16 @@
     <canvas></canvas>
     <script>
       let circles = [];
-      let maxCirc = 70;
-      let minCirc = 50
+      let maxCirc = 20;
+      let minCirc = 5;
+      let colors = ['#270245', '#871A85', '#FF2941', '#FEFF38', '#FE18D3', '#4206F1'];
+      let colorIndex = 0;
 
       const randomNum = (min, max) => {
         return Math.floor(min + Math.random() * max);
       }
 
-      for (let i = 0; i < 500; i++) {
+      for (let i = 0; i < 2000; i++) {
         const originalCirc = randomNum(minCirc, maxCirc);
         circles.push(
           {
@@ -21,7 +23,7 @@
             y: randomNum(0, window.innerHeight),
             originalCirc: originalCirc,
             circ: originalCirc,
-            color: 'grey',
+            color: '#090a0a',
             direction: 'out'
           }
         )
@@ -77,13 +79,19 @@
             (y >= (circles[i].y - (circles[i].circ)) && y <= circles[i].y + circles[i].circ)
           ) {
             if (!circles[i].pulse) {
-              circles[i].color = '#673ab7';
+              circles[i].color = colors[colorIndex];
               circles[i].pulse = true;
-              circles[i].maxCirc = circles[i].originalCirc + 30;
+              circles[i].maxCirc = circles[i].originalCirc + 5;
+
+              if (colorIndex === colors.length) {
+                colorIndex = 0;
+              } else {
+                colorIndex += 1;
+              }
             }
           } else {
-            circles[i].color = 'grey';
-            circles[i].pulse = false;
+            //circles[i].color = '#444';
+            //circles[i].pulse = false;
           }
         }
       });
