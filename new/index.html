@@ -83,15 +83,12 @@
               circles[i].pulse = true;
               circles[i].maxCirc = circles[i].originalCirc + 5;
 
-              if (colorIndex === colors.length) {
+              if (colorIndex + 1 === colors.length) {
                 colorIndex = 0;
               } else {
                 colorIndex += 1;
               }
             }
-          } else {
-            //circles[i].color = '#444';
-            //circles[i].pulse = false;
           }
         }
       });
