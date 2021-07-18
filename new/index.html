@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>7/17/2021 - new</title>
+  </head>
+  <body style="margin: 0">
+    <canvas></canvas>
+    <script>
+      let circles = [];
+      let maxCirc = 70;
+      let minCirc = 50
+
+      const randomNum = (min, max) => {
+        return Math.floor(min + Math.random() * max);
+      }
+
+      for (let i = 0; i < 500; i++) {
+        const originalCirc = randomNum(minCirc, maxCirc);
+        circles.push(
+          {
+            x: randomNum(0, window.innerWidth),
+            y: randomNum(0, window.innerHeight),
+            originalCirc: originalCirc,
+            circ: originalCirc,
+            color: 'grey',
+            direction: 'out'
+          }
+        )
+      }
+
+      const draw = () => {
+        const canvas = document.getElementsByTagName('canvas')[0];
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        for (let i = 0; i < circles.length; i++) {
+          ctx.beginPath();
+          ctx.arc(circles[i].x, circles[i].y, circles[i].circ, 0, 2 * Math.PI);
+          ctx.lineWidth = 4;
+          ctx.strokeStyle = circles[i].color;
+          ctx.stroke();
+          ctx.closePath();
+
+          if (circles[i].pulse) {
+            if (circles[i].circ + 1 === circles[i].maxCirc) {
+              circles[i].direction = 'in';
+            } else if (
+              circles[i].circ - 1 === circles[i].originalCirc-(circles[i].maxCirc/2) ||
+              circles[i].circ - 1 === minCirc
+            ) {
+              circles[i].direction = 'out';
+            }
+
+            if (circles[i].direction === 'in') {
+              circles[i].circ -= 1;
+            } else {
+              circles[i].circ += 1;
+            }
+          }
+        }
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+
+      document.addEventListener('mousemove', (event) => {
+        const x = event.x;
+        const y = event.y;
+        for (let i = 0; i < circles.length; i++) {
+          if (
+            (x >= (circles[i].x - (circles[i].circ)) && x <= circles[i].x + circles[i].circ) &&
+            (y >= (circles[i].y - (circles[i].circ)) && y <= circles[i].y + circles[i].circ)
+          ) {
+            if (!circles[i].pulse) {
+              circles[i].color = '#673ab7';
+              circles[i].pulse = true;
+              circles[i].maxCirc = circles[i].originalCirc + 30;
+            }
+          } else {
+            circles[i].color = 'grey';
+            circles[i].pulse = false;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
