@@ -1,0 +1,144 @@
+<html>
+  <head>
+    <title>7/21/2021 - deon</title>
+    <style>
+
+      .canvas {
+        width: 50%;
+        height: 50%;
+        position: fixed;
+      }
+
+      .canvasOne {
+        top: 0;
+        left: 0;
+      }
+
+      .canvasTwo {
+        top: 0;
+        left: 50%;
+      }
+
+      .canvasThree {
+        top: 50%;
+        left: 0;
+      }
+
+      .canvasFour {
+        top: 50%;
+        left: 50%;
+      }
+    </style>
+  </head>
+  <body style="margin: 0">
+    <canvas class="canvas canvasOne"></canvas>
+    <canvas class="canvas canvasTwo"></canvas>
+    <canvas class="canvas canvasThree"></canvas>
+    <canvas class="canvas canvasFour"></canvas>
+    <script>
+      let shapeSets = [];
+
+      const randomNum = (min, max) => {
+        return Math.floor(min + Math.random() * max);
+      }
+
+      const makeShapes = (i) => {
+        const color = randomColor();
+        const numOfShapes = randomNum( 1, 10);
+
+        shapes = [];
+
+        for (let i = 1; i <= numOfShapes; i++) {
+          shapes.push({
+            num1: randomNum(10, 700),
+            num2: randomNum(10, 700),
+            color
+          });
+        }
+
+        shapeSets[i] = shapes;
+      }
+
+      const indexClassNameMap = {
+        0: 'canvasOne',
+        1: 'canvasTwo',
+        2: 'canvasThree',
+        3: 'canvasFour'
+      };
+
+      function randomColor() {
+        return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      }
+
+      const draw = () => {
+        for (let c = 0; c < shapeSets.length; c++) {
+          console.log(c)
+          const canvas = document.getElementsByClassName(indexClassNameMap[c])[0];
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          const ctx = canvas.getContext('2d');
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+          ctx.fillStyle = randomColor();
+          ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+          for (let i = 0; i < shapes.length; i++) {
+            ctx.lineWidth = 10;
+            ctx.strokeStyle = shapes[i].color
+
+            ctx.beginPath();
+            ctx.moveTo((window.innerWidth / 2), (window.innerHeight / 2) - shapes[i].num1)
+            ctx.quadraticCurveTo(
+              (window.innerWidth / 2) - shapes[i].num2,
+              (window.innerHeight / 2) - shapes[i].num2,
+              (window.innerWidth / 2) - shapes[i].num1,
+              (window.innerHeight / 2)
+            );
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo((window.innerWidth / 2), (window.innerHeight / 2) - shapes[i].num1)
+            ctx.quadraticCurveTo(
+              (window.innerWidth / 2) + shapes[i].num2,
+              (window.innerHeight / 2) - shapes[i].num1,
+              (window.innerWidth / 2) + shapes[i].num1,
+              (window.innerHeight / 2)
+            );
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo((window.innerWidth / 2), (window.innerHeight / 2) + shapes[i].num1)
+            ctx.quadraticCurveTo(
+              (window.innerWidth / 2) + shapes[i].num2,
+              (window.innerHeight / 2) + shapes[i].num2,
+              (window.innerWidth / 2) + shapes[i].num1,
+              (window.innerHeight / 2)
+            );
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo((window.innerWidth / 2), (window.innerHeight / 2) + shapes[i].num1)
+            ctx.quadraticCurveTo(
+              (window.innerWidth / 2) - shapes[i].num2,
+              (window.innerHeight / 2) + shapes[i].num1,
+              (window.innerWidth / 2) - shapes[i].num1,
+              (window.innerHeight / 2)
+            );
+            ctx.stroke();
+
+          }
+
+          makeShapes(c);
+        }
+      }
+
+      makeShapes(0);
+      makeShapes(1);
+      makeShapes(2);
+      makeShapes(3);
+      draw();
+
+      setInterval(draw, 1000)
+    </script>
+  </body>
+</html>
