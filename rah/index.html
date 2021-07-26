@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>7/25/2021 - rah</title>
+  </head>
+  <body style="margin: 0">
+    <canvas class="canvas"></canvas>
+    <script>
+      let movingX = 100;
+      let movingY = 200;
+      let direction = 'right';
+
+      const randomNum = (min, max) => {
+        return Math.floor(min + Math.random() * max);
+      }
+
+      const draw = () => {
+        const canvas = document.getElementsByClassName('canvas')[0];
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'orange'
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0)
+        ctx.quadraticCurveTo(
+          movingX, movingY,
+          window.innerWidth, 0
+        );
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(0, 0, 5, 0, 2 * Math.PI);
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'yellow';
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(movingX, movingY, 5, 0, 2 * Math.PI);
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'yellow';
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(window.innerWidth, 0, 5, 0, 2 * Math.PI);
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'yellow';
+        ctx.stroke();
+        ctx.closePath();
+
+        if (movingX + 5 > window.innerWidth) {
+          direction = 'left';
+        } else if (movingX - 5 < 0) {
+          direction = 'right';
+        }
+
+        if (direction === 'right') {
+          const rand1 = randomNum(1, 50);
+          movingX += rand1;
+          movingY += rand1;
+        } else {
+          const rand2 = randomNum(1, 50);
+          movingX -= rand2;
+          movingY -= rand2;
+        }
+
+        window.requestAnimationFrame(draw)
+      }
+
+      window.requestAnimationFrame(draw)
+    </script>
+  </body>
+</html>
