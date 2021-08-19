@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <title>8/18/2021 - flower</title>
+  </head>
+  <body style="margin: 0">
+    <canvas class="canvas"></canvas>
+    <script>
+      const pistilRadius = 20;
+
+      const randomNum = (min, max) => Math.floor(min + Math.random() * max);
+      const randomColor = () => '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+      const getDistBtwPoints = (x1, y1, x2, y2) => Math.hypot(x2-x1, y2-y1);
+
+      const getRandomPoint = (radius) => {
+        let angle = Math.random() * Math.PI * 2;
+        let x = (window.innerWidth/2) - Math.cos(angle) * radius;
+        let y = (window.innerHeight/2) - Math.sin(angle) * radius;
+        return { x: x, y: y };
+      }
+
+      const getPointNear = (x, y) => {
+        let pointNearBy = getRandomPoint(20);
+        while (getDistBtwPoints(x, y, pointNearBy.x, pointNearBy.y) > 50) {
+          pointNearBy = getRandomPoint(20);
+        }
+        return pointNearBy;
+      }
+
+      const getPedalTip = (pedalStart) => {
+        let x = (pedalStart.x / 2) + randomNum(-200, 900);
+        let y = (pedalStart.y / 2) + randomNum(-200, 900);
+        return {
+          x: x,
+          y: y
+        };
+      }
+
+      const getRandomPoints = () => {
+        const pedalStart = getRandomPoint(20);
+        const pedalEnd = getPointNear(pedalStart.x, pedalStart.y);
+        const pedalTip = getPedalTip(pedalStart);
+
+        let pedalLength = randomNum(450, 500);
+
+        return {
+          x1: pedalStart.x,
+          y1: pedalStart.y,
+          x2: pedalTip.x,
+          y2: pedalTip.y,
+          x3: pedalEnd.x,
+          y3: pedalEnd.y
+        };
+      };
+
+      const draw = () => {
+        const canvas = document.getElementsByClassName('canvas')[0];
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'white';
+
+        ctx.beginPath();
+        ctx.arc((window.innerWidth/2), (window.innerHeight/2), pistilRadius, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        for (let i = 0; i < 5; i++) {
+          let randomPoints = getRandomPoints();
+
+          ctx.beginPath();
+          ctx.moveTo(
+            randomPoints.x1,
+            randomPoints.y1
+          )
+          ctx.quadraticCurveTo(
+            randomPoints.x2,
+            randomPoints.y2,
+            randomPoints.x3,
+            randomPoints.y3
+          );
+          ctx.stroke();
+        }
+        window.requestAnimationFrame(draw)
+      };
+
+      window.requestAnimationFrame(draw)
+    </script>
+  </body>
+</html>
