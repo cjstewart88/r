@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>8/19/2021 - zone</title>
+  </head>
+  <body style="margin: 0">
+    <canvas class="canvas"></canvas>
+    <script>
+      const circles = [];
+      const numOfCircles = window.innerWidth / 51;
+      for (let i = 1; i < numOfCircles; i++) {
+        circles.push({
+          radius: 50 * i
+        })
+      }
+
+      const draw = () => {
+        const canvas = document.getElementsByClassName('canvas')[0];
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'white';
+
+        for (let i = 0; i < circles.length; i++) {
+          ctx.beginPath();
+          ctx.arc((window.innerWidth/2), (window.innerHeight/2), circles[i].radius, 0, 2 * Math.PI);
+          ctx.stroke();
+
+          if (circles[i].radius >= ((window.innerWidth/2) + 500)) {
+            circles[i].radius = 0;
+          } else {
+            circles[i].radius += 1;
+          }
+        }
+        window.requestAnimationFrame(draw);
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
