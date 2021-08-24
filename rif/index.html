@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <title>8/23/2021 - rif</title>
+    <style>
+      body {
+        height: 100%;
+        margin: 0;
+        background-color: #bd9100;
+      }
+
+      .line {
+        position: absolute;
+        background-color: transparent;
+        border-left: dashed 20px red;
+        box-shadow: 15px 15px 35px red;
+        animation: spin .03s linear infinite;
+        width: 3px;
+        height: 250px;
+      }
+
+      .line:hover {
+        animation: spin 1s linear infinite;
+      }
+
+      .line1 {
+        top: calc(25% - 125px);
+        left: calc(25% - 25px);
+      }
+
+      .line2 {
+        top: calc(25% - 125px);
+        left: calc(75% - 25px);
+      }
+
+      .mid-line {
+        top: calc(50% - 250px);
+        left: calc(50% - 25px);
+        width: 3px;
+        height: 500px;
+      }
+
+      .line3 {
+        top: calc(75% - 125px);
+        left: calc(25% - 25px);
+      }
+
+      .line4 {
+        top: calc(75% - 125px);
+        left: calc(75% - 25px);
+      }
+
+      @keyframes spin {
+        100% { transform: rotate(360deg); }
+      }
+
+      .message {
+        position: absolute;
+        color: #bd9100;
+        font-size: 50px;
+        left: 50%;
+        top: 50%;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="line line1"></div>
+    <div class="line line2"></div>
+    <div class="line mid-line"></div>
+    <div class="line line3"></div>
+    <div class="line line4"></div>
+    <div class="message">HEY</div>
+  </body>
+</html>
