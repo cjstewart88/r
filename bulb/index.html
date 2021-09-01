@@ -1,0 +1,134 @@
+<html>
+  <head>
+    <title>8/31/2021 - bulb</title>
+  </head>
+  <body style="margin: 0; background-color: black;">
+    <div style="position: absolute; left: 10px; top: 10px; color: lime; font-family: 'Courier New', Courier, monospace; font-size: 16px;">score: <span id="score"></span></div>
+    <div style="position: absolute; left: 10px; top: 30px; color: lime; font-family: 'Courier New', Courier, monospace; font-size: 16px;">highscore: <span id="highscore"></span></div>
+    <canvas></canvas>
+    <script>
+      function randomIntFromInterval(min, max) { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const scoreTag = document.getElementById('score');
+      const highscoreTag = document.getElementById('highscore');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = width;
+      canvas.height = height;
+
+      let highScore = 0;
+      let score = 0;
+      canvas.addEventListener('mousemove', (e) => {
+        score = 0;
+        circles.forEach((c) => {
+          if (
+            ((c.x + (c.r*3) >= e.x) && (c.x - (c.r*3) <= e.x)) &&
+            ((c.y + (c.r*3) >= e.y) && (c.y - (c.r*3) <= e.y))
+          ) {
+            c.leftOrRight = c.leftOrRight === 'left' ? 'right' : 'left';
+            c.upOrDown = c.upOrDown === 'down' ? 'up' : 'down';
+            c.pause = true;
+            score += 1;
+            if (c.color === 'white') {
+              c.color = 'lime';
+            }
+          } else {
+            c.pause = false;
+            c.color = 'white';
+          }
+        });
+        if (score > highScore) {
+          highScore = score;
+        }
+        scoreTag.innerText = score;
+        highscoreTag.innerText = highScore;
+      });
+
+      let circles;
+      const makeCircles = () => {
+        circles = [];
+        for (let i = 0; i <= 100; i++) {
+          circles.push(
+            {
+              x: randomIntFromInterval(20, window.innerWidth - 20),
+              y: randomIntFromInterval(20, window.innerHeight - 20),
+              r: randomIntFromInterval(5, 30),
+              leftOrRight: 'left',
+              leftRightSpeed: randomIntFromInterval(1, 5),
+              upOrDown: 'down',
+              upDownSpeed: randomIntFromInterval(1, 5),
+              pause: false,
+              color: 'white'
+            }
+          )
+        }
+      }
+      makeCircles();
+
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+
+        circles.forEach((circle) => {
+          ctx.beginPath();
+          ctx.arc(
+            circle.x,
+            circle.y,
+            circle.r,
+            0,
+            2 * Math.PI
+          );
+          ctx.fillStyle = circle.color;
+          ctx.fill();
+
+          if (circle.pause) {
+            return;
+          }
+
+          if (circle.x >= window.innerWidth) {
+            circle.leftOrRight = 'left';
+            circle.leftRightSpeed = randomIntFromInterval(1, 50);
+          }
+
+          if (circle.leftOrRight === 'left') {
+            circle.x -= circle.leftRightSpeed;
+
+            if (circle.x  <= 0) {
+              circle.leftOrRight = 'right';
+            circle.leftRightSpeed = randomIntFromInterval(1, 5);
+            }
+          } else {
+            circle.x += circle.leftRightSpeed;
+          }
+
+          if (circle.y >= window.innerHeight) {
+            circle.upOrDown = 'down';
+            circle.upDownSpeed = randomIntFromInterval(1, 5);
+          }
+
+          if (circle.upOrDown === 'down') {
+            circle.y -= circle.upDownSpeed;
+
+            if (circle.y  <= 0) {
+              circle.upOrDown = 'up';
+              circle.upDownSpeed = randomIntFromInterval(1, 50);
+            }
+          } else {
+            circle.y += circle.upDownSpeed;
+          }
+
+
+        });
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
