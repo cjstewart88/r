@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <title>1/18/2022 - 3d</title>
+    <style>
+      body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background-image: linear-gradient(140deg, white, rgba(0,0,0,0.2));
+      }
+
+      .ball {
+        position: fixed;
+        width: 200px;
+        height: 200px;
+        top: calc((100vh/2) - 100px);
+        left: calc((100vw/2) - 100px);
+        border-radius: 50%;
+        box-shadow: inset -27px 10px 40px rgb(0 0 0 / 30%), 56px -14px  21px rgba(0,0,0,0.1);
+        background-color: white;
+        transform: rotate(112deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ball"></div>
+  </body>
+  <script>
+    const ball = document.getElementsByClassName('ball')[0];
+    console.log(ball.style)
+    const ballCords = ball.getBoundingClientRect();
+    document.body.onmousemove = (e) => {
+      var deltaX = (document.body.offsetWidth/2) - e.x;
+      var deltaY = (document.body.offsetHeight/2) - e.y;
+      var rad = Math.atan2(deltaY, deltaX);
+      var deg = rad * (180 / Math.PI);
+      ball.setAttribute(
+        'style', 'transform: rotate('+deg+'deg) !important;'
+      );
+    };
+  </script>
+</html>
