@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <title>2/19/2022 - borr</title>
+    <style>
+      @-webkit-keyframes rotating /* Safari and Chrome */ {
+        from {
+          -webkit-transform: rotate(0deg);
+          -o-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        to {
+          -webkit-transform: rotate(360deg);
+          -o-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes rotating {
+        from {
+          -ms-transform: rotate(0deg);
+          -moz-transform: rotate(0deg);
+          -webkit-transform: rotate(0deg);
+          -o-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        to {
+          -ms-transform: rotate(360deg);
+          -moz-transform: rotate(360deg);
+          -webkit-transform: rotate(360deg);
+          -o-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      .rotating {
+        -webkit-animation: rotating 2s linear infinite;
+        -moz-animation: rotating 2s linear infinite;
+        -ms-animation: rotating 2s linear infinite;
+        -o-animation: rotating 2s linear infinite;
+        animation: rotating 2s linear infinite;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; background-color: #272522; overflow: hidden;">
+    <canvas class="rotating"></canvas>
+    <input type="range" min="1" max="500" value="500" style="position: fixed; top: 20; left: calc(50vw - 100px); width: 200px">
+    <script>
+      const speedInput = document.querySelector('input');
+      let speed = 500;
+      speedInput.addEventListener('input', (e) => {
+        points[1][2] = parseInt(e.srcElement.value)
+      });
+
+      let points = [[window.innerWidth/2, window.innerHeight/2, 1], [window.innerWidth/2, window.innerHeight/2, speed]];
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+
+      function randomIntFromInterval(min, max) { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      let direction = 'left';
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+
+        points.forEach((dot) => {
+          ctx.beginPath();
+          ctx.arc(
+            dot[0],
+            dot[1],
+            20,
+            0,
+            2 * Math.PI
+          );
+
+          if (points[0][0] >= points[1][0]+10 && points[0][0] >= points[1][0]-10) {
+            ctx.fillStyle = '#c5902d';
+          } else {
+            ctx.fillStyle = 'white';
+          }
+
+          ctx.fill();
+
+          if (direction === 'left') {
+            dot[0] -= dot[2];
+            dot[1] -= dot[2];
+            if (dot[0] <= (window.innerWidth/2-300)) {
+              direction = 'right'
+            }
+          } else if (direction === 'right') {
+            dot[0] += dot[2];
+            dot[1] += dot[2];
+            if (dot[0] >= (window.innerWidth/2+300)) {
+              direction = 'left';
+            }
+          }
+        });
+
+        window.requestAnimationFrame(draw);
+      }
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
