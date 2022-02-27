@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <title>2/26/2022 - ville</title>
+    <style>
+      body {
+        height: 100%;
+        width: 3000000px;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .ball {
+        display: inline-block;
+        width: 200px;
+        height: 80%;
+        margin-top: 10vh;
+        margin-left: 40px;
+        border-radius: 50%;
+        box-shadow: inset -27px 10px 40px rgb(0 0 0 / 30%), 56px -14px  21px rgba(0,0,0,0.4);
+        background-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+  </body>
+  <script>
+    let on = 1;
+    const body = document.getElementsByName('body')[0]
+    setInterval(() => {
+      if (on === 50) {
+        on = 1;
+      } else {
+        on += 1;
+      }
+
+      document.body.setAttribute('style',
+      'background: repeating-conic-gradient(#f1f0d6 0% ' + on + '%, #8b8b8b 0% 50%) 50% / 150px 100px;')
+    }, 60)
+  </script>
+</html>
