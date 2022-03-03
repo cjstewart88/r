@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>3/2/2022 - swong</title>
+    <style>
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .square {
+        position: absolute;
+        left: calc(100vw/2 - (10%/2));
+        top: calc(100vh/2 - (10%/2));
+        width: 10%;
+        height: 10%;
+        border: solid 1px black;
+      }
+
+      .square2 {
+        position: absolute;
+        left: calc(100vw/2 - (30%/2));
+        top: calc(100vh/2 - (30%/2));
+        width: 30%;
+        height: 30%;
+        border: solid 1px black;
+      }
+
+      .square3 {
+        position: absolute;
+        left: calc(100vw/3 - (10%/2));
+        top: calc(100vh/3 - (10%/2));
+        width: 10%;
+        height: 10%;
+        border: solid 1px black;
+      }
+
+      .square4 {
+        position: absolute;
+        left: calc((100vw/2 + (100vw/6)) - (10%/2));
+        top: calc((100vh/2 + (100vh/6)) - (10%/2));
+        width: 10%;
+        height: 10%;
+        border: solid 1px black;
+      }
+
+      .square5 {
+        position: absolute;
+        left: calc((100vw/2 - (100vw/6)) - (10%/2));
+        top: calc((100vh/2 + (100vh/6)) - (10%/2));
+        width: 10%;
+        height: 10%;
+        border: solid 1px black;
+      }
+
+      .square6 {
+        position: absolute;
+        left: calc((100vw/2 + (100vw/6)) - (10%/2));
+        top: calc((100vh/2 - (100vh/6)) - (10%/2));
+        width: 10%;
+        height: 10%;
+        border: solid 1px black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="square"></div>
+    <div class="square2"></div>
+    <div class="square3"></div>
+    <div class="square4"></div>
+    <div class="square5"></div>
+    <div class="square6"></div>
+  </body>
+  <script>
+    let on = 1;
+    const squares = document.body.getElementsByTagName('div')
+
+    const draw = () => {
+      if (on === 360) {
+        on = 1;
+      } else {
+        on += 1;
+      }
+
+      for (let i = 0; i < squares.length; i++) {
+        squares[i].setAttribute(
+          'style',
+          'transform: rotate('+on+'deg)'
+        )
+      }
+
+      window.requestAnimationFrame(draw)
+    }
+
+    window.requestAnimationFrame(draw);
+  </script>
+</html>
