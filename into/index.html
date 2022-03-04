@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>3/3/2022 - into</title>
+    <style>
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: black;
+      }
+
+      div {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border-radius: 100%;
+        transform-origin: top left;
+      }
+
+      .a {
+        left: calc(100vw/2);
+        top: calc(100vh/2);
+      }
+
+      .b {
+        left: calc(100vw/2 - 300px);
+        top: calc(100vh/2);
+      }
+
+      .c {
+        left: calc(100vw/2 + 300px);
+        top: calc(100vh/2);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="b"></div>
+    <div class="a"></div>
+    <div class="c"></div>
+  </body>
+  <script>
+    let on = 1;
+    let w = 1;
+    let color1 = 'black';
+    let color2 = 'yellow';
+    const divs = document.body.getElementsByTagName('div')
+
+    const draw = () => {
+      if (w === 5) {
+        w = 1;
+        if (on === 50) {
+          on = 1;
+
+          if (color1 === 'yellow') {
+            color1 = 'black';
+            color2 = 'yellow';
+          } else {
+            color1= 'yellow';
+            color2 = 'black';
+          }
+        } else {
+          on += 1;
+        }
+
+        for (let i = 0; i < divs.length; i++) {
+          divs[i].setAttribute('style',
+          ';background: repeating-conic-gradient('+color1+' 0% ' + on + '%, '+color2+' 0% 50%) 0% / 500px 500px;')
+        }
+      } else {
+        w += 1;
+      }
+
+      window.requestAnimationFrame(draw)
+    }
+
+    window.requestAnimationFrame(draw);
+  </script>
+</html>
