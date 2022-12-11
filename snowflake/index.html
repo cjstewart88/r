@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>12/11/2022 - snowflake</title>
+    <style>
+      @-webkit-keyframes rotating /* Safari and Chrome */ {
+        from {
+          -webkit-transform: rotate(0deg);
+          -o-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        to {
+          -webkit-transform: rotate(360deg);
+          -o-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes rotating {
+        from {
+          -ms-transform: rotate(0deg);
+          -moz-transform: rotate(0deg);
+          -webkit-transform: rotate(0deg);
+          -o-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        to {
+          -ms-transform: rotate(360deg);
+          -moz-transform: rotate(360deg);
+          -webkit-transform: rotate(360deg);
+          -o-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+      .rotating {
+        -webkit-animation: rotating .2s linear infinite;
+        -moz-animation: rotating .2s linear infinite;
+        -ms-animation: rotating .2s linear infinite;
+        -o-animation: rotating .2s linear infinite;
+        animation: rotating .03s linear infinite;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; background-color: black;">
+    <canvas class="rotating"></canvas>
+    <script>
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      startingPoint = [width/2, height/2]
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = width;
+      canvas.height = height;
+
+      let triangleSize = 15;
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i <= 15; i++) {
+          ctx.beginPath();
+          ctx.moveTo(startingPoint[0], startingPoint[1]);
+          ctx.lineTo(startingPoint[0]+triangleSize, startingPoint[1]+triangleSize);
+          ctx.lineTo(startingPoint[0]+triangleSize, startingPoint[1]-triangleSize);
+          ctx.lineTo(startingPoint[0], startingPoint[1]);
+          ctx.strokeStyle = 'white'
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(startingPoint[0], startingPoint[1]);
+          ctx.lineTo(startingPoint[0]-triangleSize, startingPoint[1]-triangleSize);
+          ctx.lineTo(startingPoint[0]-triangleSize, startingPoint[1]+triangleSize);
+          ctx.lineTo(startingPoint[0], startingPoint[1]);
+          ctx.strokeStyle = 'white'
+          ctx.stroke();
+
+          if (i%2 > 0) {
+            startingPoint[0] += 40 * i
+            startingPoint[1] += 40 * i
+          } else {
+            startingPoint[0] -= 40 * i
+            startingPoint[1] -= 40 * i
+          }
+        }
+      }
+
+      draw()
+    </script>
+  </body>
+</html>
