@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>12/11/2022 - tri</title>
+  </head>
+  <body style="margin: 0; background-color: black;">
+    <canvas class="rotating"></canvas>
+    <script>
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      const canvas = document.getElementsByTagName('canvas')[0];
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+
+        let x = 0
+        let y = 0
+
+        for (let i = 0; i <= width; i++) {
+          ctx.beginPath();
+          ctx.moveTo(x/2, y/2);
+          ctx.lineTo(x/2, y/2+i);
+          ctx.lineTo(x/2+i, y/2);
+          ctx.lineTo(x/2, y/2);
+          ctx.strokeStyle = 'white'
+          ctx.stroke();
+
+          x += i
+          y += 25
+        }
+      }
+
+      draw()
+    </script>
+  </body>
+</html>
