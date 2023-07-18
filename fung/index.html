@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <title>7/17/2023 - fung</title>
+    <style>
+      body {
+        height: 100%;
+        margin: 0;
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+  </body>
+  <script>
+    // talked to chatgpt and made this
+    // Create a canvas element
+    var canvas = document.createElement("canvas");
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext("2d");
+
+    // Set the canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Set initial shape properties
+    var shape = {
+      vertices: [
+        { x: 0, y: 0 },
+        { x: 0, y: 0 },
+        { x: 0, y: 0 },
+        { x: 0, y: 0 }
+      ],
+      velocity: { x: 3, y: 3 }
+    };
+
+    // Function to generate a random number within a range
+    function randomRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    // Function to animate the shape
+    function animate() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Update the positions of the shape's vertices
+      shape.vertices.forEach(function (vertex) {
+        vertex.x += shape.velocity.x;
+        vertex.y += shape.velocity.y;
+
+        // Check if the shape reaches the canvas edges
+        if (vertex.x > canvas.width) {
+          vertex.x = 0; // Reset x-coordinate to start from the left side
+        } else if (vertex.x < 0) {
+          vertex.x = canvas.width; // Reset x-coordinate to start from the right side
+        }
+
+        if (vertex.y > canvas.height) {
+          vertex.y = 0; // Reset y-coordinate to start from the top side
+        } else if (vertex.y < 0) {
+          vertex.y = canvas.height; // Reset y-coordinate to start from the bottom side
+        }
+      });
+
+      // Draw the shape
+      ctx.beginPath();
+      ctx.moveTo(shape.vertices[0].x, shape.vertices[0].y);
+
+      for (var i = 1; i < shape.vertices.length; i++) {
+        var currentVertex = shape.vertices[i];
+        var previousVertex = shape.vertices[i - 1];
+
+        // Calculate the control points for the Bézier curve
+        var control1X = (previousVertex.x + currentVertex.x) / 2;
+        var control1Y = (previousVertex.y + currentVertex.y) / 2;
+        var control2X = (previousVertex.x + currentVertex.x) / 2;
+        var control2Y = (previousVertex.y + currentVertex.y) / 2;
+
+        ctx.bezierCurveTo(control1X, control1Y, control2X, control2Y, currentVertex.x, currentVertex.y);
+      }
+
+      ctx.closePath();
+
+      ctx.fillStyle = "#132840"; // Set the fill color (red with 50% opacity)
+      ctx.fill();
+      ctx.lineWidth = 3
+      ctx.strokeStyle = "#171340"; // Set the stroke color
+      ctx.stroke();
+
+      // Request the next animation frame
+      requestAnimationFrame(animate);
+    }
+
+    // Update the positions of the shape's vertices continuously
+    setInterval(function () {
+      shape.vertices.forEach(function (vertex) {
+        vertex.x += randomRange(-5, 25);
+        vertex.y += randomRange(-5, 25);
+      });
+    }, 200); // Adjust the interval duration to control the speed of change
+
+    // Start the animation
+    animate();
+  </script>
+</html>
