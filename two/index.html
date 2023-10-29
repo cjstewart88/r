@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <title>10/28/2023 - two</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgb(28 163 65), rgb(33 1 63));
+        margin: 0;
+        overflow: hidden;
+        cursor: none;
+      }
+
+      @keyframes size {
+        0% {
+          width: 250px;
+          height: 250px;
+          /* left: 0; */
+        }
+        50% {
+          width: 300px;
+          height: 300px;
+          /* left: 100%; */
+        }
+        100% {
+          width: 250px;
+          height: 250px;
+          /* left: 0; */
+        }
+      }
+
+      div {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        top: 0;
+        z-index: -1;
+        border-radius: 100%;
+        background: radial-gradient(circle, rgb(28 163 65), rgb(33 1 63));
+        box-shadow: 15px 20px 20px 10px rgba(0, 0, 0, 0.6);
+        animation: size 5s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <div></div>
+    <script>
+      const circle = document.getElementsByTagName("div")[0];
+      const moveCircle = (event) => {
+        circle.style.top = `${event.y - 150}`;
+        circle.style.left = `${event.x - 150}`;
+      };
+      document.getElementsByTagName("body")[0].onmousemove = moveCircle;
+
+      function getRandomNumber(upTo) {
+        // Math.random() generates a random number between 0 (inclusive) and 1 (exclusive).
+        // We can scale and shift the result to get a random number between 1 and 100.
+        return Math.floor(Math.random() * upTo) + 1;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        for (let i = 1; i <= window.innerHeight / 100; i++) {
+          ctx.beginPath();
+          ctx.moveTo(
+            getRandomNumber(window.innerHeight),
+            getRandomNumber(window.innerHeight)
+          );
+          ctx.lineTo(
+            getRandomNumber(window.innerWidth),
+            getRandomNumber(window.innerHeight)
+          );
+          ctx.closePath();
+
+          // Set the stroke and fill styles
+          ctx.strokeStyle = `rgba(300,160,320,.1)`;
+          ctx.lineWidth = 5; // Border line width
+          ctx.setLineDash([5, 50, 5, 50]);
+          // Fill and stroke the hexagon
+          // ctx.fill();
+          ctx.stroke();
+        }
+
+        // End the drawing
+        ctx.closePath();
+
+        // if (doDraw) {
+        window.requestAnimationFrame(draw);
+        // }
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
