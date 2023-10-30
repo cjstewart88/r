@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>10/29/2023 - crooze</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgb(1, 78, 69), rgb(0, 24, 21));
+        margin: 0;
+        overflow: hidden;
+      }
+      @keyframes rotateElement {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg); /* Rotate the element 360 degrees */
+        }
+      }
+
+      canvas {
+        animation: rotateElement 0.05s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <div></div>
+    <script>
+      const circle = document.getElementsByTagName("div")[0];
+
+      function getRandomNumber(upTo) {
+        // Math.random() generates a random number between 0 (inclusive) and 1 (exclusive).
+        // We can scale and shift the result to get a random number between 1 and 100.
+        return Math.floor(Math.random() * upTo) + 1;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      let amplitude = 1; // The amplitude of the wave
+      let direction = "up";
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        for (let i = 0; i < window.innerHeight / 100; i++) {
+          ctx.beginPath();
+
+          if (direction === "up") {
+            if (amplitude === 10) {
+              direction = "down";
+            } else {
+              amplitude += 1;
+            }
+          } else {
+            if (amplitude === -10) {
+              direction = "up";
+            } else {
+              amplitude -= 1;
+            }
+          }
+
+          const frequency = 0.1; // The frequency of the wave
+          const yOffset = i * 100; // The vertical position of the wave
+
+          ctx.moveTo(0, yOffset);
+
+          for (let x = 0; x < canvas.width; x++) {
+            const y = yOffset + amplitude * Math.sin(frequency * x);
+            ctx.lineTo(x, y);
+          }
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = "rgba(0, 255, 225,.1)";
+          ctx.stroke();
+          ctx.closePath();
+        }
+        // if (doDraw) {
+        window.requestAnimationFrame(draw);
+        // }
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
