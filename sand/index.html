@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>10/31/2023 - sand</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: black;
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      function getRandomNumber(min, max) {
+        // Use Math.random() to generate a random number between 0 and 1
+        // Scale and shift the result to the desired range [min, max]
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const generateSand = (startX, startY) => {
+        return Array.from({ length: 4000 }, () => {
+          return {
+            x: startX,
+            y: startY,
+            verticalSpeed: getRandomNumber(0, 100),
+            horizontalSpeed: getRandomNumber(0, 50),
+            leftOrRight: getRandomNumber(1, 2) === 1 ? "left" : "right",
+            upOrDown: getRandomNumber(1, 2) === 1 ? "up" : "down",
+            inOrOut: "out",
+          };
+        });
+      };
+
+      let sand = generateSand(window.innerWidth / 2, window.innerHeight / 2);
+
+      document.body.addEventListener("click", (event) => {
+        sand = generateSand(event.clientX, event.clientY);
+      });
+
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.shadowColor = "yellow"; // Shadow color and opacity
+        ctx.shadowBlur = 5; // Shadow blur amount
+        ctx.shadowOffsetX = 0; // Shadow offset in the X direction
+        ctx.shadowOffsetY = 0; // Shadow offset in the Y direction
+        for (let i = 0; i < sand.length; i++) {
+          const particle = sand[i];
+          ctx.fillStyle = "yellow";
+          ctx.beginPath();
+          ctx.fillRect(
+            particle.x,
+            particle.y,
+            getRandomNumber(1, 3),
+            getRandomNumber(1, 3)
+          );
+          ctx.fill();
+          ctx.closePath();
+
+          if (particle.inOrOut === "out") {
+            if (particle.upOrDown === "up") {
+              particle.y += particle.verticalSpeed;
+            } else {
+              particle.y -= particle.verticalSpeed;
+            }
+
+            if (particle.leftOrRight === "right") {
+              particle.x += particle.horizontalSpeed;
+            } else {
+              particle.x -= particle.horizontalSpeed;
+            }
+          } else {
+            if (particle.upOrDown === "up") {
+              particle.y -= particle.verticalSpeed;
+            } else {
+              particle.y += particle.verticalSpeed;
+            }
+
+            if (particle.leftOrRight === "right") {
+              particle.x -= particle.horizontalSpeed;
+            } else {
+              particle.x += particle.horizontalSpeed;
+            }
+          }
+        }
+
+        window.requestAnimationFrame(draw);
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
