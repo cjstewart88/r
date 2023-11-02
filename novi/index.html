@@ -1,0 +1,122 @@
+<html>
+  <head>
+    <title>11/01/2023 - novi</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: black;
+        margin: 0;
+        overflow: hidden;
+      }
+      @keyframes rotateElement {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg); /* Rotate the element 360 degrees */
+        }
+      }
+
+      canvas {
+        animation: rotateElement 1s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const largerDimension = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+      const generateSand = (startX, startY) => {
+        return Array.from({ length: 400 }, () => {
+          return {
+            x: startX,
+            y: startY,
+            startX: startX,
+            startY: startY,
+            verticalSpeed: getRandomNumber(1, 2),
+            horizontalSpeed: getRandomNumber(1, 5),
+            leftOrRight: getRandomNumber(1, 2) === 1 ? "left" : "right",
+            upOrDown: getRandomNumber(1, 2) === 1 ? "up" : "down",
+            inOrOut: "in",  // Start by animating in
+            limit: 400//getRandomNumber(largerDimension-5,largerDimension)
+          };
+        });
+      };
+
+      let sand = generateSand(window.innerWidth / 2, window.innerHeight / 2);
+
+      document.body.addEventListener("click", (event) => {
+        sand = generateSand(event.clientX, event.clientY);
+      });
+
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.shadowColor = "purple";
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+
+        for (let i = 0; i < sand.length; i++) {
+          const particle = sand[i];
+          ctx.fillStyle = "yellow";
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, 5, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.closePath();
+
+          const pastXLimit = Math.abs(particle.x - particle.startX);
+          const pastYLimit = Math.abs(particle.y - particle.startY);
+
+          if (particle.inOrOut === "out") {
+            if (pastXLimit <= 0 && pastYLimit <= 0) {
+              particle.inOrOut = 'in';
+            }
+
+            if (particle.upOrDown === "up") {
+              particle.y -= particle.verticalSpeed;
+            } else {
+              particle.y += particle.verticalSpeed;
+            }
+
+            if (particle.leftOrRight === "right") {
+              particle.x -= particle.horizontalSpeed;
+            } else {
+              particle.x += particle.horizontalSpeed;
+            }
+          } else {
+            if (pastXLimit >= particle.limit || pastYLimit >= particle.limit) {
+              particle.inOrOut = 'out';
+            }
+
+            if (particle.upOrDown === "up") {
+              particle.y += particle.verticalSpeed;
+            } else {
+              particle.y -= particle.verticalSpeed;
+            }
+
+            if (particle.leftOrRight === "right") {
+              particle.x += particle.horizontalSpeed;
+            } else {
+              particle.x -= particle.horizontalSpeed;
+            }
+          }
+        }
+
+        window.requestAnimationFrame(draw);
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
