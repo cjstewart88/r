@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <title>11/02/2023 - ribbon</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: rgb(27, 2, 20);
+        margin: 0;
+        overflow: hidden;
+      }
+
+      @keyframes rotateElement {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg); /* Rotate the element 360 degrees */
+        }
+      }
+
+      canvas {
+        display: block;
+        position: absolute;
+        left: calc(100vw / 2 - 4000px / 2);
+        top: calc(100vh / 2 - 4000px / 2);
+        width: 4000px;
+        height: 4000px;
+        border-radius: 50%;
+        animation: rotateElement 0.01s linear infinite;
+        box-shadow: 7px -20px 0px 20px black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = 4000;
+      canvas.height = 4000;
+      const ctx = canvas.getContext("2d");
+
+      const smallestDimension =
+        window.innerWidth > window.innerHeight
+          ? window.innerHeight
+          : window.innerWidth;
+
+      const padding = 50;
+
+      const generateSand = () => {
+        return Array.from({ length: 3000 }, (_, i) => {
+          const randomX = getRandomNumber(
+            padding,
+            window.innerWidth - padding * 2
+          );
+          const randomY = getRandomNumber(
+            padding,
+            window.innerHeight - padding * 2
+          );
+          return {
+            x: randomX,
+            y: randomY,
+            length: getRandomNumber(10, 150),
+            color: `rgba(
+              ${getRandomNumber(0, 255)},
+              ${getRandomNumber(0, 255)},
+              ${getRandomNumber(0, 255)}
+            )`,
+          };
+        });
+      };
+
+      let sand = generateSand();
+
+      let pausedCount = 0;
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        sand.forEach((particle) => {
+          ctx.strokeStyle = particle.color;
+
+          // Draw the ribbon
+          ctx.beginPath();
+          ctx.moveTo(particle.x, particle.y + getRandomNumber(5, 10)); // Starting point
+          ctx.lineTo(
+            particle.x + particle.length,
+            particle.y + getRandomNumber(5, 10)
+          ); // First control point
+          ctx.closePath(); // Close the path to create a ribbon shape
+          ctx.stroke(); // Fill the ribbon with the specified color
+        });
+
+        window.requestAnimationFrame(draw);
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
