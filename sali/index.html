@@ -1,0 +1,147 @@
+<html>
+  <head>
+    <title>11/01/2023 - sali</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: black;
+        margin: 0;
+        overflow: hidden;
+      }
+      @keyframes rotateElement {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg); /* Rotate the element 360 degrees */
+        }
+      }
+
+      canvas {
+        animation: rotateElement 0.1s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const largerDimension =
+        window.innerWidth > window.innerHeight
+          ? window.innerWidth
+          : window.innerHeight;
+      const generateSand = (startX, startY) => {
+        return Array.from({ length: 4000 }, (_, i) => {
+          return {
+            x: startX,
+            y: startY,
+            startX: startX,
+            startY: startY,
+            verticalSpeed: getRandomNumber(11, 40),
+            horizontalSpeed: getRandomNumber(1, 110),
+            leftOrRight: getRandomNumber(1, 2) === 1 ? "left" : "right",
+            upOrDown: getRandomNumber(1, 2) === 1 ? "up" : "down",
+            inOrOut: "in", // Start by animating in
+            limit: window.innerWidth / 3,
+            paused: false,
+            color: `rgba(
+              ${getRandomNumber(0, i / 19)},
+              ${getRandomNumber(0, i / 19)},
+              ${getRandomNumber(0, i / 19)}
+            )`,
+          };
+        });
+      };
+
+      let sand = generateSand(window.innerWidth / 2, window.innerHeight / 2);
+
+      document.body.addEventListener("click", (event) => {
+        sand = generateSand(event.clientX, event.clientY);
+      });
+
+      let pausedCount = 0;
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        for (let i = 0; i < sand.length; i++) {
+          const particle = sand[i];
+          ctx.fillStyle = particle.color;
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, 2, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.closePath();
+
+          const pastXLimit = Math.abs(particle.x - particle.startX);
+          const pastYLimit = Math.abs(particle.y - particle.startY);
+
+          if (!particle.paused) {
+            if (particle.inOrOut === "out") {
+              if (pastXLimit <= 0 && pastYLimit <= 0) {
+                particle.inOrOut = "in";
+                particle.paused = true;
+                pausedCount++;
+              }
+
+              if (particle.upOrDown === "up") {
+                particle.y -= particle.verticalSpeed;
+              } else {
+                particle.y += particle.verticalSpeed;
+              }
+
+              if (particle.leftOrRight === "right") {
+                particle.x -= particle.horizontalSpeed;
+              } else {
+                particle.x += particle.horizontalSpeed;
+              }
+            } else {
+              if (
+                pastXLimit >= particle.limit ||
+                pastYLimit >= particle.limit
+              ) {
+                particle.inOrOut = "out";
+                particle.paused = true;
+                pausedCount++;
+              }
+
+              if (particle.upOrDown === "up") {
+                particle.y += particle.verticalSpeed;
+              } else {
+                particle.y -= particle.verticalSpeed;
+              }
+
+              if (particle.leftOrRight === "right") {
+                particle.x += particle.horizontalSpeed;
+              } else {
+                particle.x -= particle.horizontalSpeed;
+              }
+            }
+          }
+        }
+
+        if (pausedCount === sand.length) {
+          sand = sand.map((s) => {
+            return {
+              ...s,
+              paused: false,
+            };
+          });
+          pausedCount = 0;
+        }
+
+        window.requestAnimationFrame(draw);
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
