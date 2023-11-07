@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>11/01/2023 - sali</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, #171a31, #200620);
+        /* You can adjust the colors and other properties as needed */
+        background-size: cover;
+        background-attachment: fixed;
+        margin: 0;
+        overflow: hidden;
+      }
+      @keyframes rotateElement {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg); /* Rotate the element 360 degrees */
+        }
+      }
+
+      canvas {
+        animation: rotateElement 3s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Draw the circle
+        ctx.beginPath();
+        ctx.arc(
+          window.innerWidth / 2,
+          window.innerHeight / 2,
+          200,
+          0,
+          2 * Math.PI
+        );
+        ctx.strokeStyle = "white"; // You can change the fill color
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(
+          window.innerWidth / 2 - 165,
+          window.innerHeight / 2 - 113,
+          10,
+          0,
+          2 * Math.PI
+        );
+        ctx.fillStyle = "white"; // You can change the fill color
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(
+          window.innerWidth / 2 - 150,
+          window.innerHeight / 2 - 250,
+          40,
+          0,
+          2 * Math.PI
+        );
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.moveTo(window.innerWidth / 2, window.innerHeight / 2 - 300); // Starting point (x=50, y=100)
+        ctx.lineTo(window.innerWidth / 2, window.innerHeight - 200); // Ending point (x=350, y=100)
+        ctx.lineWidth = 1; // Line width
+        ctx.strokeStyle = "white"; // Line color
+
+        // Draw the line
+        ctx.stroke();
+        ctx.closePath();
+        // window.requestAnimationFrame(draw);
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
