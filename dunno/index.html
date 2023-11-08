@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>11/07/2023 - dunno</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: black;
+        margin: 0;
+        overflow: hidden;
+      }
+      @keyframes rotateElement {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg); /* Rotate the element 360 degrees */
+        }
+      }
+
+      canvas {
+        /* animation: rotateElement 3s linear infinite; */
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      function generateCircleCoordinates(originX, originY, radius) {
+        if (radius <= 0) {
+          return [];
+        }
+
+        const coordinates = [];
+
+        for (let i = 0; i < 50; i++) {
+          const angle = (i / 50) * 360; // Calculate equally spaced angles
+          const radians = (angle * Math.PI) / 180;
+          const x = originX + radius * Math.cos(radians);
+          const y = originY + radius * Math.sin(radians);
+          coordinates.push({ x, y });
+        }
+
+        return coordinates;
+      }
+
+      const generateParticles = (cords) => {
+        return cords.map((cord) => {
+          return { radius: getRandomNumber(5, 30), ...cord}
+        })
+      }
+
+      let circleCords = []
+      for (let i = 0; i < 6; i++) {
+        circleCords = circleCords.concat(circleCords, generateCircleCoordinates(window.innerWidth/2, window.innerHeight/2, 100+i*100))
+
+      }
+      let particles = generateParticles(circleCords);
+
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        for (let i = 0; i < particles.length; i++) {
+          const particle = particles[i];
+          ctx.fillStyle = "#301934";
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.radius, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.closePath();
+        }
+
+        // window.requestAnimationFrame(draw);
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
