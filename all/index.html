@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background: radial-gradient(circle at center, #16010a, #000000);
+        /* You can adjust the colors and other properties as needed */
+        background-size: cover;
+        background-attachment: fixed;
+        overflow: hidden;
+      }
+      @keyframes rotateElement {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg); /* Rotate the element 360 degrees */
+        }
+      }
+
+      canvas {
+        animation: rotateElement 9s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+    <script>
+      // Get the canvas element and its 2D rendering context
+      const canvas = document.getElementById("myCanvas");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      function randomNum(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      let circles = [];
+      const makeCircles = (originX, originY) => {
+        const color = "#290212";
+        const numOfCircles = 300;
+
+        circles = [];
+
+        for (let i = 1; i <= numOfCircles; i++) {
+          const angle = (i / 360) * 360; // Calculate equally spaced angles
+          const radians = (angle * Math.PI) / 180;
+          const x = originX + 5 * Math.cos(radians);
+          const y = originY + 5 * Math.sin(radians);
+
+          circles.push({
+            x: x,
+            y: y,
+            color,
+            size: randomNum(5, 15),
+            radius: radians,
+            angle: radians,
+            speed: randomNum(0.01, 0.06),
+            direction:
+              Math.floor(randomNum(0, 2)) === 1
+                ? "clockwise"
+                : "counterClockwise",
+          });
+        }
+      };
+
+      makeCircles(window.innerWidth / 2, window.innerHeight / 2);
+
+      // Update function to be called in a loop (e.g., using requestAnimationFrame)
+      function update() {
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Set the shadow properties
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+
+        for (let i = 0; i < circles.length; i++) {
+          const circle = circles[i];
+          // Calculate the new position based on the angle
+          circle.x = circle.x + circle.radius * Math.cos(circle.angle);
+          circle.y = circle.y + circle.radius * Math.sin(circle.angle);
+
+          // Draw the object at the new position
+          ctx.beginPath();
+
+          ctx.arc(circle.x, circle.y, circle.size, 0, 2 * Math.PI);
+          ctx.fillStyle = circle.color;
+          ctx.fill();
+          ctx.closePath();
+
+          // Update the angle for the next frame
+          if (circle.direction === "clockwise") {
+            circle.angle += circle.speed;
+          } else {
+            circle.angle -= circle.speed;
+          }
+        }
+
+        // Request the next animation frame
+        requestAnimationFrame(update);
+      }
+
+      // Start the animation loop
+      update();
+    </script>
+  </body>
+</html>
