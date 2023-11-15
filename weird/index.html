@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>weird - 11/14/2023</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background: #16010a;
+        background-size: cover;
+        background-attachment: fixed;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+    <script>
+      // prompted ai for the vast majority of the code below
+      // > can you modify my code so the circle moves across the screen like a wave crashing into the shore
+      // > can you make it start over once it reachs the end
+      // > can you modify it so there's as many circles that cant fit across the window with 10px between them
+      // then i tweaked some of the input to chane the wave as i liked
+      const canvas = document.getElementById("myCanvas");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const circleRadius = 1;
+      const gap = 10;
+      const numberOfCircles = Math.floor(
+        window.innerWidth / (circleRadius * 2 + gap)
+      );
+
+      const circles = [];
+
+      for (let i = 0; i < numberOfCircles + 1; i++) {
+        circles.push({
+          x: i * (circleRadius * 2 + gap) + circleRadius + gap,
+          y: window.innerHeight / 2,
+        });
+      }
+
+      let angle = 0;
+
+      function update() {
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < numberOfCircles + 1; i++) {
+          // Update the circle position in a sinusoidal pattern
+          circles[i].x += 10; // You can adjust the speed of the wave
+
+          // Wrap around the screen
+          if (circles[i].x > window.innerWidth + circleRadius + gap) {
+            circles[i].x = -circleRadius - gap;
+          }
+
+          // Calculate the y-coordinate based on a sine wave
+          circles[i].y =
+            window.innerHeight / 2 + Math.sin(angle + i * 0.2) * 100; // You can adjust the amplitude (50 in this case)
+
+          // Draw the object at the new position
+          ctx.beginPath();
+          ctx.arc(circles[i].x, circles[i].y, circleRadius, 0, 2 * Math.PI);
+          ctx.fillStyle = "yellow";
+          ctx.fill();
+          ctx.closePath();
+        }
+
+        // Increment the angle for the sine wave
+        angle += 0.05; // You can adjust the frequency of the wave
+
+        // Request the next animation frame
+        requestAnimationFrame(update);
+      }
+
+      // Start the animation loop
+      update();
+    </script>
+  </body>
+</html>
