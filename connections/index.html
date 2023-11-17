@@ -1,0 +1,235 @@
+<html>
+  <head>
+    <title>11/16/2023 - connections</title>
+    <style>
+      .game {
+        width: 800px;
+        height: 600px;
+
+        &.win .row, &.lose .row {
+          display: none;
+        }
+
+        &.win {
+          .win-msg {
+            display: block;
+          }
+
+          .guesses {
+            display: none;
+          }
+        }
+
+        &.lose {
+          .lose-msg {
+            display: block;
+          }
+
+          .guesses {
+            display: none;
+          }
+
+          .missing-connections-wrapper {
+            display: block;
+          }
+        }
+      }
+
+      .missing-connections-wrapper {
+        display: none;
+      }
+
+      .win-msg, .lose-msg {
+        display: none;
+        font-size: 22px;
+      }
+
+      .win-msg {
+        color: green
+      }
+
+      .lose-msg {
+        color: red;
+      }
+
+      .row {
+        display: flex;
+        height: 25%;
+
+        .word {
+          width: 25%;
+          margin-right: 10px;
+          margin-bottom: 10px;
+          background: lightgray;
+          line-height: 140px;
+          text-align: center;
+          cursor: pointer;
+
+          &:last-child {
+            margin-right: 0
+          }
+
+          &.selected {
+            background-color: gray;
+          }
+        }
+
+        .word:hover {
+          background-color: gray;
+          color: white;
+        }
+      }
+
+      .guesses {
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game">
+      <div class="win-msg">You Win!</div>
+      <div class="lose-msg">You Lose!</div>
+      <div class="row">
+        <div class="word word-1"></div>
+        <div class="word word-2"></div>
+        <div class="word word-3"></div>
+        <div class="word word-4"></div>
+      </div>
+      <div class="row">
+        <div class="word word-5"></div>
+        <div class="word word-6"></div>
+        <div class="word word-7"></div>
+        <div class="word word-8"></div>
+      </div>
+      <div class="row">
+        <div class="word word-9"></div>
+        <div class="word word-10"></div>
+        <div class="word word-11"></div>
+        <div class="word word-12"></div>
+      </div>
+      <div class="row">
+        <div class="word word-13"></div>
+        <div class="word word-14"></div>
+        <div class="word word-15"></div>
+        <div class="word word-16"></div>
+      </div>
+      <div class="guesses">Guesses: O O O O</div>
+      <b>Correct Connections:</b>
+      <ul class="correct-connections"></ul>
+      <div class="missing-connections-wrapper">
+        <b>Missing Connections:</b>
+        <ul class="missing-connections"></ul>
+      </div>
+    </div>
+    <script>
+      function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const connections = {
+        'Dogs': ['westie', 'wheaton', 'bulldog', 'beagle'],
+        'Breakfast Foods': ['bagel', 'doughnut', 'eggs', 'bacon'],
+        'Spotted Things': ['dalmation', 'whale shark', 'fawn', 'ladybug'],
+        'Baked Things': ['cake', 'chicken', 'bread', 'cassserole']
+      }
+
+      const wordDivs = document.getElementsByClassName('word')
+      const correctConnectionsEl = document.getElementsByClassName('correct-connections')[0]
+      const gameEl = document.getElementsByClassName('game')[0]
+      const guessesEl = document.getElementsByClassName('guesses')[0]
+      const missingConnectionsEl = document.getElementsByClassName('missing-connections')[0]
+
+      const words = Object.values(connections).flatMap((w) => w)
+      const wordsScrambled = []
+      while (words.length > 0) {
+        const randomWord = words.splice(getRandomNumber(0, words.length-1), 1)[0]
+        wordsScrambled.push(randomWord)
+      }
+
+      let selected = []
+      let correctConnections = []
+      let guesses = 0
+
+      const checkSelected = () => {
+        guesses+=1
+
+        guessesEl.innerHTML = `Guesses: ${Array(5-guesses).join(' O')}`
+
+        const selectedSorted = selected.sort()
+
+        let isCorrect
+        for (const connection in connections) {
+          const checkAgainstConnection = connections[connection].sort()
+          isCorrect = checkAgainstConnection.every((c, i) => c === selectedSorted[i])
+
+          if (isCorrect) {
+            correctConnections.push(connection)
+            break;
+          }
+        }
+
+        for (const wordDiv of wordDivs) {
+          if (wordDiv.classList.contains('selected')) {
+            wordDiv.classList.remove('selected')
+
+            if (isCorrect) {
+              wordDiv.innerHTML = '-'
+              correctConnectionsEl.innerHTML = `
+                ${correctConnections.map((correctConnection) => {
+                  return `<li><b>${correctConnection}:</b> ${connections[correctConnection].join(', ')}</li>`
+                }).join('')}
+              `
+            }
+          }
+        }
+
+        if (guesses === 4) {
+          if(correctConnections.length === 4) {
+            gameEl.classList.add('win')
+          } else {
+            gameEl.classList.add('lose')
+            const connectionGroups = Object.keys(connections)
+            const missingConnections = connectionGroups.filter(connection => !correctConnections.includes(connection))
+            missingConnectionsEl.innerHTML = `
+              ${missingConnections.map((missingConnection) => {
+                return `<li><b>${missingConnection}:</b> ${connections[missingConnection].join(', ')}</li>`
+              }).join('')}
+            `
+          }
+        }
+
+        selected = []
+      }
+
+      const wordClicked = (e) => {
+        const wordEl = e.target
+        const word = wordEl.innerText
+
+        if (word === '-') {
+          return
+        }
+
+        if (selected.includes(word)) {
+          wordEl.classList.remove('selected')
+          selected.splice(selected.indexOf(word), 1)
+          return
+        }
+
+        wordEl.classList.toggle('selected')
+        if (selected.length === 3) {
+          selected.push(word)
+          checkSelected()
+        } else {
+          selected.push(word)
+        }
+
+      }
+
+      for (let i = 0; i < wordDivs.length; i++) {
+        const wordDiv = wordDivs[i]
+        wordDiv.innerHTML = wordsScrambled[i]
+        wordDiv.addEventListener('mouseup', wordClicked)
+      }
+    </script>
+  </body>
+</html>
