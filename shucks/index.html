@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>12/18/2023 - shucks</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: black;
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const largerDimension = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+      const generateStars = () => {
+        return Array.from({ length: 100 }, () => {
+          return {
+            x: getRandomNumber(5, window.innerWidth),
+            y: getRandomNumber(5, window.innerHeight),
+            size: getRandomNumber(.1,2)
+          };
+        });
+      };
+
+      let stars = generateStars();
+      let shootingStar = {
+        x: getRandomNumber(5, window.innerWidth),
+        y: getRandomNumber(5, window.innerHeight),
+        distanceTraveled: 0,
+        size: 2,
+        increaseXBy: getRandomNumber(5,15),
+        leftOrRight: getRandomNumber(1,2) === 1 ? 'left' : 'right',
+        upOrDown: getRandomNumber(1,2) === 1 ? 'up' : 'down'
+      }
+
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        for (let i = 0; i < stars.length; i++) {
+          const star = stars[i];
+          ctx.fillStyle = "white";
+          ctx.fillRect(star.x, star.y, star.size, star.size);
+        }
+
+        ctx.fillStyle = "white";
+        ctx.fillRect(shootingStar.x, shootingStar.y, shootingStar.size, shootingStar.size);
+
+        if (getRandomNumber(1,30) === 5) {
+          stars.shift()
+
+          stars.push({
+            x: getRandomNumber(5, window.innerWidth),
+            y: getRandomNumber(5, window.innerHeight),
+            size: getRandomNumber(.1,2)
+          })
+        }
+
+        if (shootingStar.distanceTraveled >= window.innerWidth) {
+          shootingStar.x = getRandomNumber(5, window.innerWidth)
+          shootingStar.y = getRandomNumber(5, window.innerHeight)
+          shootingStar.distanceTraveled = 0
+          shootingStar.size = getRandomNumber(1,5)
+          shootingStar.increaseXBy = getRandomNumber(5,15)
+          shootingStar.leftOrRight = getRandomNumber(1,2) === 1 ? 'left' : 'right'
+          shootingStar.upOrDown = getRandomNumber(1,2) === 1 ? 'up' : 'down'
+        } else {
+          if (shootingStar.leftOrRight === 'right') {
+            shootingStar.x += shootingStar.increaseXBy
+          } else {
+            shootingStar.x -= shootingStar.increaseXBy
+          }
+          if (shootingStar.upOrDown === 'up') {
+            shootingStar.y -= 1
+          } else {
+            shootingStar.y += 1
+          }
+          shootingStar.distanceTraveled += 5
+        }
+
+        // setTimeout(() => window.requestAnimationFrame(draw), 50)
+        window.requestAnimationFrame(draw)
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
