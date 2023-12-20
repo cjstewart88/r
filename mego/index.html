@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <title>12/19/2023 - mego</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: black;
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const largerDimension = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+      const generateStars = () => {
+        return Array.from({ length: 100 }, () => {
+          return {
+            x: getRandomNumber(5, window.innerWidth),
+            y: getRandomNumber(5, window.innerHeight),
+            size: getRandomNumber(.1,5)
+          };
+        });
+      };
+
+      let stars = generateStars();
+      let shootingStar = {
+        x: getRandomNumber(5, window.innerWidth),
+        y: getRandomNumber(5, window.innerHeight),
+        distanceTraveled: 0,
+        size: 2,
+        increaseXBy: getRandomNumber(5,15),
+        leftOrRight: getRandomNumber(1,2) === 1 ? 'left' : 'right',
+        upOrDown: getRandomNumber(1,2) === 1 ? 'up' : 'down'
+      }
+
+      let cursorX = window.innerWidth/2
+      let cursorY = window.innerHeight/2
+      document.addEventListener('mousemove', (e) => {
+        cursorX = e.pageX
+        cursorY = e.pageY
+      })
+
+      // Create a linear gradient
+      var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+      gradient.addColorStop(0, 'black');    // Start color
+      gradient.addColorStop(.5, 'rgba(0, 255, 0, .2)');   // End color
+      gradient.addColorStop(1, 'black');    // Start color
+
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        for (let i = 0; i < stars.length; i++) {
+          const star = stars[i];
+          ctx.fillStyle = "white";
+          ctx.fillRect(star.x, star.y, star.size, star.size);
+
+          // Start a new Path
+          ctx.beginPath();
+          ctx.moveTo(cursorX, cursorY);
+          ctx.lineTo(star.x, star.y);
+
+          // Draw the Path
+          ctx.strokeStyle = gradient
+          ctx.stroke();
+          ctx.closePath()
+        }
+
+        ctx.fillStyle = "white";
+        ctx.fillRect(shootingStar.x, shootingStar.y, shootingStar.size, shootingStar.size);
+
+        if (shootingStar.distanceTraveled >= window.innerWidth) {
+          shootingStar.x = getRandomNumber(5, window.innerWidth)
+          shootingStar.y = getRandomNumber(5, window.innerHeight)
+          shootingStar.distanceTraveled = 0
+          shootingStar.size = getRandomNumber(1,5)
+          shootingStar.increaseXBy = getRandomNumber(5,15)
+          shootingStar.leftOrRight = getRandomNumber(1,2) === 1 ? 'left' : 'right'
+          shootingStar.upOrDown = getRandomNumber(1,2) === 1 ? 'up' : 'down'
+        } else {
+          if (shootingStar.leftOrRight === 'right') {
+            shootingStar.x += shootingStar.increaseXBy
+          } else {
+            shootingStar.x -= shootingStar.increaseXBy
+          }
+          if (shootingStar.upOrDown === 'up') {
+            shootingStar.y -= 1
+          } else {
+            shootingStar.y += 1
+          }
+          shootingStar.distanceTraveled += 5
+        }
+
+        ctx.beginPath();
+        // Set shadow properties
+        ctx.shadowColor = 'rgba(0, 255, 0, .7)';  // Shadow color with alpha
+        ctx.shadowBlur = 30;                       // Blur level
+        ctx.shadowOffsetX = 0                     // Horizontal offset
+        ctx.shadowOffsetY = 5;
+
+        ctx.arc(cursorX, cursorY, 100, 0, 2 * Math.PI, false)
+        ctx.lineWidth = 3;
+        ctx.fillStyle = 'rgba(0,0,0,.9)';
+        ctx.fill();
+          ctx.closePath()
+        window.requestAnimationFrame(draw)
+      };
+
+      window.requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
