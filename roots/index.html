@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>04/08/2024 - roots</title>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        background: black;
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+      const getRandomNumber = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      };
+
+      const roots = [];
+
+      const generateRoots = () => {
+        for (let i = 0; i < 15; i++) {
+          roots.push({
+            x: window.innerWidth / 2,
+            y: 0,
+          });
+        }
+      };
+
+      generateRoots();
+
+      const canvas = document.getElementsByTagName("canvas")[0];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext("2d");
+
+      const draw = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        for (let i = 0; i < window.innerHeight; i++) {
+          for (let ii = 0; ii < roots.length; ii++) {
+            const root = roots[ii];
+
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 0.5;
+
+            // Start a new Path
+            ctx.beginPath();
+            ctx.moveTo(root.x, root.y);
+            root.x += [2 * getRandomNumber(-1, 1), 2 * getRandomNumber(-1, 1)][
+              getRandomNumber(0, 1)
+            ];
+            root.y += getRandomNumber(2, 3);
+            ctx.lineTo(root.x, root.y);
+
+            // Draw the Path
+            ctx.stroke();
+            ctx.closePath();
+          }
+        }
+      };
+
+      draw();
+    </script>
+  </body>
+</html>
