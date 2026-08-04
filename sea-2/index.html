@@ -5,7 +5,7 @@
       body {
         width: 100%;
         height: 100%;
-        background: #0b3350;
+        background: #120a2a;
         margin: 0;
         overflow: hidden;
       }
@@ -19,7 +19,8 @@
         font-family: monospace;
         font-size: 12px;
         letter-spacing: 2px;
-        color: rgba(255, 255, 255, 0.35);
+        color: rgba(255, 255, 255, 0.55);
+        text-shadow: 0 0 6px #000;
         pointer-events: none;
         transition: opacity 1.2s;
       }
@@ -31,15 +32,17 @@
   </head>
   <body>
     <canvas></canvas>
-    <div id="hint">click for sound</div>
+    <div id="hint">move to stir &nbsp;·&nbsp; click for sound</div>
     <script>
       const canvas = document.getElementsByTagName("canvas")[0];
       const ctx = canvas.getContext("2d");
 
-      const INK = "#12242e";
+      const INK = "#100a1e";
       const rand = (min, max) => Math.random() * (max - min) + min;
       const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
       const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+      const hsl = (h, s, l) => `hsl(${((h % 360) + 360) % 360},${s}%,${l}%)`;
+      const hsla = (h, s, l, a) => `hsla(${((h % 360) + 360) % 360},${s}%,${l}%,${a})`;
 
       const mulberry32 = (a) => () => {
         a |= 0;
@@ -49,384 +52,669 @@
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
       };
 
-      // takes "#rrggbb" or the "rgb(r,g,b)" it hands back, so mixes can be chained
-      const rgb = (c) =>
-        c[0] === "#"
-          ? [
-              parseInt(c.slice(1, 3), 16),
-              parseInt(c.slice(3, 5), 16),
-              parseInt(c.slice(5, 7), 16),
-            ]
-          : c.slice(4, -1).split(",").map(Number);
-
-      const mix = (a, b, t) => {
-        const x = rgb(a);
-        const y = rgb(b);
-        return `rgb(${x.map((v, i) => Math.round(v + (y[i] - v) * t)).join(",")})`;
-      };
+      // the whole scene slides through the spectrum, forever — and faster
+      // while the mouse is thrashing around
+      const HUE_DRIFT = 7;
+      let hueBase = 0;
 
       let W = 0;
       let H = 0;
       let sandBase = 0;
 
-      const sandY = (x) =>
+      const mouse = {
+        x: -9999,
+        y: -9999,
+        lx: -9999,
+        ly: -9999,
+        speed: 0,
+        energy: 0,
+        on: false,
+      };
+
+      const track = (x, y) => {
+        if (!mouse.on) {
+          mouse.lx = x;
+          mouse.ly = y;
+        }
+        mouse.x = x;
+        mouse.y = y;
+        mouse.on = true;
+      };
+
+      window.addEventListener("mousemove", (e) => track(e.clientX, e.clientY));
+      window.addEventListener("mouseleave", () => {
+        mouse.on = false;
+        // park the history too, or leaving the window reads as one huge jump
+        mouse.x = mouse.y = mouse.lx = mouse.ly = -9999;
+      });
+      window.addEventListener(
+        "touchmove",
+        (e) => {
+          const p = e.touches[0];
+          if (p) track(p.clientX, p.clientY);
+        },
+        { passive: true }
+      );
+
+      const REACH = 320;
+      let PX = 0;
+      let PY = 0;
+
+      // shoves a point away from the cursor — harder the closer it sits, and
+      // harder still when the mouse is moving fast. writes PX/PY instead of
+      // returning, so the per-point calls in the draw loop stay allocation-free
+      const push = (x, y, strength) => {
+        PX = 0;
+        PY = 0;
+        if (!mouse.on) return;
+        const dx = x - mouse.x;
+        const dy = y - mouse.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 > REACH * REACH) return;
+        const d = Math.sqrt(d2) || 1;
+        const f = 1 - d / REACH;
+        const s = f * f * strength * (1 + mouse.energy * 2.4);
+        PX = (dx / d) * s;
+        PY = (dy / d) * s;
+      };
+
+      // wake left behind by fast movement
+      const ripples = [];
+
+      const sandY = (x, time) =>
         sandBase +
-        Math.sin(x * 0.0055) * 14 +
-        Math.sin(x * 0.017 + 1.7) * 6 +
-        Math.sin(x * 0.041 + 4.2) * 2;
+        Math.sin(x * 0.0055 + time * 0.2) * 18 +
+        Math.sin(x * 0.017 + 1.7) * 8 +
+        Math.sin(x * 0.041 + 4.2 - time * 0.3) * 4;
 
-      // scenery
-
-      let grass = [];
-
-      const buildGrass = () => {
-        grass = [];
-        const count = Math.round(W / 26) + 20;
-        for (let i = 0; i < count; i++) {
-          const x = rand(-40, W + 40);
-          const front = Math.random() < 0.14;
-          grass.push({
-            x,
-            front,
-            h: rand(front ? 90 : 40, front ? 210 : 150),
-            w: rand(2.5, 6),
-            lean: rand(-0.5, 0.5),
-            phase: rand(0, Math.PI * 2),
-            speed: rand(0.5, 0.95),
-            tint: rand(0, 1),
-          });
+      const spline = (pts, seg) => {
+        const out = [];
+        const p = [pts[0]].concat(pts, [pts[pts.length - 1]]);
+        for (let i = 0; i < p.length - 3; i++) {
+          const p0 = p[i];
+          const p1 = p[i + 1];
+          const p2 = p[i + 2];
+          const p3 = p[i + 3];
+          for (let j = 0; j < seg; j++) {
+            const t = j / seg;
+            const t2 = t * t;
+            const t3 = t2 * t;
+            out.push([
+              0.5 *
+                (2 * p1[0] +
+                  (-p0[0] + p2[0]) * t +
+                  (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 +
+                  (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+              0.5 *
+                (2 * p1[1] +
+                  (-p0[1] + p2[1]) * t +
+                  (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 +
+                  (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3),
+            ]);
+          }
         }
-        grass.sort((a, b) => a.h - b.h);
+        out.push(pts[pts.length - 1]);
+        return out;
       };
 
-      const drawGrass = (blade, time) => {
-        const baseY = sandY(blade.x) + 4;
-        const sway =
-          Math.sin(time * blade.speed + blade.phase) * (blade.h * 0.16) +
-          blade.lean * blade.h * 0.4;
-        const tipX = blade.x + sway;
-        const tipY = baseY - blade.h;
-        const midX = blade.x + sway * 0.32;
-        const midY = baseY - blade.h * 0.55;
-        const w = blade.w;
-
-        const green = mix("#2c5f4a", "#5c8f4a", blade.tint);
-        ctx.fillStyle = blade.front ? mix(green, "#0b2f3f", 0.35) : green;
-        ctx.globalAlpha = blade.front ? 0.75 : 0.55;
-
-        ctx.beginPath();
-        ctx.moveTo(blade.x - w, baseY);
-        ctx.quadraticCurveTo(midX - w * 0.5, midY, tipX, tipY);
-        ctx.quadraticCurveTo(midX + w * 0.5, midY, blade.x + w, baseY);
-        ctx.closePath();
-        ctx.fill();
-        ctx.globalAlpha = 1;
+      const yAt = (pts, x) => {
+        for (let i = 0; i < pts.length - 1; i++) {
+          const a = pts[i];
+          const b = pts[i + 1];
+          if ((x <= a[0] && x >= b[0]) || (x >= a[0] && x <= b[0])) {
+            const d = b[0] - a[0];
+            return a[1] + (b[1] - a[1]) * (d ? (x - a[0]) / d : 0);
+          }
+        }
+        return pts[pts.length - 1][1];
       };
 
-      const drawSand = () => {
-        ctx.beginPath();
-        ctx.moveTo(0, H);
-        for (let x = 0; x <= W; x += 6) ctx.lineTo(x, sandY(x));
-        ctx.lineTo(W, H);
-        ctx.closePath();
-
-        const g = ctx.createLinearGradient(0, sandBase - 30, 0, H);
-        g.addColorStop(0, "#c9b088");
-        g.addColorStop(0.35, "#a98f68");
-        g.addColorStop(1, "#6e5b45");
-        ctx.fillStyle = g;
-        ctx.fill();
-
-        ctx.save();
-        ctx.clip();
-        ctx.fillStyle = "rgba(60,44,28,0.35)";
-        const rnd = mulberry32(7);
-        for (let i = 0; i < 900; i++) {
-          const x = rnd() * W;
-          const y = sandY(x) + rnd() * (H - sandBase + 40);
-          ctx.fillRect(x, y, 1.4, 1.4);
-        }
-        ctx.fillStyle = "rgba(255,240,210,0.22)";
-        for (let i = 0; i < 400; i++) {
-          const x = rnd() * W;
-          const y = sandY(x) + rnd() * (H - sandBase + 40);
-          ctx.fillRect(x, y, 1.2, 1.2);
-        }
-        ctx.restore();
-
-        ctx.strokeStyle = "rgba(20,40,50,0.25)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        for (let x = 0; x <= W; x += 6) {
-          const y = sandY(x);
-          x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-        }
-        ctx.stroke();
-      };
+      // background
 
       const drawWater = (time) => {
-        const g = ctx.createLinearGradient(0, 0, 0, H);
-        g.addColorStop(0, "#3f9fc4");
-        g.addColorStop(0.35, "#2472a0");
-        g.addColorStop(0.75, "#124e78");
-        g.addColorStop(1, "#0b3350");
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, W, H);
-
-        // light shafts from the surface
-        for (let i = 0; i < 7; i++) {
-          const drift = Math.sin(time * 0.13 + i * 1.9) * 70;
-          const x = ((i + 0.5) / 7) * W + drift;
-          const w = 40 + Math.sin(time * 0.21 + i) * 18;
-          const len = H * (0.65 + (i % 3) * 0.12);
-          const rg = ctx.createLinearGradient(0, 0, 0, len);
-          rg.addColorStop(0, "rgba(190,235,255,0.16)");
-          rg.addColorStop(1, "rgba(190,235,255,0)");
-          ctx.fillStyle = rg;
+        const hue = hueBase;
+        const bands = 15;
+        for (let i = 0; i < bands; i++) {
+          ctx.fillStyle = hsl(hue + i * 21, 88, 58 - (i / bands) * 32);
+          if (i === 0) {
+            ctx.fillRect(0, 0, W, H);
+            continue;
+          }
+          const baseY = (i / bands) * H * 1.02;
           ctx.beginPath();
-          ctx.moveTo(x - w * 0.4, 0);
-          ctx.lineTo(x + w * 0.4, 0);
-          ctx.lineTo(x + w * 1.5, len);
-          ctx.lineTo(x - w * 0.6, len);
+          ctx.moveTo(-20, baseY);
+          for (let x = -20; x <= W + 20; x += 14) {
+            const y =
+              baseY +
+              Math.sin(x * 0.0062 + time * 0.55 + i * 0.85) * 20 +
+              Math.sin(x * 0.019 - time * 0.4 + i) * 8;
+            // the cursor drags the bands out of shape as it passes
+            push(x, y, 70);
+            ctx.lineTo(x + PX * 0.35, y + PY);
+          }
+          ctx.lineTo(W + 20, H + 20);
+          ctx.lineTo(-20, H + 20);
           ctx.closePath();
           ctx.fill();
         }
+
+        // rings pushing out from somewhere behind it all — they follow the
+        // cursor when there is one, otherwise they wander on their own
+        const wx = W * 0.5 + Math.sin(time * 0.18) * W * 0.22;
+        const wy = H * 0.3 + Math.cos(time * 0.13) * H * 0.15;
+        const cx = mouse.on ? mouse.x : wx;
+        const cy = mouse.on ? mouse.y : wy;
+        ctx.lineWidth = 7;
+        for (let i = 0; i < 12; i++) {
+          const r = ((time * 60 + i * 90) % 1100) + 20;
+          ctx.strokeStyle = hsla(hue + 180 + i * 30, 95, 62, 0.16);
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // wake rings shed wherever the mouse whipped through
+        ripples.forEach((rp) => {
+          const age = time - rp.born;
+          const r = age * 300;
+          ctx.strokeStyle = hsla(hue + rp.hue, 100, 70, (1 - age / rp.life) * 0.55);
+          ctx.lineWidth = 10 * (1 - age / rp.life) + 1;
+          ctx.beginPath();
+          ctx.arc(rp.x, rp.y, r, 0, Math.PI * 2);
+          ctx.stroke();
+        });
+        ctx.lineWidth = 1;
+      };
+
+      // paint melting down out of the surface
+      let drips = [];
+
+      const buildDrips = () => {
+        drips = [];
+        let x = -30;
+        while (x < W + 40) {
+          const w = rand(28, 90);
+          drips.push({
+            x,
+            w,
+            len: rand(30, 190),
+            hue: rand(0, 360),
+            phase: rand(0, Math.PI * 2),
+            wob: rand(6, 26),
+          });
+          x += w * rand(0.75, 1.15);
+        }
+      };
+
+      const drawDrips = (time) => {
+        const hue = hueBase;
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = INK;
+        ctx.lineJoin = "round";
+        drips.forEach((d) => {
+          const r = d.w * 0.5;
+          // pass under a drip and you pull it down after you
+          push(d.x + r, d.len, 130);
+          const stretch = Math.abs(PY) + Math.abs(PX) * 0.4;
+          const len = Math.max(
+            r + 10,
+            d.len + Math.sin(time * 0.5 + d.phase) * d.wob + stretch
+          );
+          const lean = PX * 0.25;
+          ctx.fillStyle = hsl(hue + d.hue, 92, 60);
+          ctx.beginPath();
+          ctx.moveTo(d.x, -10);
+          ctx.lineTo(d.x + lean, len - r);
+          ctx.arc(d.x + r + lean, len - r, r, Math.PI, 0, true);
+          ctx.lineTo(d.x + d.w, -10);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        });
+        ctx.lineWidth = 1;
+      };
+
+      // kelp
+
+      let kelp = [];
+
+      const buildKelp = () => {
+        kelp = [];
+        const count = Math.round(W / 70) + 8;
+        for (let i = 0; i < count; i++) {
+          kelp.push({
+            x: rand(-40, W + 40),
+            front: Math.random() < 0.3,
+            h: rand(120, 340),
+            w: rand(14, 40),
+            lean: rand(-0.5, 0.5),
+            phase: rand(0, Math.PI * 2),
+            speed: rand(0.4, 0.9),
+            hue: rand(0, 360),
+            bulbs: Math.floor(rand(3, 7)),
+          });
+        }
+        kelp.sort((a, b) => a.h - b.h);
+      };
+
+      // a stack of fat lobes on a stem, wobbling — reads as kelp, barely
+      const drawKelp = (k, time) => {
+        const hue = hueBase + k.hue;
+        const baseY = sandY(k.x, time) + 6;
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = INK;
+        ctx.lineJoin = "round";
+
+        // the higher up the stem, the more freely it gets shoved around
+        const sway = (u) => {
+          const y = baseY - k.h * u;
+          push(k.x, y, 120);
+          return (
+            Math.sin(time * k.speed + k.phase + u * 2.6) * k.h * 0.13 * u +
+            k.lean * k.h * 0.35 * u * u +
+            PX * u * 1.3
+          );
+        };
+
+        ctx.beginPath();
+        for (let i = 0; i <= 12; i++) {
+          const u = i / 12;
+          const x = k.x + sway(u);
+          const y = baseY - k.h * u;
+          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        }
+        ctx.lineWidth = k.w * 0.42;
+        ctx.strokeStyle = INK;
+        ctx.stroke();
+        ctx.lineWidth = Math.max(3, k.w * 0.42 - 8);
+        ctx.strokeStyle = hsl(hue, 90, k.front ? 42 : 56);
+        ctx.stroke();
+
+        ctx.lineWidth = 5;
+        for (let i = 0; i < k.bulbs; i++) {
+          const u = (i + 1) / (k.bulbs + 0.6);
+          const x = k.x + sway(u);
+          const y = baseY - k.h * u;
+          const r = k.w * (0.75 - u * 0.28);
+          ctx.fillStyle = hsl(hue + 60 + i * 26, 95, k.front ? 52 : 64);
+          ctx.strokeStyle = INK;
+          ctx.beginPath();
+          ctx.ellipse(x + (i % 2 ? r * 0.7 : -r * 0.7), y, r, r * 0.72, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = hsla(hue + 180, 100, 88, 0.75);
+          ctx.beginPath();
+          ctx.arc(x + (i % 2 ? r * 0.95 : -r * 0.45), y - r * 0.25, r * 0.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.lineWidth = 1;
+      };
+
+      // floor
+
+      const drawSand = (time) => {
+        const hue = hueBase;
+        const top = (x) => sandY(x, time);
+
+        // dune height at x, with the cursor heaping it up as it passes over
+        const lift = (x, layer) => {
+          const y = top(x) + layer * 26;
+          push(x, y, 60);
+          return y - Math.abs(PY) * 0.8 + PX * 0.15;
+        };
+
+        for (let layer = 0; layer < 4; layer++) {
+          ctx.fillStyle = hsl(hue + 25 + layer * 16, 95, 62 - layer * 9);
+          ctx.beginPath();
+          ctx.moveTo(-10, lift(-10, layer));
+          for (let x = -10; x <= W + 10; x += 10) ctx.lineTo(x, lift(x, layer));
+          ctx.lineTo(W + 10, H + 10);
+          ctx.lineTo(-10, H + 10);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.strokeStyle = INK;
+          ctx.lineWidth = layer ? 3 : 6;
+          ctx.beginPath();
+          for (let x = -10; x <= W + 10; x += 10) {
+            const y = lift(x, layer);
+            x === -10 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+
+        // pebbles
+        const rnd = mulberry32(11);
+        ctx.lineWidth = 4;
+        for (let i = 0; i < 60; i++) {
+          const x = rnd() * W;
+          const y = top(x) + 34 + rnd() * (H - sandBase - 20);
+          const r = 5 + rnd() * 16;
+          push(x, y, 45);
+          ctx.fillStyle = hsl(hue + 200 + rnd() * 160, 92, 60);
+          ctx.strokeStyle = INK;
+          ctx.beginPath();
+          ctx.ellipse(x + PX, y + PY, r, r * 0.75, rnd() * 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+        ctx.lineWidth = 1;
       };
 
       // fish
 
-      const SPECIES = [
-        { body: "#f0762b", accent: "#f7a24a", marks: "bands", markCol: "#fbf3e4" },
-        { body: "#2f6fd0", accent: "#f2c53d", marks: "none" },
-        { body: "#f2c53d", accent: "#e9a92b", marks: "none" },
-        { body: "#9fc4d8", accent: "#c9dfe9", marks: "dots", markCol: "#5c8299" },
-        { body: "#e8748a", accent: "#f4a6b3", marks: "bands", markCol: "#8f3d54" },
-        { body: "#7a63c9", accent: "#a08fe0", marks: "dots", markCol: "#e6dcff" },
-        { body: "#5fbfa6", accent: "#8fd8c4", marks: "bands", markCol: "#1f6b5c" },
-        { body: "#d9dee2", accent: "#aebbc4", marks: "none" },
-      ];
+      const PATTERNS = ["stripes", "dots", "checker", "swirl", "waves"];
 
-      const NOSE = 0.5;
-      const TAIL = -0.38;
-      const SPAN = NOSE - TAIL;
+      const SNOUT = 0.46;
+      const PEDUNCLE = -0.3;
 
       const makeFish = (seedX) => {
         const rnd = mulberry32(Math.floor(Math.random() * 1e9));
         const depth = Math.random();
         const dir = Math.random() < 0.5 ? 1 : -1;
-        const size = (95 - depth * 55) * rand(0.8, 1.25);
-        const bodyH = 0.19 + rnd() * 0.1;
-        const belly = 0.95 + rnd() * 0.4;
-        const sp = pick(SPECIES);
+        const size = (170 - depth * 95) * rand(0.78, 1.3);
+        const d = 0.9 + rnd() * 0.6;
+        const b = 0.9 + rnd() * 0.4;
 
         const jit = [];
-        for (let i = 0; i < 32; i++) jit.push([rnd() * 0.024 - 0.012, rnd() * 0.024 - 0.012]);
+        for (let i = 0; i < 40; i++) jit.push([rnd() * 0.01 - 0.005, rnd() * 0.01 - 0.005]);
 
-        const hAt = (x, mult) => {
-          const t = clamp((NOSE - x) / SPAN, 0, 1);
-          return (
-            bodyH * (mult || 1) * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.85)), 0.75)
-          );
-        };
+        const top = spline(
+          [
+            [SNOUT, -0.022],
+            [0.34, -0.1 * d],
+            [0.2, -0.148 * d],
+            [0.06, -0.158 * d],
+            [-0.1, -0.128 * d],
+            [-0.22, -0.082 * d],
+            [PEDUNCLE, -0.042 * d],
+          ],
+          6
+        );
+        const bottom = spline(
+          [
+            [SNOUT, 0.028],
+            [0.34, 0.078 * d * b],
+            [0.2, 0.118 * d * b],
+            [0.06, 0.132 * d * b],
+            [-0.1, 0.108 * d * b],
+            [-0.22, 0.072 * d * b],
+            [PEDUNCLE, 0.042 * d],
+          ],
+          6
+        );
 
-        const body = [];
-        const N = 22;
-        for (let i = 0; i <= N; i++) {
-          const x = NOSE - (i / N) * SPAN;
-          body.push([x, -hAt(x)]);
-        }
-        for (let i = N; i >= 0; i--) {
-          const x = NOSE - (i / N) * SPAN;
-          body.push([x, hAt(x, belly)]);
-        }
+        const body = top.concat(bottom.slice().reverse());
+        const topY = (x) => yAt(top, x);
+        const botY = (x) => yAt(bottom, x);
 
-        const tailSize = 0.85 + rnd() * 0.5;
-        const tail = [
-          [0, 0],
-          [-0.28 * tailSize, -0.26 * tailSize],
-          [-0.18 * tailSize, 0],
-          [-0.28 * tailSize, 0.26 * tailSize],
+        const forked = rnd() < 0.6;
+        const tail = forked
+          ? [
+              [0, -0.042 * d],
+              [-0.1, -0.15],
+              [-0.21, -0.24],
+              [-0.235, -0.185],
+              [-0.13, -0.03],
+              [-0.13, 0.03],
+              [-0.235, 0.185],
+              [-0.21, 0.24],
+              [-0.1, 0.15],
+              [0, 0.042 * d],
+            ]
+          : [
+              [0, -0.042 * d],
+              [-0.11, -0.18],
+              [-0.21, -0.17],
+              [-0.23, 0],
+              [-0.21, 0.17],
+              [-0.11, 0.18],
+              [0, 0.042 * d],
+            ];
+
+        const dorsalSpiny = [
+          [0.24, topY(0.24) + 0.008],
+          [0.16, topY(0.16) - 0.12],
+          [0.04, topY(0.04) - 0.1],
+          [0.02, topY(0.02) + 0.008],
         ];
-
-        const dorsal = [
-          [0.1, -hAt(0.1) + 0.015],
-          [0.0, -bodyH - rnd() * 0.14 - 0.08],
-          [-0.24, -hAt(-0.24) + 0.015],
+        const dorsalSoft = [
+          [0.0, topY(0.0) + 0.008],
+          [-0.08, topY(-0.08) - 0.075],
+          [-0.2, topY(-0.2) - 0.035],
+          [-0.24, topY(-0.24) + 0.008],
         ];
-
-        const ventral = [
-          [-0.02, hAt(-0.02, belly) - 0.015],
-          [-0.1, hAt(-0.1, belly) + 0.11],
-          [-0.26, hAt(-0.26, belly) - 0.015],
+        const anal = [
+          [-0.06, botY(-0.06) - 0.008],
+          [-0.13, botY(-0.13) + 0.09],
+          [-0.22, botY(-0.22) + 0.035],
+          [-0.25, botY(-0.25) - 0.008],
         ];
-
+        const pelvic = [
+          [0.12, botY(0.12) - 0.006],
+          [0.04, botY(0.04) + 0.1],
+          [0.03, botY(0.03) + 0.035],
+        ];
         const pectoral = [
           [0, 0],
-          [-0.15, 0.11],
-          [-0.17, 0.0],
+          [-0.1, 0.07],
+          [-0.175, 0.09],
+          [-0.145, 0.018],
         ];
 
-        const marks = [];
-        if (sp.marks === "bands") {
-          const n = 2 + Math.floor(rnd() * 2);
-          for (let i = 0; i < n; i++) {
-            const x = 0.26 - i * (0.42 / n) - rnd() * 0.04;
-            marks.push([x, hAt(x, belly) * 0.95, hAt(x) * 0.95]);
-          }
-        } else if (sp.marks === "dots") {
-          const n = 5 + Math.floor(rnd() * 6);
-          for (let i = 0; i < n; i++) {
-            const x = TAIL + 0.08 + rnd() * (SPAN - 0.2);
-            const top = -hAt(x) * 0.7;
-            const bot = hAt(x, belly) * 0.7;
-            marks.push([x, top + rnd() * (bot - top), 0.018 + rnd() * 0.016]);
-          }
-        }
-
-        const margin = size;
+        const eyeX = 0.33;
+        const lane = rand(H * 0.1, sandBase - 60);
         return {
           depth,
           dir,
           size,
-          sp,
-          bodyH,
-          belly,
+          d,
           jit,
           body,
+          top,
+          bottom,
           tail,
-          dorsal,
-          ventral,
+          dorsalSpiny,
+          dorsalSoft,
+          anal,
+          pelvic,
           pectoral,
-          marks,
-          eye: [0.35, -hAt(0.35) * 0.42],
-          gill: 0.24,
-          x: seedX === undefined ? (dir > 0 ? -margin : W + margin) : seedX,
-          y: rand(H * 0.1, sandY(W / 2) - 40),
-          speed: (26 + (1 - depth) * 64) * rand(0.75, 1.3),
+          hue: rand(0, 360),
+          hue2: rand(90, 270),
+          sat: rand(88, 100),
+          light: rand(52, 66),
+          pattern: pick(PATTERNS),
+          eye: [eyeX, topY(eyeX) * 0.5],
+          eyeR: 0.05 + rnd() * 0.022,
+          grin: rnd() < 0.5,
+          x: seedX === undefined ? (dir > 0 ? -size : W + size) : seedX,
+          y: lane,
+          lane,
+          speed: (24 + (1 - depth) * 58) * rand(0.7, 1.25),
           bob: rand(0, Math.PI * 2),
-          bobAmp: rand(3, 11),
-          wag: rand(4.5, 7.5),
+          bobAmp: rand(3, 12),
+          wag: rand(3.4, 5.6),
+          waveAmp: 0.016 + rnd() * 0.024,
           phase: rand(0, Math.PI * 2),
         };
       };
 
-      const path = (f, pts, k, closed) => {
-        ctx.beginPath();
-        for (let i = 0; i < pts.length; i++) {
-          const o = f.jit[(i + k) % f.jit.length];
-          const x = pts[i][0] + o[0];
-          const y = pts[i][1] + o[1];
-          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-        }
-        if (closed) ctx.closePath();
+      // the body flexes as a travelling wave, strongest at the tail
+      const bend = (f, x, t) => {
+        const u = clamp((SNOUT - x) / (SNOUT - PEDUNCLE), 0, 1);
+        return Math.sin(t * f.wag + f.phase - u * 2.4) * f.waveAmp * Math.pow(u, 1.7);
       };
 
-      // fill once, then stroke twice off-register so the outline reads as pen
-      const shape = (f, pts, fill, alpha, closed) => {
-        if (fill) {
-          path(f, pts, 0, true);
-          ctx.fillStyle = fill;
-          ctx.fill();
+      const path = (f, pts, t) => {
+        ctx.beginPath();
+        for (let i = 0; i < pts.length; i++) {
+          const o = f.jit[i % f.jit.length];
+          const x = pts[i][0] + o[0];
+          const y = pts[i][1] + o[1] + (t === null ? 0 : bend(f, pts[i][0], t));
+          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
         }
+        ctx.closePath();
+      };
+
+      const shape = (f, pts, fill, t, lw) => {
+        path(f, pts, t);
+        ctx.fillStyle = fill;
+        ctx.fill();
         ctx.strokeStyle = INK;
-        ctx.globalAlpha = alpha;
-        path(f, pts, 0, closed);
+        ctx.lineWidth = lw / f.size;
         ctx.stroke();
-        ctx.globalAlpha = alpha * 0.45;
-        path(f, pts, 11, closed);
+      };
+
+      const rays = (f, pts, n, t) => {
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 2.6 / f.size;
+        ctx.beginPath();
+        for (let i = 1; i < n; i++) {
+          const p = pts[Math.floor((i / n) * (pts.length - 1))];
+          if (!p) continue;
+          ctx.moveTo(0, 0);
+          ctx.lineTo(p[0] * 0.88, p[1] * 0.88 + (t === null ? 0 : bend(f, p[0], t)));
+        }
         ctx.stroke();
-        ctx.globalAlpha = alpha;
+      };
+
+      // dropped inside the clipped body — this is where the trip lives
+      const patternFill = (f, hue, t) => {
+        const c = hsl(hue + f.hue2, f.sat, clamp(f.light + 24, 0, 92));
+        ctx.fillStyle = c;
+        ctx.strokeStyle = c;
+
+        if (f.pattern === "stripes") {
+          for (let x = -0.55; x < 0.55; x += 0.1) {
+            ctx.beginPath();
+            ctx.moveTo(x, -0.35);
+            ctx.lineTo(x + 0.05, -0.35);
+            ctx.lineTo(x - 0.02, 0.35);
+            ctx.lineTo(x - 0.07, 0.35);
+            ctx.closePath();
+            ctx.fill();
+          }
+        } else if (f.pattern === "dots") {
+          for (let x = -0.5, col = 0; x < 0.55; x += 0.075, col++) {
+            for (let y = -0.3; y < 0.3; y += 0.07) {
+              ctx.beginPath();
+              ctx.arc(x, y + (col % 2 ? 0.035 : 0), 0.023, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        } else if (f.pattern === "checker") {
+          for (let x = -0.5, i = 0; x < 0.55; x += 0.06, i++) {
+            for (let y = -0.3, j = 0; y < 0.3; y += 0.06, j++) {
+              if ((i + j) % 2) ctx.fillRect(x, y, 0.06, 0.06);
+            }
+          }
+        } else if (f.pattern === "swirl") {
+          ctx.lineWidth = 0.026;
+          for (let r = 0.03; r < 0.62; r += 0.06) {
+            ctx.beginPath();
+            ctx.arc(0.02, 0, r, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        } else {
+          ctx.lineWidth = 0.032;
+          for (let y = -0.32; y < 0.34; y += 0.062) {
+            ctx.beginPath();
+            for (let x = -0.55; x < 0.56; x += 0.04) {
+              const yy = y + Math.sin(x * 22 + t * 2 + f.phase) * 0.014;
+              x === -0.55 ? ctx.moveTo(x, yy) : ctx.lineTo(x, yy);
+            }
+            ctx.stroke();
+          }
+        }
       };
 
       const drawFish = (f, time) => {
-        const t = time * f.wag + f.phase;
-        const fade = f.depth * 0.55;
-        const alpha = 1 - f.depth * 0.35;
-        const bodyCol = mix(f.sp.body, "#1c5f8a", fade);
-        const accentCol = mix(f.sp.accent, "#1c5f8a", fade);
+        const t = time;
+        const hue = hueBase + f.hue;
+        const dim = f.depth * 0.35;
+        const bodyCol = hsl(hue, f.sat - dim * 30, f.light + dim * 16);
+        const finCol = hsl(hue + 40, f.sat - dim * 30, f.light - 8 + dim * 16);
 
         ctx.save();
-        ctx.translate(f.x, f.y + Math.sin(time * 0.9 + f.bob) * f.bobAmp);
-        ctx.rotate(Math.sin(time * 0.7 + f.bob) * 0.05);
+        ctx.translate(f.x, f.y + Math.sin(time * 0.7 + f.bob) * f.bobAmp);
+        ctx.rotate(Math.sin(time * 0.5 + f.bob) * 0.05);
         ctx.scale(f.dir * f.size, f.size);
-        ctx.lineWidth = 1.7 / f.size;
         ctx.lineJoin = "round";
         ctx.lineCap = "round";
-        ctx.globalAlpha = alpha;
 
-        // tail, hinged at the body pinch
+        // fins behind the body
+        const pedY = bend(f, PEDUNCLE, t);
+        const tailAngle = (pedY - bend(f, PEDUNCLE + 0.08, t)) * 7;
         ctx.save();
-        ctx.translate(TAIL, 0);
-        ctx.rotate(Math.sin(t) * 0.36);
-        shape(f, f.tail, accentCol, alpha, true);
+        ctx.translate(PEDUNCLE, pedY);
+        ctx.rotate(clamp(tailAngle, -0.5, 0.5));
+        shape(f, f.tail, finCol, null, 5);
+        rays(f, f.tail, 7, null);
         ctx.restore();
 
-        shape(f, f.dorsal, accentCol, alpha, true);
-        shape(f, f.ventral, accentCol, alpha, true);
-        shape(f, f.body, bodyCol, alpha, true);
+        shape(f, f.dorsalSpiny, finCol, t, 5);
+        shape(f, f.dorsalSoft, finCol, t, 5);
+        shape(f, f.anal, finCol, t, 5);
+        shape(f, f.pelvic, finCol, t, 5);
 
-        // belly shading
-        ctx.globalAlpha = alpha * 0.25;
-        ctx.fillStyle = "#ffffff";
-        path(f, f.body.slice(f.body.length / 2), 3, true);
-        ctx.fill();
-        ctx.globalAlpha = alpha;
+        // body
+        shape(f, f.body, bodyCol, t, 6);
 
-        if (f.sp.marks === "bands") {
-          ctx.strokeStyle = f.sp.markCol;
-          ctx.lineWidth = 3.4 / f.size;
-          ctx.globalAlpha = alpha * 0.85;
-          f.marks.forEach((m) => {
-            ctx.beginPath();
-            ctx.moveTo(m[0], -m[2]);
-            ctx.quadraticCurveTo(m[0] - 0.05, 0, m[0] - 0.01, m[1]);
-            ctx.stroke();
-          });
-          ctx.lineWidth = 1.7 / f.size;
-          ctx.globalAlpha = alpha;
-        } else if (f.sp.marks === "dots") {
-          ctx.fillStyle = f.sp.markCol;
-          ctx.globalAlpha = alpha * 0.7;
-          f.marks.forEach((m) => {
-            ctx.beginPath();
-            ctx.arc(m[0], m[1], m[2], 0, Math.PI * 2);
-            ctx.fill();
-          });
-          ctx.globalAlpha = alpha;
-        }
-
-        // pectoral fin, flapping
         ctx.save();
-        ctx.translate(0.13, f.bodyH * f.belly * 0.45);
-        ctx.scale(1, 0.55 + Math.abs(Math.sin(t * 0.8)) * 0.75);
-        shape(f, f.pectoral, mix(accentCol, "#ffffff", 0.25), alpha * 0.9, true);
+        path(f, f.body, t);
+        ctx.clip();
+        patternFill(f, hue, t);
         ctx.restore();
 
-        // gill
+        // gill arc + mouth, bold and cartoon
         ctx.strokeStyle = INK;
-        ctx.globalAlpha = alpha * 0.6;
+        ctx.lineWidth = 5 / f.size;
         ctx.beginPath();
-        ctx.moveTo(f.gill, -f.bodyH * 0.55);
-        ctx.quadraticCurveTo(f.gill - 0.06, 0, f.gill, f.bodyH * 0.5);
+        ctx.moveTo(0.29, yAt(f.top, 0.29) + 0.01);
+        ctx.quadraticCurveTo(0.225, 0, 0.275, yAt(f.bottom, 0.275) - 0.01);
         ctx.stroke();
 
-        // eye
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = "#fdfaf2";
         ctx.beginPath();
-        ctx.arc(f.eye[0], f.eye[1], 0.042, 0, Math.PI * 2);
+        if (f.grin) {
+          ctx.moveTo(SNOUT - 0.015, 0.006);
+          ctx.quadraticCurveTo(0.41, 0.055, 0.355, 0.03);
+        } else {
+          ctx.moveTo(SNOUT - 0.01, 0.008);
+          ctx.lineTo(0.385, 0.03);
+        }
+        ctx.stroke();
+
+        // pectoral fin, sweeping
+        ctx.save();
+        ctx.translate(0.235, yAt(f.bottom, 0.235) * 0.35);
+        ctx.rotate(Math.sin(t * f.wag * 0.9 + f.phase) * 0.45 - 0.15);
+        shape(f, f.pectoral, hsl(hue + 140, f.sat, f.light + 12), null, 4.5);
+        rays(f, f.pectoral, 5, null);
+        ctx.restore();
+
+        // big dumb eye
+        const e = f.eye;
+        ctx.fillStyle = "#fffdf2";
+        ctx.strokeStyle = INK;
+        ctx.lineWidth = 5 / f.size;
+        ctx.beginPath();
+        ctx.arc(e[0], e[1], f.eyeR, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
+        const look = Math.sin(time * 0.9 + f.phase) * f.eyeR * 0.22;
         ctx.fillStyle = INK;
         ctx.beginPath();
-        ctx.arc(f.eye[0] + 0.008, f.eye[1] + 0.004, 0.021, 0, Math.PI * 2);
+        ctx.arc(e[0] + f.eyeR * 0.2 + look, e[1] + look * 0.5, f.eyeR * 0.46, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#fffdf2";
+        ctx.beginPath();
+        ctx.arc(e[0] + f.eyeR * 0.42 + look, e[1] - f.eyeR * 0.28, f.eyeR * 0.16, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
-        ctx.globalAlpha = 1;
       };
 
-      // bubbles + drifting bits
+      // bubbles + floaties
 
       const bubbles = [];
       const motes = [];
@@ -436,22 +724,28 @@
           x,
           y,
           r,
+          hue: rand(0, 360),
           phase: rand(0, Math.PI * 2),
-          drift: rand(0.3, 1.1),
-          speed: rand(30, 80),
+          drift: rand(0.3, 1.2),
+          speed: rand(30, 85),
         });
       };
 
       const buildMotes = () => {
         motes.length = 0;
-        for (let i = 0; i < Math.round(W / 10); i++) {
+        for (let i = 0; i < Math.round(W / 22); i++) {
+          const hx = rand(-8, 8);
+          const hy = rand(4, 16);
           motes.push({
             x: rand(0, W),
             y: rand(0, H),
-            r: rand(0.4, 1.7),
-            vx: rand(-6, 6),
-            vy: rand(3, 14),
-            a: rand(0.06, 0.28),
+            r: rand(3, 9),
+            hue: rand(0, 360),
+            spin: rand(-2, 2),
+            hx,
+            hy,
+            vx: hx,
+            vy: hy,
           });
         }
       };
@@ -492,7 +786,7 @@
         bubbleBus.gain.value = 0.5;
         const bubbleTone = actx.createBiquadFilter();
         bubbleTone.type = "lowpass";
-        bubbleTone.frequency.value = 2600;
+        bubbleTone.frequency.value = 2400;
         bubbleBus.connect(bubbleTone);
         bubbleTone.connect(master);
 
@@ -511,7 +805,7 @@
         noise.loop = true;
         const lp = actx.createBiquadFilter();
         lp.type = "lowpass";
-        lp.frequency.value = 420;
+        lp.frequency.value = 400;
         const ng = actx.createGain();
         ng.gain.value = 0.5;
         noise.connect(lp);
@@ -519,7 +813,6 @@
         ng.connect(master);
         noise.start();
 
-        // slow swell on the bed so it breathes
         const lfo = actx.createOscillator();
         const lfoGain = actx.createGain();
         lfo.frequency.value = 0.07;
@@ -527,6 +820,25 @@
         lfo.connect(lfoGain);
         lfoGain.connect(lp.frequency);
         lfo.start();
+
+        // two detuned oscillators beating against each other, way down low
+        const droneGain = actx.createGain();
+        droneGain.gain.value = 0.05;
+        droneGain.connect(master);
+        [55, 55.6, 82.5].forEach((hz, i) => {
+          const o = actx.createOscillator();
+          o.type = i === 2 ? "triangle" : "sine";
+          o.frequency.value = hz;
+          const det = actx.createOscillator();
+          const detGain = actx.createGain();
+          det.frequency.value = 0.03 + i * 0.017;
+          detGain.gain.value = 1.4;
+          det.connect(detGain);
+          detGain.connect(o.frequency);
+          det.start();
+          o.connect(droneGain);
+          o.start();
+        });
 
         document.getElementById("hint").className = "off";
       };
@@ -540,33 +852,40 @@
       window.addEventListener("keydown", enable);
       window.addEventListener("touchstart", enable);
 
-      // a cluster of bubbles leaves the sand, and you hear it leave
+      let now = performance.now();
+
+      // a cluster of bubbles leaves the floor, and you hear it leave
       const burst = () => {
         const x = rand(0, W);
         const n = 1 + Math.floor(Math.random() * 5);
         for (let i = 0; i < n; i++) {
           const delay = i * rand(0.04, 0.13);
-          const r = rand(1.5, 6);
-          setTimeout(() => spawnBubble(x + rand(-14, 14), sandY(x) - 4, r), delay * 1000);
-          if (actx) bubbleSound(rand(190, 900) / (r * 0.25 + 0.8), actx.currentTime + delay);
+          const r = rand(4, 16);
+          setTimeout(
+            () => spawnBubble(x + rand(-18, 18), sandY(x, now / 1000) - 6, r),
+            delay * 1000
+          );
+          if (actx) bubbleSound(rand(190, 900) / (r * 0.1 + 0.8), actx.currentTime + delay);
         }
-        setTimeout(burst, rand(500, 3200));
+        setTimeout(burst, rand(500, 3000));
       };
 
       // main loop
 
       const fish = [];
 
-      const targetFish = () => clamp(Math.round(W / 150), 8, 26);
+      const targetFish = () => clamp(Math.round(W / 190), 6, 20);
 
       const resize = () => {
         W = canvas.width = window.innerWidth;
         H = canvas.height = window.innerHeight;
-        sandBase = H * 0.87;
-        buildGrass();
+        sandBase = H * 0.84;
+        buildDrips();
+        buildKelp();
         buildMotes();
         fish.forEach((f) => {
-          f.y = clamp(f.y, H * 0.08, sandY(f.x) - 30);
+          f.lane = clamp(f.lane, H * 0.08, sandBase - 40);
+          f.y = clamp(f.y, H * 0.08, sandBase - 40);
         });
       };
 
@@ -577,18 +896,45 @@
 
       let prev = performance.now();
 
-      const draw = (now) => {
-        const dt = Math.min((now - prev) / 1000, 0.05);
-        prev = now;
-        const time = now / 1000;
+      const draw = (ts) => {
+        now = ts;
+        const dt = Math.min((ts - prev) / 1000, 0.05);
+        prev = ts;
+        const time = ts / 1000;
+
+        // how hard the mouse is being thrown around, smoothed so the scene
+        // keeps reacting for a moment after it stops
+        const mdx = mouse.x - mouse.lx;
+        const mdy = mouse.y - mouse.ly;
+        mouse.speed = Math.sqrt(mdx * mdx + mdy * mdy) / Math.max(dt, 0.001);
+        mouse.lx = mouse.x;
+        mouse.ly = mouse.y;
+        const kick = clamp(mouse.speed / 1400, 0, 1);
+        mouse.energy += (kick - mouse.energy) * (kick > mouse.energy ? 0.55 : 0.03);
+
+        // the trip speeds up when you stir it
+        hueBase += dt * HUE_DRIFT * (1 + mouse.energy * 5);
+        const hue = hueBase;
+
+        if (mouse.on && mouse.speed > 900 && Math.random() < 0.4) {
+          ripples.push({ x: mouse.x, y: mouse.y, born: time, life: 1.6, hue: rand(0, 360) });
+        }
+        for (let i = ripples.length - 1; i >= 0; i--) {
+          if (time - ripples[i].born > ripples[i].life) ripples.splice(i, 1);
+        }
 
         drawWater(time);
-        drawSand();
-        grass.forEach((b) => !b.front && drawGrass(b, time));
+        kelp.forEach((k) => !k.front && drawKelp(k, time));
 
         fish.sort((a, b) => b.depth - a.depth);
         fish.forEach((f) => {
           f.x += f.speed * f.dir * dt;
+          // they scatter out of the way, then settle back to their lane
+          push(f.x, f.y, 200);
+          f.x += PX * dt * 3;
+          f.y += PY * dt * 3;
+          f.y += (f.lane - f.y) * dt * 0.6;
+          f.y = clamp(f.y, 30, sandBase - 20);
           drawFish(f, time);
         });
 
@@ -599,60 +945,73 @@
         }
         while (fish.length < targetFish()) fish.push(makeFish());
 
-        grass.forEach((b) => b.front && drawGrass(b, time));
+        drawSand(time);
+        kelp.forEach((k) => k.front && drawKelp(k, time));
 
         // bubbles
+        ctx.lineJoin = "round";
         for (let i = bubbles.length - 1; i >= 0; i--) {
           const b = bubbles[i];
           b.y -= b.speed * dt;
           b.phase += dt * 2.4;
-          const bx = b.x + Math.sin(b.phase) * b.drift * 6;
-          if (b.y < -20) {
+          if (b.y < -30) {
             bubbles.splice(i, 1);
             continue;
           }
-          ctx.globalAlpha = 0.45;
-          ctx.strokeStyle = "rgba(226,246,255,0.9)";
-          ctx.lineWidth = 1.1;
+          push(b.x, b.y, 90);
+          b.x += PX * dt * 4;
+          b.y += PY * dt * 4;
+          const bx = b.x + Math.sin(b.phase) * b.drift * 10;
+          ctx.fillStyle = hsla(hue + b.hue, 100, 72, 0.55);
+          ctx.strokeStyle = INK;
+          ctx.lineWidth = 4;
           ctx.beginPath();
           ctx.arc(bx, b.y, b.r, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.fillStyle = "rgba(226,246,255,0.35)";
-          ctx.beginPath();
-          ctx.arc(bx - b.r * 0.3, b.y - b.r * 0.3, b.r * 0.32, 0, Math.PI * 2);
           ctx.fill();
-          ctx.globalAlpha = 1;
+          ctx.stroke();
+          ctx.fillStyle = "rgba(255,255,255,0.9)";
+          ctx.beginPath();
+          ctx.arc(bx - b.r * 0.32, b.y - b.r * 0.32, b.r * 0.24, 0, Math.PI * 2);
+          ctx.fill();
         }
 
-        // marine snow
-        ctx.fillStyle = "#dff0f7";
+        // spinning bits drifting through
         motes.forEach((m) => {
+          // these keep what the cursor gives them, then bleed it back off
+          push(m.x, m.y, 260);
+          m.vx += PX * dt * 9;
+          m.vy += PY * dt * 9;
+          m.vx += (m.hx - m.vx) * dt * 0.8;
+          m.vy += (m.hy - m.vy) * dt * 0.8;
           m.x += m.vx * dt;
           m.y += m.vy * dt;
-          if (m.y > H) {
-            m.y = -5;
+          if (m.y > H + 10) {
+            m.y = -10;
             m.x = rand(0, W);
           }
-          if (m.x < -5) m.x = W + 5;
-          if (m.x > W + 5) m.x = -5;
-          ctx.globalAlpha = m.a;
-          ctx.fillRect(m.x, m.y, m.r, m.r);
+          if (m.x < -10) m.x = W + 10;
+          if (m.x > W + 10) m.x = -10;
+          ctx.save();
+          ctx.translate(m.x, m.y);
+          ctx.rotate(time * m.spin);
+          ctx.fillStyle = hsla(hue + m.hue, 100, 70, 0.75);
+          ctx.strokeStyle = INK;
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          for (let i = 0; i < 8; i++) {
+            const a = (i / 8) * Math.PI * 2;
+            const r = i % 2 ? m.r : m.r * 0.42;
+            const x = Math.cos(a) * r;
+            const y = Math.sin(a) * r;
+            i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+          }
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          ctx.restore();
         });
-        ctx.globalAlpha = 1;
 
-        // edges fall off into the deep
-        const v = ctx.createRadialGradient(
-          W / 2,
-          H / 2,
-          Math.min(W, H) * 0.35,
-          W / 2,
-          H / 2,
-          Math.max(W, H) * 0.75
-        );
-        v.addColorStop(0, "rgba(6,30,50,0)");
-        v.addColorStop(1, "rgba(6,30,50,0.55)");
-        ctx.fillStyle = v;
-        ctx.fillRect(0, 0, W, H);
+        drawDrips(time);
 
         requestAnimationFrame(draw);
       };

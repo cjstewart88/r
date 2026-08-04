@@ -21,9 +21,11 @@ Occasional local assets (`.jpg`, `.png`, `.mp4`, `.txt`) live next to their `ind
    ```html
    <a class="item" href="<name>/index.html"><name></a>
    ```
-4. Commit with the folder name as the message, then push. One commit per experiment.
+4. Stop there. Leave the change uncommitted so it can be looked at first.
 
-Always commit straight to `master` and push. No branches, no PRs.
+**Never commit or push on your own.** Wait to be told. When told, commit straight to
+`master` with the folder name as the message and push — one commit per experiment,
+no branches, no PRs.
 
 ## Don't
 
