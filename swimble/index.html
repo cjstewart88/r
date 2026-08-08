@@ -1,0 +1,309 @@
+<html>
+  <head>
+    <title>08/07/2026 - swimble</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        background: #000;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      canvas {
+        display: block;
+      }
+
+      #controls {
+        position: fixed;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 18px;
+        font-family: monospace;
+        font-size: 11px;
+        letter-spacing: 1px;
+        color: #32cd32;
+        background: rgba(0, 0, 0, 0.6);
+        border: solid 1px rgba(50, 205, 50, 0.35);
+        padding: 10px 12px;
+        user-select: none;
+      }
+
+      #controls label {
+        display: block;
+      }
+
+      #controls .val {
+        float: right;
+        opacity: 0.7;
+      }
+
+      #controls input {
+        display: block;
+        width: 130px;
+        margin-top: 6px;
+        accent-color: #32cd32;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <div id="controls">
+      <label>
+        spin 1·3·5 <span class="val" id="v-odd"></span>
+        <input id="odd" type="range" min="0" max="0.3" step="0.005" />
+      </label>
+      <label>
+        spin 2·4 <span class="val" id="v-even"></span>
+        <input id="even" type="range" min="0" max="0.3" step="0.005" />
+      </label>
+      <label>
+        bob <span class="val" id="v-bob"></span>
+        <input id="bob" type="range" min="0" max="0.15" step="0.001" />
+      </label>
+      <label>
+        zoom <span class="val" id="v-zoom"></span>
+        <input id="zoom" type="range" min="0" max="0.12" step="0.001" />
+      </label>
+    </div>
+    <script>
+      const canvas = document.getElementsByTagName("canvas")[0];
+      const ctx = canvas.getContext("2d");
+
+      const COUNT = 5;
+      const MIDDLE = Math.floor(COUNT / 2);
+      const LINE = "#32cd32";
+      const SCALE = 0.6; // fraction of its slot each triangle fills
+      // the middle one breathes between SWELL-SWING and SWELL+SWING. past 1.44
+      // its swept circle would start eating into its neighbours' slots
+      const SWELL = 0.9;
+      const SWING = 0.45;
+      const EDGE = 58; // clearance kept from the top and bottom, clears the rim
+      const ORB = 16; // glow radius at each corner of the big five
+      const RIM = 26; // side of the little ones marching around the window
+      const RIM_ORB = 7;
+      const DEEP = 34; // how many are drifting up out of the back
+      const DEEP_SIZE = 55;
+      const FAR = 4.5; // depth they appear at
+      const NEAR = 0.4; // depth they are recycled at
+      const RUSH = 0.006; // depth gained per frame
+
+      const rate = {
+        odd: 0.06, // spin of 1st, 3rd, 5th
+        even: 0.09, // spin of 2nd, 4th
+        bob: 0.035, // shared up/down cycle
+        zoom: 0.022, // the middle one breathing in and out
+      };
+
+      // angles accumulate instead of being t * rate, so dragging a slider
+      // changes the speed without snapping anything to a new position
+      let angleOdd = 0;
+      let angleEven = 0;
+      let phase = 0;
+      let breath = 0;
+
+      let W = 0;
+      let H = 0;
+      let floor = 0; // how much of the bottom the sliders have claimed
+
+      for (const key of ["odd", "even", "bob", "zoom"]) {
+        const input = document.getElementById(key);
+        const out = document.getElementById("v-" + key);
+        const show = () => (out.textContent = rate[key].toFixed(3));
+        input.value = rate[key];
+        input.addEventListener("input", () => {
+          rate[key] = parseFloat(input.value);
+          show();
+        });
+        show();
+      }
+
+      const resize = () => {
+        const dpr = window.devicePixelRatio || 1;
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = W + "px";
+        canvas.style.height = H + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        // measured, not guessed — the panel grows with the font and wraps on
+        // narrow windows, and the triangles have to stay above whatever it is
+        floor = H - document.getElementById("controls").getBoundingClientRect().top;
+      };
+
+      // the border alone is a few hundred glows a frame, so each size gets
+      // painted once into its own little canvas and stamped from then on
+      const sprite = (r) => {
+        const dpr = window.devicePixelRatio || 1;
+        const c = document.createElement("canvas");
+        c.width = c.height = r * 2 * dpr;
+        const g = c.getContext("2d");
+        g.scale(dpr, dpr);
+        const glow = g.createRadialGradient(r, r, 0, r, r, r);
+        glow.addColorStop(0, "rgba(240,255,240,0.95)");
+        glow.addColorStop(0.22, "rgba(120,255,120,0.65)");
+        glow.addColorStop(1, "rgba(50,205,50,0)");
+        g.fillStyle = glow;
+        g.fillRect(0, 0, r * 2, r * 2);
+        return c;
+      };
+
+      const orbs = { [ORB]: sprite(ORB), [RIM_ORB]: sprite(RIM_ORB) };
+
+      // one equilateral triangle, spun about its own centroid. orbs on the tips
+      // unless r is null, which the background ones use
+      const triangle = (cx, cy, side, angle, r) => {
+        const reach = side / Math.sqrt(3); // centroid to any vertex
+        const tips = [
+          [0, -reach],
+          [side / 2, reach / 2],
+          [-side / 2, reach / 2],
+        ];
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(angle);
+
+        ctx.beginPath();
+        ctx.moveTo(tips[0][0], tips[0][1]);
+        ctx.lineTo(tips[1][0], tips[1][1]);
+        ctx.lineTo(tips[2][0], tips[2][1]);
+        ctx.closePath();
+        ctx.stroke();
+
+        if (r) {
+          // inside the rotation, so they ride the corners around
+          ctx.globalCompositeOperation = "lighter";
+          for (const [ox, oy] of tips)
+            ctx.drawImage(orbs[r], ox - r, oy - r, r * 2, r * 2);
+        }
+
+        ctx.restore();
+      };
+
+      const rand = (a, b) => a + Math.random() * (b - a);
+
+      // divide by depth for everything — size, spread, spin — and a thing that
+      // walks toward the eye grows and slides outward at the same time
+      const born = (z) => ({
+        z,
+        px: rand(-1, 1),
+        py: rand(-1, 1),
+        tilt: rand(0, Math.PI * 2),
+        lean: rand(0.25, 0.9) * (Math.random() < 0.5 ? -1 : 1),
+      });
+
+      const deep = [];
+      for (let i = 0; i < DEEP; i++) deep.push(born(rand(NEAR, FAR)));
+
+      const depths = () => {
+        ctx.lineWidth = 1.5;
+
+        for (const s of deep) {
+          s.z -= RUSH;
+          if (s.z <= NEAR) Object.assign(s, born(FAR));
+
+          // up out of nothing at the back, gone again before it can fill the
+          // screen — nothing ever sails past the eye at full brightness
+          const a =
+            Math.min(1, (FAR - s.z) / 0.9) * Math.min(1, (s.z - NEAR) / 1.1);
+          if (a <= 0) continue;
+
+          ctx.strokeStyle = `rgba(50,205,50,${a * 0.45})`;
+          triangle(
+            W / 2 + (s.px * W * 0.5) / s.z,
+            H / 2 + (s.py * H * 0.5) / s.z,
+            DEEP_SIZE / s.z,
+            s.tilt + angleOdd * s.lean,
+            null
+          );
+        }
+      };
+
+      // a marching ring of them, evenly spaced, corners shared by both runs
+      const border = () => {
+        const inset = RIM / Math.sqrt(3) + 4;
+        const spanX = W - inset * 2;
+        const spanY = H - inset * 2;
+        const gap = RIM * 1.8;
+        const cols = Math.max(1, Math.round(spanX / gap));
+        const rows = Math.max(1, Math.round(spanY / gap));
+        let n = 0;
+
+        const at = (x, y) => {
+          triangle(x, y, RIM, n % 2 === 0 ? angleOdd : -angleEven, RIM_ORB);
+          n++;
+        };
+
+        for (let i = 0; i <= cols; i++) {
+          const x = inset + (i * spanX) / cols;
+          at(x, inset);
+          at(x, H - inset);
+        }
+        // skip the ends, the rows above already put one in each corner
+        for (let i = 1; i < rows; i++) {
+          const y = inset + (i * spanY) / rows;
+          at(inset, y);
+          at(W - inset, y);
+        }
+      };
+
+      const draw = () => {
+        ctx.clearRect(0, 0, W, H);
+
+        // each one gets a fifth of the width to live in and fills part of it.
+        // above 0.866 the swept circles would touch each other and the edges
+        const slot = W / COUNT;
+        const side = slot * SCALE;
+        const reach = side / Math.sqrt(3);
+
+        // corners keep EDGE px of air at the top and the same above the
+        // sliders. the swing stays symmetric, so the tighter bottom sets both.
+        // measured against the middle one at full swell, the tallest it gets
+        const travel = Math.max(H / 2 - reach * (SWELL + SWING) - EDGE - floor, 0);
+        const bob = Math.sin(phase) * travel;
+
+        ctx.lineJoin = "round";
+        depths();
+
+        ctx.strokeStyle = LINE;
+        ctx.lineWidth = 2;
+        border();
+
+        const swell = SWELL + Math.sin(breath) * SWING;
+
+        for (let i = 0; i < COUNT; i++) {
+          const up = i % 2 === 0;
+          // one group rides up while the other rides down
+          const cy = H / 2 + (up ? bob : -bob);
+          const grow = i === MIDDLE ? swell : 1;
+          triangle(
+            (i + 0.5) * slot,
+            cy,
+            side * grow,
+            up ? angleOdd : angleEven,
+            ORB
+          );
+        }
+      };
+
+      const step = () => {
+        angleOdd += rate.odd;
+        angleEven += rate.even;
+        phase += rate.bob;
+        breath += rate.zoom;
+        draw();
+        requestAnimationFrame(step);
+      };
+
+      window.addEventListener("resize", resize);
+      resize();
+      step();
+    </script>
+  </body>
+</html>
