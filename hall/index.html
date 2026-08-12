@@ -1,0 +1,773 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <title>hall</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+      }
+
+      body {
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        cursor: crosshair;
+      }
+
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      #crt {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        background: radial-gradient(
+            ellipse at center,
+            rgba(0, 0, 0, 0) 45%,
+            rgba(0, 0, 0, 0.7) 100%
+          ),
+          repeating-linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 0px,
+            rgba(0, 0, 0, 0) 2px,
+            rgba(0, 0, 0, 0.2) 3px,
+            rgba(0, 0, 0, 0.2) 4px
+          );
+      }
+
+      #hint {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 8%;
+        text-align: center;
+        font-family: monospace;
+        font-size: 13px;
+        letter-spacing: 3px;
+        color: #7fb;
+        text-shadow: 0 0 8px #0f5;
+        opacity: 0.8;
+        pointer-events: none;
+        transition: opacity 1.6s ease-out;
+      }
+
+      #hint.gone {
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+    <div id="crt"></div>
+    <div id="hint">
+      hold &nbsp;/&nbsp; W &nbsp;&nbsp;·&nbsp;&nbsp; drag to steer, drag down to
+      back up &nbsp;&nbsp;·&nbsp;&nbsp; space jumps
+    </div>
+
+    <script>
+      var cvs = document.getElementById("c");
+      var ctx = cvs.getContext("2d", { alpha: false });
+      var hint = document.getElementById("hint");
+
+      // ---------- the place ----------
+      var MW = 34,
+        MH = 18;
+      var map = new Uint8Array(MW * MH).fill(1); // 1 wall, 0 floor
+
+      function carve(x1, y1, x2, y2) {
+        for (var y = y1; y <= y2; y++)
+          for (var x = x1; x <= x2; x++) map[y * MW + x] = 0;
+      }
+
+      carve(2, 8, 31, 10); // the hallway
+
+      carve(3, 2, 8, 6); // three rooms off the north side
+      carve(5, 7, 6, 7);
+      carve(12, 3, 17, 6);
+      carve(14, 7, 15, 7);
+      carve(22, 1, 29, 6);
+      carve(25, 7, 26, 7);
+
+      carve(5, 12, 12, 15); // two off the south
+      carve(8, 11, 9, 11);
+      carve(19, 12, 26, 16);
+      carve(22, 11, 23, 11);
+
+      var WALL_H = 2.4,
+        EYE = 1.05,
+        FOV = 1.16;
+
+      // ---------- glyphs ----------
+      var GLYPHS =
+        "ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍｦｲｸｺｿﾁﾄﾉﾌﾔﾖﾙﾚﾛﾝ0123457989:･=*+-<>|";
+      var G = GLYPHS.length;
+      var L = 12; // brightness levels; the top one is the white stream head
+      var ATLAS = null, // every glyph at every level, as raw pixels
+        AW = 0;
+
+      function buildAtlas() {
+        var a = document.createElement("canvas");
+        a.width = AW = G * charW;
+        a.height = L * charH;
+        var g = a.getContext("2d");
+        g.textAlign = "center";
+        g.textBaseline = "middle";
+        g.font = Math.floor(charH * 0.88) + "px monospace";
+        for (var l = 0; l < L; l++) {
+          var r, gr, b;
+          if (l === L - 1) {
+            r = 205;
+            gr = 255;
+            b = 215; // the head of a stream is nearly white
+          } else {
+            var f = Math.pow((l + 1) / (L - 1), 1.18);
+            r = 46 * f;
+            gr = 255 * f;
+            b = 96 * f;
+          }
+          var css = "rgb(" + (r | 0) + "," + (gr | 0) + "," + (b | 0) + ")";
+          // opaque tiles: the compositor copies rows straight in, no blending
+          g.fillStyle = "#000";
+          g.fillRect(0, l * charH, a.width, charH);
+          g.fillStyle = css;
+          g.shadowColor = css;
+          g.shadowBlur = l > L - 4 ? charH * 0.45 : l > L - 8 ? charH * 0.2 : 0;
+          for (var q = 0; q < G; q++)
+            g.fillText(GLYPHS[q], q * charW + charW / 2, l * charH + charH * 0.52);
+        }
+        ATLAS = new Uint32Array(
+          g.getImageData(0, 0, a.width, a.height).data.buffer
+        );
+      }
+
+      // ---------- hashing ----------
+      function h32(x) {
+        x = Math.imul(x ^ (x >>> 16), 2246822507);
+        x = Math.imul(x ^ (x >>> 13), 3266489909);
+        return (x ^ (x >>> 16)) >>> 0;
+      }
+      function hash4(a, b, c, d) {
+        return h32(
+          (Math.imul(a, 73856093) ^
+            Math.imul(b, 19349663) ^
+            Math.imul(c, 83492791) ^
+            Math.imul(d, 2654435761)) |
+            0
+        );
+      }
+
+      // ---------- viewport ----------
+      // the glyph field is composited into a typed array and uploaded once a
+      // frame. thousands of per-glyph canvas calls are ~10x slower than this,
+      // and the buffer is capped so a huge or hidpi screen can't melt it.
+      var MAXPX = 1000000;
+      var W = 0,
+        H = 0,
+        cssW = 1,
+        cssH = 1,
+        charW = 0,
+        charH = 0,
+        cols = 0,
+        rows = 0,
+        fx = 0,
+        img = null,
+        FB = null,
+        cell = null;
+      var wallTop, wallBot, wallDist, wallFace, wallPos;
+      var postX, postA, postB, postL;
+
+      function resize() {
+        cssW = window.innerWidth;
+        cssH = window.innerHeight;
+        var scale = Math.min(
+          Math.min(window.devicePixelRatio || 1, 2),
+          Math.sqrt(MAXPX / (cssW * cssH))
+        );
+        charH = Math.max(8, Math.round((cssH * scale) / 40));
+        charW = Math.max(5, Math.round(charH * 0.62));
+        cols = Math.max(8, Math.round((cssW * scale) / charW));
+        rows = Math.max(8, Math.round((cssH * scale) / charH));
+        // exact multiples of the cell size, so a row copy can never run off
+        // the end of a scanline
+        cvs.width = W = cols * charW;
+        cvs.height = H = rows * charH;
+        img = ctx.createImageData(W, H);
+        FB = new Uint32Array(img.data.buffer);
+        cell = new Int32Array(cols * rows);
+        fx = W / 2 / Math.tan(FOV / 2);
+        wallTop = new Float32Array(cols);
+        wallBot = new Float32Array(cols);
+        wallDist = new Float32Array(cols);
+        wallFace = new Int32Array(cols); // which wall cell+side this column hit
+        wallPos = new Int32Array(cols); // how far along that face
+        postX = new Float32Array(cols);
+        postA = new Float32Array(cols);
+        postB = new Float32Array(cols);
+        postL = new Uint8Array(cols);
+        buildAtlas();
+      }
+      window.addEventListener("resize", resize);
+
+      // ---------- player ----------
+      var px = 3.5,
+        py = 9.5,
+        ang = 0,
+        vel = 0,
+        bob = 0,
+        jz = 0, // height off the floor
+        jv = 0,
+        jumpWanted = false;
+
+      var keys = {};
+      var held = false,
+        hx = 0,
+        hy = 0,
+        anchor = 0, // where the press started — steering is relative to it
+        anchorY = 0;
+
+      function touched() {
+        hint.className = "gone";
+      }
+
+      window.addEventListener("keydown", function (e) {
+        var k = e.key.toLowerCase();
+        if (k === " " || k === "spacebar") {
+          e.preventDefault();
+          if (!e.repeat) jumpWanted = true;
+        }
+        keys[k] = true;
+        touched();
+      });
+      window.addEventListener("keyup", function (e) {
+        keys[e.key.toLowerCase()] = false;
+      });
+      window.addEventListener(
+        "pointerdown",
+        function (e) {
+          if (e.pointerType === "mouse" && e.button !== 0) return;
+          held = true;
+          hx = anchor = e.clientX;
+          hy = anchorY = e.clientY;
+          touched();
+        },
+        { passive: false }
+      );
+      window.addEventListener("pointermove", function (e) {
+        if (held) {
+          hx = e.clientX;
+          hy = e.clientY;
+        }
+      });
+      window.addEventListener("pointerup", function () {
+        held = false;
+      });
+      window.addEventListener("pointercancel", function () {
+        held = false;
+      });
+      window.addEventListener("blur", function () {
+        held = false;
+        keys = {};
+      });
+      window.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+      });
+
+      function solid(x, y) {
+        var mx = Math.floor(x),
+          my = Math.floor(y);
+        if (mx < 0 || my < 0 || mx >= MW || my >= MH) return true;
+        return map[my * MW + mx] === 1;
+      }
+      function free(x, y) {
+        var r = 0.26;
+        return (
+          !solid(x - r, y - r) &&
+          !solid(x + r, y - r) &&
+          !solid(x - r, y + r) &&
+          !solid(x + r, y + r)
+        );
+      }
+
+      function update(dt) {
+        var turn = 0;
+        if (keys["a"] || keys["arrowleft"]) turn -= 1;
+        if (keys["d"] || keys["arrowright"]) turn += 1;
+        if (held) {
+          var t = (hx - anchor) / (cssW * 0.2);
+          turn += Math.max(-1, Math.min(1, t));
+        }
+        ang += turn * 1.85 * dt;
+
+        // drag well below where you pressed to back up — same gesture on a
+        // thumb as on a mouse, with a deadzone so steering doesn't trip it
+        var dragBack = held && hy - anchorY > cssH * 0.14;
+        var back = keys["s"] || keys["arrowdown"] || dragBack;
+        var go = (held && !dragBack) || keys["w"] || keys["arrowup"];
+        var want = go ? 2.55 : back ? -1.5 : 0;
+        vel += (want - vel) * (1 - Math.exp(-dt * 7));
+
+        var dx = Math.cos(ang) * vel * dt,
+          dy = Math.sin(ang) * vel * dt;
+        if (free(px + dx, py)) px += dx;
+        if (free(px, py + dy)) py += dy;
+
+        if (jumpWanted && jz <= 0) jv = 3.5;
+        jumpWanted = false;
+        if (jv !== 0 || jz > 0) {
+          jz += jv * dt;
+          jv -= 11 * dt;
+          if (jz <= 0) {
+            jz = 0;
+            jv = 0;
+          }
+        }
+
+        bob += vel * dt * 3.4;
+      }
+
+      // ---------- raycast ----------
+      var rDist = 0,
+        rSide = 0,
+        rWallX = 0,
+        rMX = 0,
+        rMY = 0;
+
+      function cast(rdx, rdy) {
+        var mx = Math.floor(px),
+          my = Math.floor(py);
+        var ddx = rdx === 0 ? 1e30 : Math.abs(1 / rdx);
+        var ddy = rdy === 0 ? 1e30 : Math.abs(1 / rdy);
+        var sx, sy, sdx, sdy;
+        if (rdx < 0) {
+          sx = -1;
+          sdx = (px - mx) * ddx;
+        } else {
+          sx = 1;
+          sdx = (mx + 1 - px) * ddx;
+        }
+        if (rdy < 0) {
+          sy = -1;
+          sdy = (py - my) * ddy;
+        } else {
+          sy = 1;
+          sdy = (my + 1 - py) * ddy;
+        }
+        var side = 0,
+          n = 0;
+        for (;;) {
+          if (sdx < sdy) {
+            sdx += ddx;
+            mx += sx;
+            side = 0;
+          } else {
+            sdy += ddy;
+            my += sy;
+            side = 1;
+          }
+          if (mx < 0 || my < 0 || mx >= MW || my >= MH) {
+            rDist = 60;
+            rSide = side;
+            rWallX = 0;
+            rMX = mx;
+            rMY = my;
+            return;
+          }
+          if (map[my * MW + mx] === 1) break;
+          if (++n > 80) break;
+        }
+        var d = side === 0 ? sdx - ddx : sdy - ddy;
+        if (d < 0.0001) d = 0.0001;
+        var wx = side === 0 ? py + d * rdy : px + d * rdx;
+        rDist = d;
+        rSide = side;
+        rWallX = wx - Math.floor(wx);
+        rMX = mx;
+        rMY = my;
+      }
+
+      // snap to powers of two so the glyph grid only reshuffles now and then
+      // as you close on a surface, instead of crawling every frame
+      function pow2(v, hi) {
+        var p = Math.pow(2, Math.round(Math.log(v) / Math.LN2));
+        return Math.max(2, Math.min(hi, p));
+      }
+
+      // ---------- draw ----------
+      var eyeNow = EYE;
+      var t0 = performance.now(),
+        T = 0,
+        msAvg = 0;
+
+      // Both passes below only *record* which glyph goes in which cell; the
+      // pixels get copied afterwards, in reading order. Copying as we went
+      // meant the wall pass wrote column-first — every glyph row landing a
+      // whole scanline away from the last — and that alone cost 5x per glyph.
+      function paint() {
+        var fb = FB,
+          at = ATLAS,
+          cw = charW,
+          chh = charH,
+          aw = AW,
+          bw = W,
+          cl = cell;
+        for (var cr = 0; cr < rows; cr++) {
+          var ci = cr * cols,
+            dRow = cr * chh * bw;
+          for (var c = 0; c < cols; c++) {
+            var v = cl[ci + c];
+            if (v === 0) continue;
+            var s = v - 1,
+              d = dRow + c * cw;
+            for (var y = 0; y < chh; y++, s += aw, d += bw)
+              fb.set(at.subarray(s, s + cw), d);
+          }
+        }
+      }
+
+      // do two neighbouring columns sit on one unbroken stretch of wall?
+      // seen end-on, a single column can span several cells at once, so the
+      // question isn't how far apart the hits are — it's whether everything
+      // between them is solid, or whether a doorway opens up in there
+      function joined(a, b) {
+        if (wallFace[a] !== wallFace[b]) return false;
+        var p0 = wallPos[a],
+          p1 = wallPos[b];
+        if (p0 > p1) {
+          var t = p0;
+          p0 = p1;
+          p1 = t;
+        }
+        if (p1 - p0 <= 1) return true;
+        var side = (wallFace[b] >> 1) & 1,
+          line = wallFace[b] >> 2;
+        for (var i = p0 + 1; i < p1; i++) {
+          var mx = side === 1 ? i : line,
+            my = side === 1 ? line : i;
+          if (mx < 0 || my < 0 || mx >= MW || my >= MH) return false;
+          if (map[my * MW + mx] !== 1) return false;
+        }
+        return true;
+      }
+
+      // one stroked line along a wall edge, broken wherever the wall does
+      // (door jambs, corners) so it never draws across a gap
+      // the glyphs on a surface dim with distance; if the outline doesn't dim
+      // with them it ends up a bright wireframe floating over black
+      function lineAlpha(d) {
+        return Math.min(1, 3.2 / (d * 0.8 + 0.6));
+      }
+
+      function edge(ys, width, horizon, up, rgb, scale, dbg) {
+        if (DEBUG) ctx.strokeStyle = dbg;
+        else {
+          var far = up ? horizon : H,
+            h = up ? WALL_H - eyeNow : eyeNow;
+          var grad = ctx.createLinearGradient(0, horizon, 0, up ? 0 : H);
+          for (var i = 0; i <= 8; i++) {
+            var t = i / 8;
+            var dy = (up ? horizon : H - horizon) * t;
+            var d = dy < 1 ? 60 : (fx * h) / dy;
+            grad.addColorStop(t, rgb + lineAlpha(d) * scale + ")");
+          }
+          ctx.strokeStyle = grad;
+        }
+        ctx.lineWidth = width;
+        ctx.beginPath();
+        var open = false;
+        for (var c = 0; c < cols; c++) {
+          var d = wallDist[c];
+          if (d > 26 || (open && !joined(c - 1, c))) {
+            // run the line out to the cell boundary before dropping it, so
+            // it meets the corner post instead of stopping half a cell short
+            if (open) ctx.lineTo(c * charW, ys[c - 1]);
+            open = false;
+            if (d > 26) continue;
+          }
+          // start at the boundary too — a surface only one column wide would
+          // otherwise be a lone moveTo, which strokes nothing at all
+          if (!open) ctx.moveTo(c * charW, ys[c]);
+          ctx.lineTo(c * charW + charW / 2, ys[c]);
+          open = true;
+        }
+        if (open) ctx.lineTo(cols * charW, ys[cols - 1]);
+        ctx.stroke();
+      }
+
+      // the vertical corners: wherever the surface changes there is a real
+      // edge in the world — the side of a door jamb, the corner of a room.
+      // without these the outline is a set of floating horizontals and an
+      // opening in the wall never closes up.
+      // TEMP debug: colour the three kinds of line so it is obvious which
+      // one is wrong. red = floor edge, blue = ceiling edge, yellow = corner
+      // post. remove with the HUD below.
+      var DEBUG = false;
+
+      var NB = 5; // brightness buckets — one stroke each, they are not cheap
+      function corners(width, horizon) {
+        var n = 0;
+        for (var c = 1; c < cols; c++) {
+          if (wallDist[c] > 26 || wallDist[c - 1] > 26) continue;
+          if (joined(c - 1, c)) continue;
+          // span both surfaces, which covers the nearer one's full height and
+          // lands on the far one's lines on the way past
+          var yA = Math.max(0, Math.min(wallTop[c - 1], wallTop[c]));
+          var yB = Math.min(H, Math.max(wallBot[c - 1], wallBot[c]));
+          if (yB - yA < 1) continue;
+          // a post sits at one distance the whole way up, so it gets one
+          // brightness — taking it from a gradient would fade the top of a
+          // near doorway out and leave the opening looking unclosed
+          var dy = Math.max(wallBot[c - 1], wallBot[c]) - horizon;
+          var f = lineAlpha(dy < 1 ? 60 : (fx * eyeNow) / dy);
+          postX[n] = c * charW;
+          postA[n] = yA;
+          postB[n] = yB;
+          postL[n] = Math.min(NB - 1, Math.floor(f * NB));
+          n++;
+        }
+        ctx.lineWidth = width;
+        for (var b = 0; b < NB; b++) {
+          var any = false;
+          ctx.beginPath();
+          for (var i = 0; i < n; i++) {
+            if (postL[i] !== b) continue;
+            ctx.moveTo(postX[i], postA[i]);
+            ctx.lineTo(postX[i], postB[i]);
+            any = true;
+          }
+          if (!any) continue;
+          ctx.strokeStyle = DEBUG
+            ? "rgba(255,215,0,0.95)"
+            : "rgba(58,255,58," + ((b + 0.6) / NB).toFixed(3) + ")";
+          ctx.stroke();
+        }
+      }
+
+
+      function frame(now) {
+        var dt = Math.min(0.05, (now - t0) / 1000);
+        t0 = now;
+        T += dt;
+        update(dt);
+
+        FB.fill(0xff000000);
+        cell.fill(0);
+
+        var dirX = Math.cos(ang),
+          dirY = Math.sin(ang);
+        var pl = Math.tan(FOV / 2);
+        var plX = -dirY * pl,
+          plY = dirX * pl;
+
+        var bobPx =
+          Math.sin(bob) *
+          0.22 *
+          charH *
+          Math.min(1, Math.abs(vel)) *
+          (jz > 0 ? 0 : 1);
+        var horizon = (rows / 2) * charH + bobPx;
+        var eye = (eyeNow = Math.min(EYE + jz, WALL_H - 0.2));
+
+        // walls
+        var prevKey = -1,
+          prevWX = 0,
+          prevTU = 8;
+        for (var c = 0; c < cols; c++) {
+          var cx = c * charW;
+          var camX = (2 * (cx + charW / 2)) / W - 1;
+          var rdx = dirX + plX * camX,
+            rdy = dirY + plY * camX;
+          cast(rdx, rdy);
+          var d = rDist;
+          var lineH = (fx * WALL_H) / d;
+          var top = horizon + (fx * (eye - WALL_H)) / d;
+          var bot = horizon + (fx * eye) / d;
+          wallTop[c] = top;
+          wallBot[c] = bot;
+          wallDist[c] = d;
+          // identify the exact face this column landed on, so the edge lines
+          // can tell "same flat wall, one cell over" from "different surface
+          // seen through a doorway"
+          wallFace[c] =
+            (rSide === 1 ? rMY * 2 + 1 : rMX * 2) * 2 +
+            ((rSide === 1 ? rdy : rdx) > 0 ? 1 : 0);
+          wallPos[c] = rSide === 1 ? rMX : rMY;
+          if (d > 26) continue;
+
+          // one glyph per cell, but pinned to the wall: horizontal density
+          // comes from how fast the hit slides along this face
+          var ck = (rMX * 4 + rSide) | 0;
+          var key = ck * 977 + rMY;
+          var TU = prevTU;
+          if (key === prevKey) {
+            var du = Math.abs(rWallX - prevWX);
+            if (du > 1e-5 && du < 0.5) TU = pow2(1 / du, 1024);
+          } else {
+            TU = pow2(lineH / WALL_H / charW, 1024);
+          }
+          prevKey = key;
+          prevWX = rWallX;
+          prevTU = TU;
+
+          var TV = pow2(fx / (d * charH), 1024);
+          var tu = Math.floor(rWallX * TU);
+          var shade = Math.min(1, 3.2 / (d * 0.8 + 0.6)) * (rSide === 1 ? 0.78 : 1);
+
+          // every glyph column on the wall is its own falling stream
+          var sh = hash4(ck, rMY, tu, 7);
+          var phase = (sh & 1023) / 1024;
+          var speed = 0.25 + (((sh >>> 10) & 255) / 255) * 0.5;
+          var headZ = 1 - ((T * speed + phase) % 1);
+          var trail = 0.45 + (((sh >>> 18) & 63) / 63) * 0.75;
+          // a quarter of the columns run dark, so the code reads as separate
+          // ribbons down the wall rather than an even field
+          var colVar = 0.78 + (((sh >>> 24) & 63) / 63) * 0.22;
+          if (((sh >>> 3) & 7) < 2) colVar *= 0.4;
+          var mut = ((sh >>> 5) & 7) < 4;
+          var mutT = Math.floor(T * (3 + ((sh >>> 8) & 3)));
+
+          var r0 = Math.max(0, Math.ceil(top / charH));
+          var r1 = Math.min(rows - 1, Math.floor(bot / charH));
+          for (var r = r0; r <= r1; r++) {
+            var z = eye - (((r + 0.5) * charH - horizon) * d) / fx;
+            var vN = z / WALL_H;
+            if (vN < 0) vN = 0;
+            else if (vN > 1) vN = 1;
+            var q = (vN - headZ) % 1;
+            if (q < 0) q += 1;
+            var isHead = q < 0.05;
+            var rain = q < trail ? 1 - q / trail : 0;
+            var b = shade * colVar * (0.26 + 0.74 * rain);
+            var lv = isHead ? L - 1 : Math.floor(b * (L - 1));
+            if (lv > L - 2 && !isHead) lv = L - 2;
+            if (lv < 1) continue;
+            var tv = Math.floor(z * TV);
+            var gi = hash4(ck, rMY * 3 + 1, tu * 91 + tv, mut ? mutT : 0) % G;
+            cell[r * cols + c] = 1 + lv * charH * AW + gi * charW;
+          }
+        }
+
+        // floor + ceiling: the same code, lying down and streaming toward you
+        var rdLx = dirX - plX,
+          rdLy = dirY - plY;
+        var rdRx = dirX + plX,
+          rdRy = dirY + plY;
+        var f0 = charW / 2 / W,
+          fStep = charW / W;
+
+        for (var r = 0; r < rows; r++) {
+          var yPx = (r + 0.5) * charH;
+          var isFloor = yPx > horizon;
+          var p = isFloor ? yPx - horizon : horizon - yPx;
+          if (p < 1) continue;
+          var rowD = (fx * (isFloor ? eye : WALL_H - eye)) / p;
+          if (rowD > 20) continue;
+          var stepX = rowD * (rdRx - rdLx) * fStep;
+          var stepY = rowD * (rdRy - rdLy) * fStep;
+          var wx = px + rowD * (rdLx + (rdRx - rdLx) * f0),
+            wy = py + rowD * (rdLy + (rdRy - rdLy) * f0);
+          var fade = Math.min(1, 2.6 / (0.6 + rowD));
+          var dim = (isFloor ? 1.15 : 0.72) * fade;
+          var rowBase = r * cols;
+          // cells sized so one lands in one glyph cell at this depth
+          var gs = pow2(fx / (rowD * charW), 1024);
+          for (var c2 = 0; c2 < cols; c2++, wx += stepX, wy += stepY) {
+            if (isFloor ? yPx <= wallBot[c2] : yPx >= wallTop[c2]) continue;
+            var hh = hash4(
+              Math.floor(wx * gs),
+              Math.floor(wy * gs),
+              isFloor ? 5 : 9,
+              3
+            );
+            // long streaks down the length of the place, flowing toward you
+            var streak = 0.5 + 0.5 * Math.sin(wy * 5.5 + wx * 0.4);
+            var flow = 0.5 + 0.5 * Math.sin(wx * 1.7 - T * 2.4 + wy);
+            var b2 =
+              dim *
+              (0.6 + 0.4 * ((hh & 255) / 255)) *
+              (0.45 + 0.55 * (0.5 * streak + 0.5 * flow));
+            var lv2 = Math.floor(b2 * (L - 1));
+            if (lv2 < 1) continue;
+            if (lv2 > L - 3) lv2 = L - 3;
+            cell[rowBase + c2] = 1 + lv2 * charH * AW + ((hh >>> 16) % G) * charW;
+          }
+        }
+
+        paint();
+        ctx.putImageData(img, 0, 0);
+
+        // the edges of the place, stroked at true pixel positions — snapped
+        // to the glyph grid they stair-step a whole cell at a time and crawl
+        // as you walk. depth fade comes free from a vertical gradient: the
+        // nearer the floor line, the lower on screen.
+        var s = W / cssW;
+        corners(2 * s, horizon);
+        edge(wallTop, 1.4 * s, horizon, 1, "rgba(48,220,80,", 0.7,
+          "rgba(80,150,255,0.95)");
+        edge(wallBot, 2 * s, horizon, 0, "rgba(58,255,58,", 1,
+          "rgba(255,60,60,0.95)");
+
+        if (DEBUG) {
+          // top-down map: walls, where you are, and the view cone
+          var m = Math.max(4, Math.round(7 * s)),
+            ox = W - MW * m - 8 * s,
+            oy = 8 * s;
+          ctx.fillStyle = "rgba(0,0,0,0.72)";
+          ctx.fillRect(ox - 2, oy - 2, MW * m + 4, MH * m + 4);
+          ctx.fillStyle = "#1c6";
+          for (var my = 0; my < MH; my++)
+            for (var mx = 0; mx < MW; mx++)
+              if (map[my * MW + mx])
+                ctx.fillRect(ox + mx * m, oy + my * m, m - 1, m - 1);
+          ctx.strokeStyle = "rgba(255,215,0,0.9)";
+          ctx.lineWidth = Math.max(1, s);
+          ctx.beginPath();
+          for (var e = -1; e <= 1; e += 2) {
+            ctx.moveTo(ox + px * m, oy + py * m);
+            ctx.lineTo(
+              ox + (px + (dirX + plX * e) * 6) * m,
+              oy + (py + (dirY + plY * e) * 6) * m
+            );
+          }
+          ctx.stroke();
+          ctx.fillStyle = "#f33";
+          ctx.fillRect(ox + px * m - 2, oy + py * m - 2, 4, 4);
+
+          msAvg += (performance.now() - now - msAvg) * 0.08;
+          ctx.font = Math.round(15 * s) + "px monospace";
+          ctx.fillStyle = "rgba(0,0,0,0.65)";
+          ctx.fillRect(0, H - 30 * s, 330 * s, 30 * s);
+          ctx.fillStyle = "#fff";
+          ctx.fillText(
+            "x " + px.toFixed(2) + "  y " + py.toFixed(2) +
+              "  ang " + ang.toFixed(3) + "  " + msAvg.toFixed(1) + " ms",
+            8 * s,
+            H - 10 * s
+          );
+        }
+        requestAnimationFrame(frame);
+      }
+
+      resize();
+      requestAnimationFrame(frame);
+    </script>
+  </body>
+</html>
